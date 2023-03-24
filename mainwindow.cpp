@@ -13,3 +13,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::testMerge(){
+    int x = 0;
+    x++;
+}
