@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,6 +15,6 @@ MainWindow::~MainWindow()
 
 
 void MainWindow:: testFunction1(){
-    int i = 0;
-    int j = 0;
+    int i = 1;
+    int j = 1;
 }
