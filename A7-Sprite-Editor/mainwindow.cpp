@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    //delete everything
+    //delete everything, sike
     delete ui;
 }
 
