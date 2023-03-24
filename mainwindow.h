@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    void testFunction1();
 private:
     Ui::MainWindow *ui;
 };
