@@ -1,3 +1,7 @@
+/**
+ * Course: CS3505
+ **/
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
