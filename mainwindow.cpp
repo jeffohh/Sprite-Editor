@@ -16,7 +16,7 @@ MainWindow::~MainWindow()
 void MainWindow:: testFunction1(){
     int i = 1;
     int j = 1;
-
+}
 void MainWindow::testMerge(){
     int z = 0;
     z++;
@@ -24,6 +24,6 @@ void MainWindow::testMerge(){
     int j =0;
     j++
 
-    j = x+3;
+    j = z+3;
 
 }
