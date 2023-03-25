@@ -32,4 +32,10 @@ void MainWindow::test() {
 void MainWindow:: testFunction1(){
     int i = 1;
     int j = 1;
+
+void MainWindow::testMerge(){
+    int z = 0;
+    z++;
+
+
 }
