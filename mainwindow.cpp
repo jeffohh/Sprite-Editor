@@ -24,7 +24,6 @@ void MainWindow::testMerge(){
     int j =0;
     j++
 
-    j = z+3;
-    j = x+2;
+    j = z+2;
 
 }
