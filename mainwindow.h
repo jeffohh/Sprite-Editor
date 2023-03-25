@@ -17,6 +17,7 @@ public:
 
     void test();
 
+    void testFunction1();
 private:
     Ui::MainWindow *ui;
     int num;

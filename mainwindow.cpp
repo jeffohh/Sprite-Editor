@@ -28,3 +28,8 @@ void MainWindow::test() {
     cout << x << y << endl;
     return;
 }
+
+void MainWindow:: testFunction1(){
+    int i = 1;
+    int j = 1;
+}
