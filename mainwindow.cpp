@@ -25,5 +25,6 @@ void MainWindow::testMerge(){
     j++
 
     j = z+3;
+    j = x+2;
 
 }
