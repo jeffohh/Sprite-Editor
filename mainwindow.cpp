@@ -22,4 +22,7 @@ void MainWindow::testMerge(){
     x++;
     int j =0;
     j++
+
+    x = x+2;
+
 }
