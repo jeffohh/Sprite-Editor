@@ -21,6 +21,9 @@ void MainWindow::testMerge(){
     int x = 0;
     x++;
 
+    int j =0;
+    j++
+
     x = x+2;
 
 }
