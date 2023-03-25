@@ -19,28 +19,6 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::test() {
-    int x = 0;
-    x++;
-    x++;
-
-    std::string y = "";
-
-    cout << x << y << endl;
-    return;
+    "remote changes"
 }
 
-void MainWindow:: testFunction1(){
-    int i = 1;
-    int j = 1;
-}
-
-void MainWindow::testMerge(){
-    int z = 0;
-    z++;
-
-    int j =0;
-    j++
-
-    j = z+2;
-
-}
