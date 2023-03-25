@@ -18,12 +18,12 @@ void MainWindow:: testFunction1(){
     int j = 1;
 
 void MainWindow::testMerge(){
-    int x = 0;
-    x++;
+    int z = 0;
+    z++;
 
     int j =0;
     j++
 
-    j = x+2;
+    j = x+3;
 
 }
