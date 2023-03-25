@@ -22,3 +22,8 @@ void MainWindow::test() {
     "remote changes"
 }
 
+void MainWindow:: testFunction1(){
+    int i = 1;
+    int j = 1;
+}
+
