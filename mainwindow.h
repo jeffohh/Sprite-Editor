@@ -14,6 +14,12 @@
 using std::vector;
 //----------------
 
+//TZhou
+#include<QColorDialog>
+#include<QColor>
+//-------------------
+
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -30,6 +36,13 @@ public:
     void previewAnimation();
     //----------------------
 
+    //TZhou
+    void setColor();
+    //--------------
+
+private slots:
+    void on_changeColorBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     int num;
@@ -38,5 +51,10 @@ private:
     vector<QImage> frameList;
     QGraphicsScene *scene;
     //------------------------
+
+    //TZhou
+    QColor* currentColor;
+    void setCurrentColorBtnTo(QColor* newColor);
+    //----------------------
 };
 #endif // MAINWINDOW_H
