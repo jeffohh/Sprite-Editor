@@ -1,11 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "model.h"
 
 #include <iostream>
 using std::cout;
 using std::endl;
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(Model& model,QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -19,7 +20,8 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::test() {
-    "remote changes"
+    //remote changes
+    //test pushing by Andy Tran
 }
 
 void MainWindow:: testFunction1(){

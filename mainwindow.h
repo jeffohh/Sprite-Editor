@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "model.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -13,11 +14,11 @@ class MainWindow : public QMainWindow
     void testMerge();
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(Model& model,QWidget *parent = nullptr);
     ~MainWindow();
 
+    //Test by Andy Tran
     void test();
-
     void testFunction1();
 private:
     Ui::MainWindow *ui;
