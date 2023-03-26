@@ -6,6 +6,12 @@
 using std::cout;
 using std::endl;
 
+//Tzhou
+#include<QString>
+#include<QDebug>
+//-----------------------
+
+
 MainWindow::MainWindow(Model& model,QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -30,6 +36,12 @@ MainWindow::MainWindow(Model& model,QWidget *parent)
     frameList.push_back(frame3);
 
     previewAnimation();
+
+    //Tzhou
+    // Initializes the current color to be black, and its buttons.
+    QColor* black = new QColor(0,0,0, 255);
+    setCurrentColorBtnTo(black);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
+    //-----------------------------------
 }
 
 MainWindow::~MainWindow()
@@ -79,4 +91,29 @@ void MainWindow::previewAnimation() {
     ui->graphicsView->setFocus();
 }
 
+
+//Tzhou
+void MainWindow::on_changeColorBtn_clicked()
+{
+    bool OKBtnIsPressed;
+    QColor color = QColorDialog::getColor(*currentColor, this);
+    if(&OKBtnIsPressed)
+    {
+        currentColor = &color;
+        setCurrentColorBtnTo(&color);
+    }
+}
+
+//Tzhou
+void MainWindow::setCurrentColorBtnTo(QColor* newColor)
+{
+    currentColor = newColor;
+    int r = newColor->red();
+    int g = newColor->green();
+    int b = newColor->blue();
+    int a = newColor->alpha();
+    qDebug()<<r<<g<<b<<a;
+    QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
+    ui->currentColorBtn->setStyleSheet(style.arg(r).arg(g).arg(b).arg(a));
+}
 
