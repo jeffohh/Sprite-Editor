@@ -4,6 +4,16 @@
 #include <QMainWindow>
 #include "model.h"
 
+//Added by Andy Tran
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+#include <QImage>
+#include <QPixmap>
+#include <QVector>
+#include <QTimer>
+using std::vector;
+//----------------
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -11,17 +21,22 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    void testMerge();
 
 public:
     MainWindow(Model& model,QWidget *parent = nullptr);
     ~MainWindow();
 
-    //Test by Andy Tran
-    void test();
-    void testFunction1();
+    //Andy Tran
+    void previewAnimation();
+    //----------------------
+
 private:
     Ui::MainWindow *ui;
     int num;
+
+    //Andy Tran
+    vector<QImage> frameList;
+    QGraphicsScene *scene;
+    //------------------------
 };
 #endif // MAINWINDOW_H
