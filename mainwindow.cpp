@@ -40,6 +40,9 @@ MainWindow::MainWindow(Model& model,QWidget *parent)
     //Tzhou
     // Initializes the current color to be black, and its buttons.
     QColor* black = new QColor(0,0,0, 255);
+    ui->alphaSlider->setMinimum(0);
+    ui->alphaSlider->setMaximum(10);
+    ui->alphaSlider->setValue(10);
     setCurrentColorBtnTo(black);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
     //-----------------------------------
 }
@@ -112,8 +115,21 @@ void MainWindow::setCurrentColorBtnTo(QColor* newColor)
     int g = newColor->green();
     int b = newColor->blue();
     int a = newColor->alpha();
-    qDebug()<<r<<g<<b<<a;
     QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
     ui->currentColorBtn->setStyleSheet(style.arg(r).arg(g).arg(b).arg(a));
+    qDebug()<<r<<g<<b<<a;
+}
+
+//TZhou
+void MainWindow::on_alphaSlider_valueChanged(int value)
+{
+    QString realValue = QString::number(value/10.0, 'f', 1);
+    ui->alphaValueLabel->setText(realValue);
+    int alpha = 255*value/10.0;
+    currentColor = new QColor(currentColor->red(),currentColor->green(),
+                             currentColor->blue(), alpha);
+
+    //Note: color->setAlpha will not work, have to assign a new object.
+    setCurrentColorBtnTo(currentColor);
 }
 
