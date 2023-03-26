@@ -51,13 +51,8 @@ private:
     //------------------------
 
     //TZhou
-<<<<<<< HEAD
-    QColor* currentColor;
-    void setCurrentColorBtnTo(QColor* newColor); //helper method
-=======
     QColor* currentColor; // The current color of the pen, default black.
     void setCurrentColorBtnTo(QColor* newColor);
->>>>>>> local
     //----------------------
 };
 #endif // MAINWINDOW_H
