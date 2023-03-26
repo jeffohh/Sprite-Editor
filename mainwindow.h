@@ -37,10 +37,10 @@ public:
     //----------------------
 
 private slots:
-    //Tzhou
+    //TZhou: color picker area
     void on_changeColorBtn_clicked();
-    //-----------------------
-
+    void on_alphaSlider_valueChanged(int value);
+    //-------------------------------------------
 private:
     Ui::MainWindow *ui;
     int num;
@@ -51,8 +51,13 @@ private:
     //------------------------
 
     //TZhou
+<<<<<<< HEAD
     QColor* currentColor;
     void setCurrentColorBtnTo(QColor* newColor); //helper method
+=======
+    QColor* currentColor; // The current color of the pen, default black.
+    void setCurrentColorBtnTo(QColor* newColor);
+>>>>>>> local
     //----------------------
 };
 #endif // MAINWINDOW_H
