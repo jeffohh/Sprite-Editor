@@ -12,7 +12,7 @@ using std::endl;
 //-----------------------
 
 
-MainWindow::MainWindow(Model& model,QWidget *parent)
+MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -45,11 +45,25 @@ MainWindow::MainWindow(Model& model,QWidget *parent)
     ui->alphaSlider->setValue(10);
     setCurrentColorBtnTo(black);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
     //-----------------------------------
+
+
+    // INITIALIZE VIEW
+    ui->canvasView->updatePixmap(&model.canvas);
+
+    // CONNECTIONS START HERE
+    connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
+    connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+// Jeffrey Le *sunglasses_emoji*
+void MainWindow::updateCanvas(QImage* canvas) {
+    // we can update preview elements here?
+    ui->canvasView->updatePixmap(canvas);
 }
 
 //Andy Tran
