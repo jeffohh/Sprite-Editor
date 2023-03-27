@@ -52,7 +52,9 @@ private:
 
     //TZhou
     QColor* currentColor; // The current color of the pen, default black.
-    void setCurrentColorBtnTo(QColor* newColor);
+    int currentRgba[4]; // I have good reason to have this variable.
+    void setCurrentColorBtnTo();
+    void setCurrentRbga(QColor* newColor);
     //----------------------
 };
 #endif // MAINWINDOW_H
