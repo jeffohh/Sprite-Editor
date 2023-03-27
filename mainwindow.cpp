@@ -19,6 +19,17 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     ui->setupUi(this);
     num = 90;
 
+    //Andy Duong
+       canvas = new QGraphicsScene(this);
+       pixmap = QPixmap (800,600);
+       pixmap.fill(Qt::white);
+
+       canvas->addPixmap(pixmap);
+       ui->graphicsView->setScene(canvas);
+
+       connect(ui->canvasView, &canvas::viewClicked, this, &MainWindow::handleViewClicked);
+
+
     //Andy Tran
     // Create a QGraphicsScene object to hold the preview animation frames
     scene = new QGraphicsScene(this);
@@ -147,3 +158,14 @@ void MainWindow::on_alphaSlider_valueChanged(int value)
     setCurrentColorBtnTo(currentColor);
 }
 
+//Andy Duong
+
+void MainWindow::handleViewClicked()
+{
+    // Update the pixmap with the new image data
+    // ...
+
+    // Update the QGraphicsScene
+    scene->clear();
+    scene->addPixmap(pixmap);
+}

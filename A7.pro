@@ -10,12 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     imagevieweditor.cpp \
+    canvas.cpp \
     main.cpp \
     mainwindow.cpp \
     model.cpp
 
 HEADERS += \
     imagevieweditor.h \
+    canvas.h \
     mainwindow.h \
     model.h
 
