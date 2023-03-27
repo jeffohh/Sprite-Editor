@@ -41,11 +41,6 @@ public:
 
 public slots:
     void updateCanvas(QImage*); // jeff!!
-private slots:
-    //TZhou: color picker area
-    void on_changeColorBtn_clicked();
-    void on_alphaSlider_valueChanged(int value);
-    //-------------------------------------------
 
     //Andy Duong
     void handleViewClicked();

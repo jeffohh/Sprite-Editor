@@ -27,7 +27,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
        canvas->addPixmap(pixmap);
        ui->graphicsView->setScene(canvas);
 
-       connect(ui->canvasView, &canvas::viewClicked, this, &MainWindow::handleViewClicked);
+       // connect(ui->canvasView, &canvas::viewClicked, this, &MainWindow::handleViewClicked);
 
 
     //Andy Tran
