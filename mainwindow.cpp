@@ -52,7 +52,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     // Initializes the current color to be black, and its buttons.
     QColor* black = new QColor(0,0,0, 255);
     currentColor = black;
-    setCurrentColorBtnTo(currentColor);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
+    setCurrentColorBtnTo();// alpha value: [0, 225], 0 means transparent, 225 means opaque.
     ui->alphaSlider->setMinimum(0);
     ui->alphaSlider->setMaximum(10);
     ui->alphaSlider->setValue(10);
@@ -68,6 +68,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
     connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
 
+    //Ruini Tong
     //handle pencil event
     connect(ui->btnPencil,&QPushButton::clicked,ui->canvasView,&ImageViewEditor::pencilClicked);
     connect(ui->btnPencil,&QPushButton::clicked,this, [=](){
@@ -140,25 +141,19 @@ void MainWindow::on_changeColorBtn_clicked()
     {
         currentColor = &color;
         on_alphaSlider_valueChanged(10);
-        setCurrentColorBtnTo(currentColor);
+        setCurrentColorBtnTo();
 
         qDebug()<<currentColor->red()<<currentColor->green()<<currentColor->blue()<<currentColor->alpha();
     }
 }
 
 //Tzhou
-void MainWindow::setCurrentColorBtnTo(QColor* newColor)
+void MainWindow::setCurrentColorBtnTo()
 {
-    //update pencil color
-    emit updateColor(*newColor); //Ruini Tong
 
-    currentColor = newColor;
-    int r = newColor->red();
-    int g = newColor->green();
-    int b = newColor->blue();
-    int a = newColor->alpha();
     setCurrentRbga(currentColor);
     QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
+
     ui->currentColorBtn->setStyleSheet(style.arg(currentRgba[0]).arg(currentRgba[1])
             .arg(currentRgba[2]).arg(currentRgba[3]));
 
@@ -174,6 +169,9 @@ void MainWindow::setCurrentColorBtnTo(QColor* newColor)
 //TZhou
 void MainWindow::setCurrentRbga(QColor *newColor)
 {
+    //update pencil color
+    emit updateColor(*newColor); //Ruini Tong
+
     currentRgba[0] = newColor->red();
     currentRgba[1] = newColor->green();
     currentRgba[2]  = newColor->blue();

@@ -19,9 +19,10 @@ class Model : public QObject
 public:
     explicit Model(QObject *parent = nullptr);
 
+    //Ruini Tong
     void setToolColor(const QColor newColor);
     void changeTool(Tool currentTool);
-
+    //----------------------
     QImage canvas;
 
 public slots:
