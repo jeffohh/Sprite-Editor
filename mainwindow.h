@@ -36,11 +36,9 @@ public:
     void previewAnimation();
     //----------------------
 
-private slots:
-    //TZhou: color picker area
-    void on_changeColorBtn_clicked();
-    void on_alphaSlider_valueChanged(int value);
-    //-------------------------------------------
+public slots:
+    void updateCanvas(QImage*); // jeff!!
+
 private:
     Ui::MainWindow *ui;
     int num;
@@ -54,5 +52,12 @@ private:
     QColor* currentColor; // The current color of the pen, default black.
     void setCurrentColorBtnTo(QColor* newColor);
     //----------------------
+
+private slots:
+    //TZhou: color picker area
+    void on_changeColorBtn_clicked();
+    void on_alphaSlider_valueChanged(int value);
+    //-------------------------------------------
+
 };
 #endif // MAINWINDOW_H
