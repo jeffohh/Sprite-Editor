@@ -4,9 +4,6 @@
 #include <QMainWindow>
 #include "model.h"
 
-//Andy Duong
-#include "canvas.h"
-
 //Added by Andy Tran
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
