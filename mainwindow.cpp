@@ -12,6 +12,11 @@ using std::endl;
 //-----------------------
 
 
+//Andy Tran
+unsigned int currentFrameIndex = 0;
+bool needsRestart = false;
+//-------------
+
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -31,8 +36,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
 
     //Andy Tran
-    // Create a QGraphicsScene object to hold the preview animation frames
-    scene = new QGraphicsScene(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
 
     //Just for testing
     // Create QImage objects for each frame of the animation
@@ -46,7 +50,12 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     frameList.push_back(frame2);
     frameList.push_back(frame3);
 
+    ui->fpsSlider->setMinimum(1);
+    ui->fpsSlider->setMaximum(60);
+    ui->fpsSlider->setValue(12);
     previewAnimation();
+
+
 
     //Tzhou
     // Initializes the current color to be black, and its buttons.
@@ -90,47 +99,61 @@ void MainWindow::updateCanvas(QImage* canvas) {
 }
 
 //Andy Tran
+void MainWindow::onTimerTimeout() {
+    // Get the current frame out of the list
+    QImage currentFrame = frameList[currentFrameIndex];
+
+    // Update the QGraphicsScene with the current frame
+    scene->addPixmap(QPixmap::fromImage(currentFrame));
+
+    // Set the focus to the first item in the scene
+    if (!scene->items().isEmpty()) {
+        QGraphicsItem* firstItem = scene->items().first();
+        scene->setFocusItem(firstItem);
+    }
+
+    // Move to the next frame
+    currentFrameIndex = (currentFrameIndex + 1)%frameList.size();
+
+    // Check if the animation needs to be restarted
+    if (needsRestart && currentFrameIndex == 0) {
+        needsRestart = false;
+        timer->start(frameDuration);
+    }
+}
+
 void MainWindow::previewAnimation() {
+    //Clear and update from the frameList
     scene->clear();
     for(unsigned int i = 0; i < frameList.size();i++){
         scene->addPixmap(QPixmap::fromImage(frameList[i]));
     }
 
-    // Create a QTimer object to update the display with the next frame
-    QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, [=]() {
-        // Get the current frame index
-        static unsigned int frameIndex = 0;
-
-        // Get the current frame out of the list
-        QImage currentFrame = frameList[frameIndex];
-
-        // Update the QGraphicsScene with the current frame
-        scene->addPixmap(QPixmap::fromImage(currentFrame));
-
-        // Set the focus to the first item in the scene
-        if (!scene->items().isEmpty()) {
-            scene->setFocusItem(scene->items().first());
-        }
-
-        //Reset the frameIndex to start over
-        if(frameIndex == frameList.size())
-            frameIndex = 0;
-
-        //move to the next frame
-        frameIndex++;
-    });
-
     // Set the timer to fire every frameDuration milliseconds
-    int fps = 10; // need to change according to the slider
-    int frameDuration = 1000 / fps;
+    frameDuration = 1000 / fps;
+    if(timer->isActive()) {
+        // Stop the timer and set a flag to indicate that the animation needs to be restarted
+        timer->stop();
+        needsRestart = true;
+    } else {
+        // Set the current frame index to 0 if the timer is not running
+        currentFrameIndex = 0;
+    }
     timer->start(frameDuration);
 
-    // Set the QGraphicsScene to the QGraphicsView
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setFocus();
 }
 
+
+void MainWindow::on_fpsSlider_valueChanged(int value)
+{
+    QString textValue = QString::number(value);
+    ui->fpsValueLabel->setText(textValue);
+    fps = value;
+    previewAnimation();
+}
+//----------------------------------------------------------------
 
 //Tzhou
 void MainWindow::on_changeColorBtn_clicked()
@@ -213,3 +236,6 @@ void MainWindow::handleViewClicked()
     scene->clear();
     scene->addPixmap(pixmap);
 }
+
+
+

@@ -46,6 +46,9 @@ public slots:
 
     //Andy Duong
     void handleViewClicked();
+
+    //Andy Tran
+    void onTimerTimeout();
 private:
     Ui::MainWindow *ui;
     int num;
@@ -57,7 +60,10 @@ private:
 
     //Andy Tran
     vector<QImage> frameList;
-    QGraphicsScene *scene;
+    QGraphicsScene* scene = new QGraphicsScene(this);
+    QTimer *timer = new QTimer(this);;
+    int fps = 12;
+    int frameDuration;
     //------------------------
 
     //TZhou
@@ -73,5 +79,6 @@ private slots:
     void on_alphaSlider_valueChanged(int value);
     //-------------------------------------------
 
+    void on_fpsSlider_valueChanged(int value);
 };
 #endif // MAINWINDOW_H
