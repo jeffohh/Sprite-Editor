@@ -1,5 +1,4 @@
 #include "imagevieweditor.h"
-
 #include <QMouseEvent>
 
 ImageViewEditor::ImageViewEditor(QWidget *parent) :
@@ -21,12 +20,39 @@ void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         QPoint pos = mapToScene(event->pos()).toPoint();
         emit mouseDown(pos);
+        //qDebug() << "moussPress";
     }
 }
 
-void ImageViewEditor::mouseMoveEvent(QMouseEvent *) {
+void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
+//    if(pencil == true){
+//        QPoint pos = mapToScene(event->pos()).toPoint();
+//        emit mouseDown(pos);
+//        //qDebug() << pencil;
+//    }
+
+    //Andy Tran Edited
+    QPoint pos = mapToScene(event->pos()).toPoint();
+    emit mouseDown(pos);
+    //qDebug() << pencil;
+
 
 }
+
+void ImageViewEditor::pencilClicked(){
+    //Andy Tran Edited
+//    pencil = true;
+//    eraser = false;
+    emit changeTool(PENCIL);
+};
+
+void ImageViewEditor::eraserClicked(){
+    //Andy Tran Edited
+//    pencil = false;
+//    eraser = true;
+    emit changeTool(ERASER);
+    qDebug() << "eraser called";
+};
 
 void ImageViewEditor::mouseReleaseEvent(QMouseEvent *) {
 

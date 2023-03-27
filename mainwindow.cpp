@@ -12,6 +12,11 @@ using std::endl;
 //-----------------------
 
 
+//Andy Tran
+unsigned int currentFrameIndex = 0;
+bool needsRestart = false;
+//-------------
+
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -31,8 +36,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
 
     //Andy Tran
-    // Create a QGraphicsScene object to hold the preview animation frames
-    scene = new QGraphicsScene(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
 
     //Just for testing
     // Create QImage objects for each frame of the animation
@@ -46,24 +50,57 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     frameList.push_back(frame2);
     frameList.push_back(frame3);
 
+    ui->fpsSlider->setMinimum(1);
+    ui->fpsSlider->setMaximum(60);
+    ui->fpsSlider->setValue(12);
     previewAnimation();
+
+
 
     //Tzhou
     // Initializes the current color to be black, and its buttons.
     QColor* black = new QColor(0,0,0, 255);
+    currentColor = black;
+    setCurrentColorBtnTo();// alpha value: [0, 225], 0 means transparent, 225 means opaque.
     ui->alphaSlider->setMinimum(0);
     ui->alphaSlider->setMaximum(10);
     ui->alphaSlider->setValue(10);
-    setCurrentColorBtnTo(black);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
     //-----------------------------------
 
 
     // INITIALIZE VIEW
+    //Andy Tran Added
+    //Zoom the canvasView by default 1500%
+    double scale = 15;
+    ui->canvasView->setTransform(QTransform().scale(scale, scale));
+    //---------------------------------------
+
     ui->canvasView->updatePixmap(&model.canvas);
+    // set the opacity using style sheets
+    ui->canvasView->setStyleSheet("background-color: grey;");
 
     // CONNECTIONS START HERE
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
     connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
+
+    //Ruini Tong
+    //handle pencil event
+    connect(ui->btnPencil,&QPushButton::clicked,ui->canvasView,&ImageViewEditor::pencilClicked);
+    connect(ui->btnPencil,&QPushButton::clicked,this, [=](){
+            ui->btnPencil->setEnabled(false);
+            ui->btnEraser->setEnabled(true);
+        });
+
+    //Andy Tran Added
+    //handle eraser event
+    connect(ui->btnEraser,&QPushButton::clicked,ui->canvasView,&ImageViewEditor::eraserClicked);
+    connect(ui->btnEraser,&QPushButton::clicked,this, [=](){
+            ui->btnPencil->setEnabled(true);
+            ui->btnEraser->setEnabled(false);
+        });
+    connect(ui->canvasView, &ImageViewEditor::changeTool, &model, &Model::changeTool);
+
+    connect(this,&MainWindow::updateColor,&model,&Model::setToolColor);
 }
 
 MainWindow::~MainWindow()
@@ -78,47 +115,61 @@ void MainWindow::updateCanvas(QImage* canvas) {
 }
 
 //Andy Tran
+void MainWindow::onTimerTimeout() {
+    // Get the current frame out of the list
+    QImage currentFrame = frameList[currentFrameIndex];
+
+    // Update the QGraphicsScene with the current frame
+    scene->addPixmap(QPixmap::fromImage(currentFrame));
+
+    // Set the focus to the first item in the scene
+    if (!scene->items().isEmpty()) {
+        QGraphicsItem* firstItem = scene->items().first();
+        scene->setFocusItem(firstItem);
+    }
+
+    // Move to the next frame
+    currentFrameIndex = (currentFrameIndex + 1)%frameList.size();
+
+    // Check if the animation needs to be restarted
+    if (needsRestart && currentFrameIndex == 0) {
+        needsRestart = false;
+        timer->start(frameDuration);
+    }
+}
+
 void MainWindow::previewAnimation() {
+    //Clear and update from the frameList
     scene->clear();
     for(unsigned int i = 0; i < frameList.size();i++){
         scene->addPixmap(QPixmap::fromImage(frameList[i]));
     }
 
-    // Create a QTimer object to update the display with the next frame
-    QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, [=]() {
-        // Get the current frame index
-        static unsigned int frameIndex = 0;
-
-        // Get the current frame out of the list
-        QImage currentFrame = frameList[frameIndex];
-
-        // Update the QGraphicsScene with the current frame
-        scene->addPixmap(QPixmap::fromImage(currentFrame));
-
-        // Set the focus to the first item in the scene
-        if (!scene->items().isEmpty()) {
-            scene->setFocusItem(scene->items().first());
-        }
-
-        //Reset the frameIndex to start over
-        if(frameIndex == frameList.size())
-            frameIndex = 0;
-
-        //move to the next frame
-        frameIndex++;
-    });
-
     // Set the timer to fire every frameDuration milliseconds
-    int fps = 10; // need to change according to the slider
-    int frameDuration = 1000 / fps;
+    frameDuration = 1000 / fps;
+    if(timer->isActive()) {
+        // Stop the timer and set a flag to indicate that the animation needs to be restarted
+        timer->stop();
+        needsRestart = true;
+    } else {
+        // Set the current frame index to 0 if the timer is not running
+        currentFrameIndex = 0;
+    }
     timer->start(frameDuration);
 
-    // Set the QGraphicsScene to the QGraphicsView
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setFocus();
 }
 
+
+void MainWindow::on_fpsSlider_valueChanged(int value)
+{
+    QString textValue = QString::number(value);
+    ui->fpsValueLabel->setText(textValue);
+    fps = value;
+    previewAnimation();
+}
+//----------------------------------------------------------------
 
 //Tzhou
 void MainWindow::on_changeColorBtn_clicked()
@@ -128,21 +179,42 @@ void MainWindow::on_changeColorBtn_clicked()
     if(&OKBtnIsPressed)
     {
         currentColor = &color;
-        setCurrentColorBtnTo(&color);
+        on_alphaSlider_valueChanged(10);
+        setCurrentColorBtnTo();
+
+        qDebug()<<currentColor->red()<<currentColor->green()<<currentColor->blue()<<currentColor->alpha();
     }
 }
 
 //Tzhou
-void MainWindow::setCurrentColorBtnTo(QColor* newColor)
+void MainWindow::setCurrentColorBtnTo()
 {
-    currentColor = newColor;
-    int r = newColor->red();
-    int g = newColor->green();
-    int b = newColor->blue();
-    int a = newColor->alpha();
+
+    setCurrentRbga(currentColor);
     QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
-    ui->currentColorBtn->setStyleSheet(style.arg(r).arg(g).arg(b).arg(a));
-    qDebug()<<r<<g<<b<<a;
+
+    ui->currentColorBtn->setStyleSheet(style.arg(currentRgba[0]).arg(currentRgba[1])
+            .arg(currentRgba[2]).arg(currentRgba[3]));
+
+    // show team : this doesn't work.
+    //ui->currentColorBtn->setStyleSheet(style.arg(currentColor->red()).arg(currentColor->green())
+    //            .arg(currentColor->blue()).arg(currentColor->alpha()));
+
+    qDebug()<<"currentColor: "<<currentColor->red()<<currentColor->green()
+           <<currentColor->blue()<<currentColor->alpha();
+
+}
+
+//TZhou
+void MainWindow::setCurrentRbga(QColor *newColor)
+{
+    //update pencil color
+    emit updateColor(*newColor); //Ruini Tong
+
+    currentRgba[0] = newColor->red();
+    currentRgba[1] = newColor->green();
+    currentRgba[2]  = newColor->blue();
+    currentRgba[3] = newColor->alpha();
 }
 
 //TZhou
@@ -151,11 +223,22 @@ void MainWindow::on_alphaSlider_valueChanged(int value)
     QString realValue = QString::number(value/10.0, 'f', 1);
     ui->alphaValueLabel->setText(realValue);
     int alpha = 255*value/10.0;
-    currentColor = new QColor(currentColor->red(),currentColor->green(),
-                             currentColor->blue(), alpha);
+    ui->alphaSlider->setValue(value);
 
-    //Note: color->setAlpha will not work, have to assign a new object.
-    setCurrentColorBtnTo(currentColor);
+    currentColor->setAlpha(alpha);
+    currentRgba[3] = alpha;
+
+    /*** setCurrentColorBtnTo(currentColor) doesn't work *****/
+    QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
+    ui->currentColorBtn->setStyleSheet(style.arg(currentRgba[0]).arg(currentRgba[1])
+            .arg(currentRgba[2]).arg(currentRgba[3]));
+
+    // show team
+    //setCurrentColorBtnTo();
+    /*******************************************************/
+
+    qDebug()<<"int array: "<<currentColor->red()<<currentColor->green()<<currentColor->blue()<<currentColor->alpha();
+
 }
 
 //Andy Duong
@@ -169,3 +252,6 @@ void MainWindow::handleViewClicked()
     scene->clear();
     scene->addPixmap(pixmap);
 }
+
+
+

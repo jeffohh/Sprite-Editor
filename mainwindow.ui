@@ -52,7 +52,7 @@
        <number>6</number>
       </property>
       <item row="0" column="0">
-       <widget class="QToolButton" name="toolButton_2">
+       <widget class="QToolButton" name="btnPencil">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -90,7 +90,7 @@
        </spacer>
       </item>
       <item row="2" column="0">
-       <widget class="QToolButton" name="toolButton_4">
+       <widget class="QToolButton" name="btnEraser">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -238,18 +238,97 @@
       </rect>
      </property>
     </widget>
-    <widget class="QSlider" name="horizontalSlider">
+    <widget class="QWidget" name="horizontalLayoutWidget_2">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>180</y>
+       <y>170</y>
        <width>191</width>
-       <height>16</height>
+       <height>41</height>
       </rect>
      </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="alphaLabel_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>FPS</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="fpsSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="fpsValueLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>1</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QGroupBox" name="colorPanel">
@@ -432,7 +511,7 @@
      <x>0</x>
      <y>0</y>
      <width>1043</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

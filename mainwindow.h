@@ -38,12 +38,17 @@ public:
     //Andy Tran
     void previewAnimation();
     //----------------------
+signals:
+    void updateColor(QColor);
 
 public slots:
     void updateCanvas(QImage*); // jeff!!
 
     //Andy Duong
     void handleViewClicked();
+
+    //Andy Tran
+    void onTimerTimeout();
 private:
     Ui::MainWindow *ui;
     int num;
@@ -55,12 +60,17 @@ private:
 
     //Andy Tran
     vector<QImage> frameList;
-    QGraphicsScene *scene;
+    QGraphicsScene* scene = new QGraphicsScene(this);
+    QTimer *timer = new QTimer(this);;
+    int fps = 12;
+    int frameDuration;
     //------------------------
 
     //TZhou
     QColor* currentColor; // The current color of the pen, default black.
-    void setCurrentColorBtnTo(QColor* newColor);
+    int currentRgba[4]; // I have good reason to have this variable.
+    void setCurrentColorBtnTo();
+    void setCurrentRbga(QColor* newColor);
     //----------------------
 
 private slots:
@@ -69,5 +79,6 @@ private slots:
     void on_alphaSlider_valueChanged(int value);
     //-------------------------------------------
 
+    void on_fpsSlider_valueChanged(int value);
 };
 #endif // MAINWINDOW_H

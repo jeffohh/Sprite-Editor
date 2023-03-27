@@ -19,6 +19,11 @@ class Model : public QObject
 public:
     explicit Model(QObject *parent = nullptr);
 
+    //Ruini Tong
+    void setToolColor(const QColor newColor);
+    //Andy Tran Edited
+//    void changeTool(Tool currentTool);
+    //----------------------
     QImage canvas;
 
 public slots:
@@ -26,9 +31,12 @@ public slots:
     void mouseMove(QPoint);
     void mouseUp(QPoint);
 
+    //Andy Tran Added
+    void changeTool(Tool currentTool);
+
 private:
     Tool tool = PENCIL;
-    QColor toolColor = Qt::blue;
+    QColor toolColor = Qt::black;
 
 private slots:
 
