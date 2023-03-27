@@ -52,7 +52,7 @@
        <number>6</number>
       </property>
       <item row="0" column="0">
-       <widget class="QToolButton" name="toolButton_2">
+       <widget class="QToolButton" name="btnPencil">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -90,7 +90,7 @@
        </spacer>
       </item>
       <item row="2" column="0">
-       <widget class="QToolButton" name="toolButton_4">
+       <widget class="QToolButton" name="btnEraser">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -188,6 +188,9 @@
         <width>611</width>
         <height>431</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOn</enum>
@@ -432,7 +435,7 @@
      <x>0</x>
      <y>0</y>
      <width>1043</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

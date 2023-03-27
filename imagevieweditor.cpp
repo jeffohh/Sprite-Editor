@@ -18,15 +18,31 @@ void ImageViewEditor::updatePixmap(QImage* image) {
 }
 
 void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
-    if (event->button() == Qt::LeftButton) {
+//    if (event->button() == Qt::LeftButton) {
+//        QPoint pos = mapToScene(event->pos()).toPoint();
+//        emit mouseDown(pos);
+//        //qDebug() << "moussPress";
+//    }
+}
+
+void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
+    if(pencil == true){
         QPoint pos = mapToScene(event->pos()).toPoint();
         emit mouseDown(pos);
+        //qDebug() << pencil;
     }
-}
-
-void ImageViewEditor::mouseMoveEvent(QMouseEvent *) {
 
 }
+
+void ImageViewEditor::pencilClicked(){
+    pencil = true;
+    eraser = false;
+};
+
+void ImageViewEditor::eraserClicked(){
+    pencil = false;
+    eraser = true;
+};
 
 void ImageViewEditor::mouseReleaseEvent(QMouseEvent *) {
 

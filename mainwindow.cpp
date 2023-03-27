@@ -60,10 +60,20 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     // INITIALIZE VIEW
     ui->canvasView->updatePixmap(&model.canvas);
+    // set the opacity using style sheets
+    ui->canvasView->setStyleSheet("background-color: grey;");
 
     // CONNECTIONS START HERE
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
     connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
+
+    //handle pencil event
+    connect(ui->btnPencil,&QPushButton::clicked,ui->canvasView,&ImageViewEditor::pencilClicked);
+    connect(ui->btnPencil,&QPushButton::clicked,this, [=](){
+            ui->btnPencil->setEnabled(false);
+            ui->btnEraser->setEnabled(true);
+        });
+    connect(this,&MainWindow::updateColor,&model,&Model::setToolColor);
 }
 
 MainWindow::~MainWindow()
@@ -135,6 +145,9 @@ void MainWindow::on_changeColorBtn_clicked()
 //Tzhou
 void MainWindow::setCurrentColorBtnTo(QColor* newColor)
 {
+    //update pencil color
+    emit updateColor(*newColor); //Ruini Tong
+
     currentColor = newColor;
     int r = newColor->red();
     int g = newColor->green();

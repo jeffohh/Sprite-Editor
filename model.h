@@ -19,6 +19,9 @@ class Model : public QObject
 public:
     explicit Model(QObject *parent = nullptr);
 
+    void setToolColor(const QColor newColor);
+    void changeTool(Tool currentTool);
+
     QImage canvas;
 
 public slots:
@@ -28,7 +31,7 @@ public slots:
 
 private:
     Tool tool = PENCIL;
-    QColor toolColor = Qt::blue;
+    QColor toolColor = Qt::black;
 
 private slots:
 

@@ -4,6 +4,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsView>
 #include <QObject>
+#include <QDebug>
 
 class ImageViewEditor : public QGraphicsView
 {
@@ -13,6 +14,8 @@ public:
     explicit ImageViewEditor(QWidget *parent = nullptr);
 
     void updatePixmap(QImage*);
+    void pencilClicked();
+    void eraserClicked();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -23,6 +26,8 @@ protected:
 
 private:
     double scale = 1;
+    bool pencil = false;
+    bool eraser = false;
 
     QGraphicsPixmapItem* imageItem;
 
