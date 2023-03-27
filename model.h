@@ -21,7 +21,8 @@ public:
 
     //Ruini Tong
     void setToolColor(const QColor newColor);
-    void changeTool(Tool currentTool);
+    //Andy Tran Edited
+//    void changeTool(Tool currentTool);
     //----------------------
     QImage canvas;
 
@@ -29,6 +30,9 @@ public slots:
     void mouseDown(QPoint);
     void mouseMove(QPoint);
     void mouseUp(QPoint);
+
+    //Andy Tran Added
+    void changeTool(Tool currentTool);
 
 private:
     Tool tool = PENCIL;

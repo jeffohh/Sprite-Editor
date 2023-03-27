@@ -189,9 +189,6 @@
         <height>431</height>
        </rect>
       </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOn</enum>
       </property>
@@ -514,11 +511,7 @@
      <x>0</x>
      <y>0</y>
      <width>1043</width>
-<<<<<<< HEAD
-     <height>24</height>
-=======
      <height>26</height>
->>>>>>> local
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

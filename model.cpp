@@ -1,4 +1,5 @@
 #include "model.h"
+#include "qdebug.h"
 
 Model::Model(QObject *parent)
     : QObject{parent}
@@ -44,6 +45,7 @@ void Model::setToolColor(const QColor newColor){
 
 void Model::changeTool(Tool currentTool){
     tool = currentTool;
+    qDebug() << "changeTool called";
 }
 
 void Model::mouseMove(QPoint) {

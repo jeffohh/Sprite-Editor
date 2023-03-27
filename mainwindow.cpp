@@ -69,6 +69,12 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
 
     // INITIALIZE VIEW
+    //Andy Tran Added
+    //Zoom the canvasView by default 1500%
+    double scale = 15;
+    ui->canvasView->setTransform(QTransform().scale(scale, scale));
+    //---------------------------------------
+
     ui->canvasView->updatePixmap(&model.canvas);
     // set the opacity using style sheets
     ui->canvasView->setStyleSheet("background-color: grey;");
@@ -84,6 +90,16 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             ui->btnPencil->setEnabled(false);
             ui->btnEraser->setEnabled(true);
         });
+
+    //Andy Tran Added
+    //handle eraser event
+    connect(ui->btnEraser,&QPushButton::clicked,ui->canvasView,&ImageViewEditor::eraserClicked);
+    connect(ui->btnEraser,&QPushButton::clicked,this, [=](){
+            ui->btnPencil->setEnabled(true);
+            ui->btnEraser->setEnabled(false);
+        });
+    connect(ui->canvasView, &ImageViewEditor::changeTool, &model, &Model::changeTool);
+
     connect(this,&MainWindow::updateColor,&model,&Model::setToolColor);
 }
 
