@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include "model.h"
 
+//Andy Duong
+#include "canvas.h"
+
 //Added by Andy Tran
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
@@ -41,9 +44,17 @@ private slots:
     void on_changeColorBtn_clicked();
     void on_alphaSlider_valueChanged(int value);
     //-------------------------------------------
+
+    //Andy Duong
+    void handleViewClicked();
 private:
     Ui::MainWindow *ui;
     int num;
+
+    //Andy Duong
+    //This create an instance of canvas object and using QPixmap for pixel stuffs.
+    QGraphicsScene *canvas;
+    QPixmap pixmap;
 
     //Andy Tran
     vector<QImage> frameList;
