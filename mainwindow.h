@@ -61,7 +61,7 @@ private:
     //Andy Tran
     vector<QImage> frameList;
     QGraphicsScene* scene = new QGraphicsScene(this);
-    QTimer *timer = new QTimer(this);;
+    QTimer *timer = new QTimer(this);
     int fps = 12;
     int frameDuration;
     //------------------------
