@@ -12,12 +12,23 @@ using std::endl;
 //-----------------------
 
 
-MainWindow::MainWindow(Model& model,QWidget *parent)
+MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     num = 90;
+
+    //Andy Duong
+       canvas = new QGraphicsScene(this);
+       pixmap = QPixmap (800,600);
+       pixmap.fill(Qt::white);
+
+       canvas->addPixmap(pixmap);
+       ui->graphicsView->setScene(canvas);
+
+       // connect(ui->canvasView, &canvas::viewClicked, this, &MainWindow::handleViewClicked);
+
 
     //Andy Tran
     // Create a QGraphicsScene object to hold the preview animation frames
@@ -46,11 +57,25 @@ MainWindow::MainWindow(Model& model,QWidget *parent)
     ui->alphaSlider->setMaximum(10);
     ui->alphaSlider->setValue(10);
     //-----------------------------------
+
+
+    // INITIALIZE VIEW
+    ui->canvasView->updatePixmap(&model.canvas);
+
+    // CONNECTIONS START HERE
+    connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
+    connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+// Jeffrey Le *sunglasses_emoji*
+void MainWindow::updateCanvas(QImage* canvas) {
+    // we can update preview elements here?
+    ui->canvasView->updatePixmap(canvas);
 }
 
 //Andy Tran
@@ -161,3 +186,14 @@ void MainWindow::on_alphaSlider_valueChanged(int value)
 
 }
 
+//Andy Duong
+
+void MainWindow::handleViewClicked()
+{
+    // Update the pixmap with the new image data
+    // ...
+
+    // Update the QGraphicsScene
+    scene->clear();
+    scene->addPixmap(pixmap);
+}

@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include "model.h"
 
+//Andy Duong
+#include "canvas.h"
+
 //Added by Andy Tran
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
@@ -36,14 +39,19 @@ public:
     void previewAnimation();
     //----------------------
 
-private slots:
-    //TZhou: color picker area
-    void on_changeColorBtn_clicked();
-    void on_alphaSlider_valueChanged(int value);
-    //-------------------------------------------
+public slots:
+    void updateCanvas(QImage*); // jeff!!
+
+    //Andy Duong
+    void handleViewClicked();
 private:
     Ui::MainWindow *ui;
     int num;
+
+    //Andy Duong
+    //This create an instance of canvas object and using QPixmap for pixel stuffs.
+    QGraphicsScene *canvas;
+    QPixmap pixmap;
 
     //Andy Tran
     vector<QImage> frameList;
@@ -56,5 +64,12 @@ private:
     void setCurrentColorBtnTo();
     void setCurrentRbga(QColor* newColor);
     //----------------------
+
+private slots:
+    //TZhou: color picker area
+    void on_changeColorBtn_clicked();
+    void on_alphaSlider_valueChanged(int value);
+    //-------------------------------------------
+
 };
 #endif // MAINWINDOW_H
