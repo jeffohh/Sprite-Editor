@@ -5,8 +5,6 @@ Model::Model(QObject *parent)
     , canvas(32, 32, QImage::Format_RGB32)
 {
     canvas.fill(Qt::red);
-
-    emit updateCanvas(&canvas);
 }
 
 
