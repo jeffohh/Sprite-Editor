@@ -35,8 +35,6 @@ public:
     //Andy Tran
     void previewAnimation();
     //----------------------
-signals:
-    void updateColor(QColor);
 
 public slots:
     void updateCanvas(QImage*); // jeff!!
@@ -68,5 +66,9 @@ private slots:
     //-------------------------------------------
 
     void on_fpsSlider_valueChanged(int value);
+
+signals:
+    void updateColor(QColor);
+
 };
 #endif // MAINWINDOW_H
