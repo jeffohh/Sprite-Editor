@@ -4,6 +4,9 @@
 ImageViewEditor::ImageViewEditor(QWidget *parent) :
     QGraphicsView(parent)
 {
+    setStyleSheet("background-color: grey;");
+
+
     imageItem = new QGraphicsPixmapItem();
 
     QGraphicsScene* scene = new QGraphicsScene();
@@ -20,23 +23,17 @@ void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         QPoint pos = mapToScene(event->pos()).toPoint();
         emit mouseDown(pos);
-        //qDebug() << "moussPress";
     }
 }
 
 void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
-//    if(pencil == true){
-//        QPoint pos = mapToScene(event->pos()).toPoint();
-//        emit mouseDown(pos);
-//        //qDebug() << pencil;
-//    }
-
-    //Andy Tran Edited
     QPoint pos = mapToScene(event->pos()).toPoint();
-    emit mouseDown(pos);
-    //qDebug() << pencil;
+    emit mouseMove(pos);
+}
 
-
+void ImageViewEditor::mouseReleaseEvent(QMouseEvent *event) {
+    QPoint pos = mapToScene(event->pos()).toPoint();
+    emit mouseRelease(pos);
 }
 
 void ImageViewEditor::pencilClicked(){
@@ -53,10 +50,6 @@ void ImageViewEditor::eraserClicked(){
     emit changeTool(ERASER);
     qDebug() << "eraser called";
 };
-
-void ImageViewEditor::mouseReleaseEvent(QMouseEvent *) {
-
-}
 
 void ImageViewEditor::wheelEvent(QWheelEvent *event)
 {
