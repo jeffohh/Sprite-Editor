@@ -57,12 +57,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
 
     // INITIALIZE VIEW
-    //Andy Tran Added
-    //Zoom the canvasView by default 1500%
-    double scale = 15;
-    ui->canvasView->setTransform(QTransform().scale(scale, scale));
-    //---------------------------------------
-
     ui->canvasView->updatePixmap(&model.canvas);
     // set the opacity using style sheets
 

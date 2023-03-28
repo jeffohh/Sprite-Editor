@@ -6,6 +6,7 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
 {
     setStyleSheet("background-color: grey;");
 
+    setTransform(QTransform().scale(scale, scale));
 
     imageItem = new QGraphicsPixmapItem();
 
