@@ -41,19 +41,10 @@ signals:
 public slots:
     void updateCanvas(QImage*); // jeff!!
 
-    //Andy Duong
-    void handleViewClicked();
-
     //Andy Tran
     void onTimerTimeout();
 private:
     Ui::MainWindow *ui;
-    int num;
-
-    //Andy Duong
-    //This create an instance of canvas object and using QPixmap for pixel stuffs.
-    QGraphicsScene *canvas;
-    QPixmap pixmap;
 
     //Andy Tran
     vector<QImage> frameList;
