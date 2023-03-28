@@ -21,9 +21,6 @@ public:
 
     //Ruini Tong
     void setToolColor(const QColor newColor);
-    //Andy Tran Edited
-//    void changeTool(Tool currentTool);
-    //----------------------
     QImage canvas;
 
 public slots:

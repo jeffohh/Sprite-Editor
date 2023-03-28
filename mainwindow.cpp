@@ -3,8 +3,6 @@
 #include "model.h"
 
 #include <iostream>
-using std::cout;
-using std::endl;
 
 //Tzhou
 #include<QString>
@@ -58,8 +56,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     // INITIALIZE VIEW
     ui->canvasView->updatePixmap(&model.canvas);
-    // set the opacity using style sheets
-
 
     // CONNECTIONS START HERE
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
