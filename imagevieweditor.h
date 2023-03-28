@@ -34,6 +34,9 @@ private:
 
 signals:
     void mouseDown(QPoint);
+    void mouseMove(QPoint);
+    void mouseRelease(QPoint);
+
     void changeTool(Tool);
 };
 
