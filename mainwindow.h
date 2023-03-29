@@ -41,6 +41,17 @@ public slots:
 
     //Andy Tran
     void onTimerTimeout();
+    void changeFpsSliderValue(int value);
+    //------------------------------------------
+
+
+    //-----------------TZhou: color picker area----------------------
+    void updatePaintColor(QColor newColor);
+    void changeColorBtnIsPressed();
+    //-------------------------------------------
+
+    //Andy D
+    void handleNewCanvas();
 
 private:
     Ui::MainWindow *ui;
@@ -61,22 +72,11 @@ private:
     QColor DEFAULT_PAINT_COLOR = Qt::black; // Default pen or brush color
     //----------------------
 
-private slots:
-
-    //-----------------TZhou: color picker area----------------------
-    void setPaintColorView(QColor newColor);
-    void on_changeColorBtn_clicked();
-    //-------------------------------------------
-
-    void on_fpsSlider_valueChanged(int value);
-
-    void handleNewCanvas();
-
 signals:
 
     //Renee
     // used by any color change
-    void updateColor(QColor);
+    void paintColorChanged(QColor);
     void newCanvasRequested(int width, int height);
 
 };
