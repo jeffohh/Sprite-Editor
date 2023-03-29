@@ -32,7 +32,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     //Tzhou
     // Initializes the current color to be black, and its buttons.
-    //currentColor = DEFAULT_PAINT_COLOR;
     setPaintColorView(DEFAULT_PAINT_COLOR);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
     ui->alphaSlider->setMinimum(0);
     ui->alphaSlider->setMaximum(10);
