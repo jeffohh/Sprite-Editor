@@ -69,10 +69,10 @@ void Model::changeTool(Tool currentTool){
 }
 
 //Renee, Tzhou
-void Model::updatePaintColor(QColor newColor)
+void Model::paintColorChanged(QColor newColor)
 {
     paintColor=newColor;
-    emit updateColorPickerPanel(paintColor);
+    emit updatePaintColor(paintColor);
     emit resetAlphaSlider(10);
 }
 
@@ -83,7 +83,7 @@ void Model::updateAlpha(int newAlphaSliderValue)
     paintColor.setAlpha(newAlpha);
     QString alphaSliderReading = QString::number(newAlphaSliderValue/10.0, 'f', 1);
 
-    emit updateColorPickerPanel(paintColor);
+    emit updatePaintColor(paintColor);
     emit updateAlphaSliderLabel(alphaSliderReading);
     qDebug() << "paint: "<<paintColor.red()<<" "<<
                 paintColor.green()<<" "
