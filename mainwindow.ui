@@ -215,6 +215,29 @@
     <property name="title">
      <string>Frames</string>
     </property>
+    <widget class="QScrollArea" name="framesScrollArea">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>631</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="framesContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>629</width>
+        <height>99</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
@@ -567,7 +590,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="toolValueLabel">
+       <widget class="QLabel" name="sizeValueLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
