@@ -47,8 +47,23 @@ private:
     Tool tool = PENCIL;
     QColor paintColor; //It is initialized in the constructor, uniform convention with the UI.
 
-private slots:
+    //Ruini Tong
+    void mousePressed(bool pressed);
+    void setPenSize(int size);
 
+private:
+    QColor toolColor = Qt::black;
+
+    //Ruini Tong
+    QPoint posBegin;
+    QPoint posEnd;
+    bool isPos = false;
+    QPoint newPoint;
+    bool isPressed = false;
+    int penSize = 1;
+
+private slots:
+    void drawLine(QPoint posOne,QPoint posTwo);
 
 signals:
     /**
@@ -68,6 +83,10 @@ signals:
     void updateAlphaSliderLabel(QString alphaSliderReading);
     void resetAlphaSlider(int max);
     //---------------------------------------------
+
+    //Ruini Tong
+    void newPosition(QPoint pos);
+
 };
 
 #endif // MODEL_H

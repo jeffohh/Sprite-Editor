@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "canvasform.h"
-#include "ui_mainwindow.h"
 #include "model.h"
+#include "ui_mainwindow.h"
 
 #include <iostream>
 
@@ -54,7 +54,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     ui->alphaSlider->setValue(10);
     //-----------------------------------
 
-
     // INITIALIZE VIEW
     ui->btnPencil->setEnabled(false);
     ui->canvasView->updatePixmap(&model.canvas);
@@ -67,11 +66,14 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     //Ruini Tong
     //handle pencil event
-    connect(ui->btnPencil,&QPushButton::clicked,ui->canvasView,&ImageViewEditor::pencilClicked);
+    connect(ui->btnPencil,&QPushButton::clicked,this,[=](){
+        emit changeTool(PENCIL);
+    });
     connect(ui->btnPencil,&QPushButton::clicked,this, [=](){
             ui->btnPencil->setEnabled(false);
             ui->btnEraser->setEnabled(true);
         });
+
 
     //-----------------TZHou: Color Picker----------------------
     //handle color picker change color event
@@ -92,15 +94,16 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             ui->alphaSlider, &QSlider::setValue );
     //-------------------------------------------------------------
 
-
     //Andy Tran Added
     //handle eraser event
-    connect(ui->btnEraser,&QPushButton::clicked,ui->canvasView,&ImageViewEditor::eraserClicked);
+    connect(ui->btnEraser,&QPushButton::clicked,this,[=](){
+        emit changeTool(ERASER);
+    });
     connect(ui->btnEraser,&QPushButton::clicked,this, [=](){
             ui->btnPencil->setEnabled(true);
             ui->btnEraser->setEnabled(false);
         });
-    connect(ui->canvasView, &ImageViewEditor::changeTool, &model, &Model::changeTool);
+    connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
 
     //Duong
     //Handle clicking on new
@@ -116,6 +119,8 @@ MainWindow::~MainWindow()
 // Jeffrey Le *sunglasses_emoji*
 void MainWindow::updateCanvas(QImage* canvas) {
     // we can update preview elements here?
+//    count++;
+//    qDebug() << "Canvas: " <<count;
     ui->canvasView->updatePixmap(canvas);
 }
 
@@ -167,13 +172,13 @@ void MainWindow::previewAnimation() {
 }
 
 
-void MainWindow::on_fpsSlider_valueChanged(int value)
-{
-    QString textValue = QString::number(value);
-    ui->fpsValueLabel->setText(textValue);
-    fps = value;
-    previewAnimation();
-}
+//void MainWindow::on_fpsSlider_valueChanged(int value)
+//{
+//    QString textValue = QString::number(value);
+//    ui->fpsValueLabel->setText(textValue);
+//    fps = value;
+//    previewAnimation();
+//}
 //----------------------------------------------------------------
 
 
@@ -187,16 +192,16 @@ void MainWindow::setPaintColorView(QColor newColor)
 
 }
 
-void MainWindow::on_changeColorBtn_clicked()
-{
-    bool OKBtnIsPressed;
-    QColor color = QColorDialog::getColor(DEFAULT_PAINT_COLOR,this);
-    if(&OKBtnIsPressed && color.isValid())
-    {
-       //comment edited:  update paint color in Model - tzhou
-       emit updateColor(color); //Ruini Tong
-    }
-}
+//void MainWindow::on_changeColorBtn_clicked()
+//{
+//    bool OKBtnIsPressed;
+//    QColor color = QColorDialog::getColor(DEFAULT_PAINT_COLOR,this);
+//    if(&OKBtnIsPressed && color.isValid())
+//    {
+//       //comment edited:  update paint color in Model - tzhou
+//       emit updateColor(color); //Ruini Tong
+//    }
+//}
 
 
 

@@ -58,14 +58,15 @@ private:
     QColor DEFAULT_PAINT_COLOR = Qt::black; // Default pen or brush color
     //----------------------
 
+
 private slots:
 
     //-----------------TZhou: color picker area----------------------
     void setPaintColorView(QColor newColor);
-    void on_changeColorBtn_clicked();
+    //void on_changeColorBtn_clicked();
     //-------------------------------------------
 
-    void on_fpsSlider_valueChanged(int value);
+    //void on_fpsSlider_valueChanged(int value);
 
     void handleNewCanvas();
 
@@ -75,6 +76,10 @@ signals:
     // used by any color change
     void updateColor(QColor);
     void newCanvasRequested(int width, int height);
+
+    //Ruini Tong
+    void changeTool(Tool);
+    //----------------------
 
 };
 #endif // MAINWINDOW_H

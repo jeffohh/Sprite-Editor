@@ -1,4 +1,5 @@
 #include "model.h"
+#include "QtGui/qpainter.h"
 #include "qdebug.h"
 
 Model::Model(QObject *parent)
@@ -11,17 +12,37 @@ Model::Model(QObject *parent)
 
 void Model::mouseDown(QPoint pos) {
 
+    if(isPressed){
+        if(isPos){
+            posEnd = pos;
+            isPos = false;
+        }else{
+            posBegin = posEnd;
+            isPos = true;
+        }
+    }else{
+        posBegin = pos;
+        posEnd = pos;
+    }
+
+    drawLine(posBegin,posEnd);
+
+
+    //qDebug() << "model: " <<pos;
+
     switch (tool) {
 
     case PENCIL:
         // set pixel at location
         canvas.setPixelColor(pos, paintColor);
-        // update view
-        emit updateCanvas(&canvas);
+
+        //canvas.setPixelColor(pos, toolColor);
+
         break;
 
     case ERASER:
         canvas.setPixelColor(pos, Qt::white);
+
         emit updateCanvas(&canvas);
         break;
 
@@ -29,6 +50,36 @@ void Model::mouseDown(QPoint pos) {
         break;
 
     }
+
+    //Ruini's Edit:
+    // update view
+    emit updateCanvas(&canvas);
+}
+
+void Model::mousePressed(bool pressed){
+    isPressed = pressed;
+    qDebug() << isPressed;
+}
+
+void Model::drawLine(QPoint posOne,QPoint posTwo){
+
+    QPainter painter(&canvas);
+    QPen pen;
+    pen.setWidth(penSize);
+    if(tool == PENCIL){
+        pen.setColor(paintColor);
+    }else{
+        pen.setColor(Qt::white);
+    }
+
+    painter.setPen(pen);
+    painter.drawLine(posOne.x(),posOne.y(),posTwo.x(),posTwo.y());
+
+    emit updateCanvas(&canvas);
+}
+
+void Model::setPenSize(int size){
+    penSize = size/10;
 }
 
 // we

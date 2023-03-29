@@ -20,37 +20,29 @@ void ImageViewEditor::updatePixmap(QImage* image) {
     imageItem->setPixmap(QPixmap::fromImage(*image));
 }
 
-void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
-    if (event->button() == Qt::LeftButton) {
-        QPoint pos = mapToScene(event->pos()).toPoint();
-        emit mouseDown(pos);
-    }
+void ImageViewEditor::mousePressEvent(QMouseEvent *) {
+//    if (event->button() == Qt::LeftButton) {
+//        QPoint pos = mapToScene(event->pos()).toPoint();
+//        emit mouseDown(pos);
+
+//    }
+
+      emit mousePressed(true);
 }
 
 void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
+
+    //Andy Tran Edited
     QPoint pos = mapToScene(event->pos()).toPoint();
-    emit mouseMove(pos);
+    emit mouseDown(pos);
+
 }
 
-void ImageViewEditor::mouseReleaseEvent(QMouseEvent *event) {
-    QPoint pos = mapToScene(event->pos()).toPoint();
-    emit mouseRelease(pos);
+void ImageViewEditor::mouseReleaseEvent(QMouseEvent *) {
+    //Ruini Tong
+    emit mousePressed(false);
 }
 
-void ImageViewEditor::pencilClicked(){
-    //Andy Tran Edited
-//    pencil = true;
-//    eraser = false;
-    emit changeTool(PENCIL);
-};
-
-void ImageViewEditor::eraserClicked(){
-    //Andy Tran Edited
-//    pencil = false;
-//    eraser = true;
-    emit changeTool(ERASER);
-    qDebug() << "eraser called";
-};
 
 void ImageViewEditor::wheelEvent(QWheelEvent *event)
 {
