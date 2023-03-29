@@ -47,9 +47,6 @@ private:
     Tool tool = PENCIL;
     QColor paintColor; //It is initialized in the constructor, uniform convention with the UI.
 
-private slots:
-
-
 signals:
     /**
      * @brief Sends canvas to View
