@@ -56,6 +56,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
 
     // INITIALIZE VIEW
+    ui->btnPencil->setEnabled(false);
     ui->canvasView->updatePixmap(&model.canvas);
 
     // CONNECTIONS START HERE
