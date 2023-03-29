@@ -53,6 +53,10 @@ public slots:
     //Andy D
     void handleNewCanvas();
 
+    //Ruini Tong
+    void changeSizeSliderValue(int value);
+    //-------------------------------------------
+
 private:
     Ui::MainWindow *ui;
     Model& model;

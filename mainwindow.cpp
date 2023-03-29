@@ -90,6 +90,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         });
     //tool size
     connect(ui->toolSlider, &QSlider::valueChanged, &model, &Model::setPenSize);
+    connect(ui->toolSlider, &QSlider::valueChanged,this,&MainWindow::changeSizeSliderValue);
 
     //track mouse movenment
     connect(ui->canvasView, &ImageViewEditor::mousePressed, &model, &Model::mousePressed);
@@ -226,5 +227,11 @@ void MainWindow::handleNewCanvas() {
     CanvasForm form(this);
     connect(&form, &CanvasForm::canvasSizeChanged, &model, &Model::createNewCanvas);
     form.exec();
+}
+
+//Ruini Tong
+void MainWindow::changeSizeSliderValue(int value){
+    QString textValue = QString::number(value);
+    ui->sizeValueLabel->setText(textValue);
 }
 
