@@ -8,18 +8,19 @@ CanvasForm::CanvasForm(QWidget *parent): QDialog(parent)
         heightInput = new QLineEdit(this);
         widthLabel = new QLabel("Width", this);
         heightLabel = new QLabel("Height", this);
-        submitButton = new QPushButton("Submit", this);
+        submitButton = new QPushButton("Create", this);
 
-        QVBoxLayout *layout = new QVBoxLayout();
-        layout->addWidget(widthLabel);
-        layout->addWidget(widthInput);
+        QGridLayout *layout = new QGridLayout();
+        layout->addWidget(widthLabel, 0, 0);
+           layout->addWidget(widthInput, 0, 1);
 
-        layout->addWidget(heightLabel);
-        layout->addWidget(heightInput);
+           layout->addWidget(heightLabel, 1, 0);
+           layout->addWidget(heightInput, 1, 1);
 
-        layout->addWidget(submitButton);
+           layout->addWidget(submitButton, 2, 1);
 
-        setLayout(layout);
+           setLayout(layout);
+           setWindowTitle("New Canvas");
 
         connect(submitButton, &QPushButton::clicked, this, &CanvasForm::handleSubmitButton);
 }
