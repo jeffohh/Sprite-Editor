@@ -44,6 +44,30 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     ui->btnPencil->setEnabled(false);
     ui->canvasView->updatePixmap(&model.canvas);
 
+    {
+        QPushButton* addFrameBtn = new QPushButton("+");
+        addFrameBtn->setFixedSize(50, 50);
+
+        QHBoxLayout* framesHorizontalLayout = new QHBoxLayout(this);
+        framesHorizontalLayout->setAlignment(Qt::AlignLeft);
+        framesHorizontalLayout->addWidget(addFrameBtn);
+
+        ui->framesContents->setLayout(framesHorizontalLayout);
+
+        // NOTE, THIS IS A PREVIEW (BAREBONE CONCEPT)
+        // Think about how to apply Model-View!
+        // user clicks -> model creates new frame -> view creates
+
+        // a bit tricky since we have to destroy frames too
+        connect(addFrameBtn, &QPushButton::clicked, this, [framesHorizontalLayout]() {
+            // we use ImageViewEditor because we may need to accept "clicked" events?
+            ImageViewEditor* frame = new ImageViewEditor();
+            frame->setFixedSize(60, 60);
+
+            framesHorizontalLayout->insertWidget(0, frame);
+        });
+    }
+
     // CONNECTIONS START HERE
     //Andy Tran - Connection
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
