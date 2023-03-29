@@ -14,6 +14,7 @@
 //Andy Tran
 unsigned int currentFrameIndex = 0;
 bool needsRestart = false;
+
 //-------------
 
 MainWindow::MainWindow(Model& model, QWidget *parent)
@@ -23,27 +24,11 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 {
     ui->setupUi(this);
 
-    //Andy Tran
-    connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
-
-    //Just for testing
-    // Create QImage objects for each frame of the animation
-    QImage frame1(ui->graphicsView->viewport()->size(), QImage::Format_ARGB32);
-    frame1.fill(Qt::red);
-    QImage frame2(ui->graphicsView->viewport()->size(), QImage::Format_ARGB32);
-    frame2.fill(Qt::blue);
-    QImage frame3(ui->graphicsView->viewport()->size(), QImage::Format_ARGB32);
-    frame3.fill(Qt::green);
-    frameList.push_back(frame1);
-    frameList.push_back(frame2);
-    frameList.push_back(frame3);
-
-    ui->fpsSlider->setMinimum(1);
+    //Andy Tran - Initialize
+    ui->fpsSlider->setMinimum(0);
     ui->fpsSlider->setMaximum(60);
     ui->fpsSlider->setValue(12);
-    previewAnimation();
-
-
+    startPreview();
 
     //Tzhou
     // Initializes the current color to be black, and its buttons.
@@ -59,9 +44,11 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     ui->canvasView->updatePixmap(&model.canvas);
 
     // CONNECTIONS START HERE
+    //Andy Tran - Connection
+    connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
+
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
     connect(ui->canvasView, &ImageViewEditor::mouseMove, &model, &Model::mouseMove);
-
     connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
 
     //Ruini Tong
@@ -117,58 +104,41 @@ MainWindow::~MainWindow()
 }
 
 // Jeffrey Le *sunglasses_emoji*
-void MainWindow::updateCanvas(QImage* canvas) {
+void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* frameList) {
     // we can update preview elements here?
 //    count++;
 //    qDebug() << "Canvas: " <<count;
     ui->canvasView->updatePixmap(canvas);
+
+
+    //Andy Tran - Update pixmapFrames
+    viewSize = ui->graphicsView->viewport()->size();
+    pixmapFrames.clear();
+    for (const auto& image : *frameList) {
+        QImage scaledImage = image.scaled(viewSize, Qt::KeepAspectRatio, Qt::FastTransformation);
+        pixmapFrames.push_back(QPixmap::fromImage(scaledImage));
+    }
 }
 
 //Andy Tran
-void MainWindow::onTimerTimeout() {
-    // Get the current frame out of the list
-    QImage currentFrame = frameList[currentFrameIndex];
+void MainWindow::startPreview() {
+    pixmapFrames.push_back(QPixmap::fromImage(model.canvas));
+    qDebug() << pixmapFrames.front();
+    pixmapItem.setPixmap(pixmapFrames.front());
+    previewScene->addItem(&pixmapItem);
 
-    // Update the QGraphicsScene with the current frame
-    scene->addPixmap(QPixmap::fromImage(currentFrame));
-
-    // Set the focus to the first item in the scene
-    if (!scene->items().isEmpty()) {
-        QGraphicsItem* firstItem = scene->items().first();
-        scene->setFocusItem(firstItem);
-    }
-
-    // Move to the next frame
-    currentFrameIndex = (currentFrameIndex + 1)%frameList.size();
-
-    // Check if the animation needs to be restarted
-    if (needsRestart && currentFrameIndex == 0) {
-        needsRestart = false;
-        timer->start(frameDuration);
-    }
+    // Set the focus item to the first pixmap item
+    previewScene->setFocusItem(&pixmapItem);
+    ui->graphicsView->setScene(previewScene);
+    timer->start(frameDuration);
 }
 
-void MainWindow::previewAnimation() {
-    //Clear and update from the frameList
-    scene->clear();
-    for(unsigned int i = 0; i < frameList.size();i++){
-        scene->addPixmap(QPixmap::fromImage(frameList[i]));
-    }
+void MainWindow::onTimerTimeout() {
+    currentFrameIndex = (currentFrameIndex + 1) % pixmapFrames.size();
+    pixmapItem.setPixmap(pixmapFrames[currentFrameIndex]);
 
-    // Set the timer to fire every frameDuration milliseconds
-    frameDuration = 1000 / fps;
-    if(timer->isActive()) {
-        // Stop the timer and set a flag to indicate that the animation needs to be restarted
-        timer->stop();
-        needsRestart = true;
-    } else {
-        // Set the current frame index to 0 if the timer is not running
-        currentFrameIndex = 0;
-    }
-    timer->start(frameDuration);
-
-    ui->graphicsView->setScene(scene);
-    ui->graphicsView->setFocus();
+    // Set the focus item to the current pixmap item
+    previewScene->setFocusItem(&pixmapItem);
 }
 
 
@@ -179,6 +149,27 @@ void MainWindow::previewAnimation() {
 //    fps = value;
 //    previewAnimation();
 //}
+
+void MainWindow::on_fpsSlider_valueChanged(int value)
+{
+    QString textValue = QString::number(value);
+    ui->fpsValueLabel->setText(textValue);
+    fps = value;
+
+    if(fps == 0){
+        frameDuration = 0;
+        timer->stop();
+    }
+    else{
+        frameDuration = 1000 / fps;
+        if(timer->isActive()) {
+            timer->stop();
+        }
+        timer->start(frameDuration);
+    }
+
+}
+
 //----------------------------------------------------------------
 
 
@@ -192,18 +183,16 @@ void MainWindow::setPaintColorView(QColor newColor)
 
 }
 
-//void MainWindow::on_changeColorBtn_clicked()
-//{
-//    bool OKBtnIsPressed;
-//    QColor color = QColorDialog::getColor(DEFAULT_PAINT_COLOR,this);
-//    if(&OKBtnIsPressed && color.isValid())
-//    {
-//       //comment edited:  update paint color in Model - tzhou
-//       emit updateColor(color); //Ruini Tong
-//    }
-//}
-
-
+void MainWindow::on_changeColorBtn_clicked()
+{
+    bool OKBtnIsPressed;
+    QColor color = QColorDialog::getColor(DEFAULT_PAINT_COLOR,this);
+    if(&OKBtnIsPressed && color.isValid())
+    {
+       //comment edited:  update paint color in Model - tzhou
+       emit updateColor(color); //Ruini Tong
+    }
+}
 
 
 //Duong

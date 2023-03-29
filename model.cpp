@@ -8,9 +8,23 @@ Model::Model(QObject *parent)
 {
     canvas.fill(Qt::white);
     paintColor = Qt::black;
+    frameList.push_back(canvas);
+
+    //Testing purpose
+    QImage frame1(32,32, QImage::Format_ARGB32);
+    frame1.fill(Qt::red);
+    frameList.push_back(frame1);
+
+    //Testing purpose
+    QImage frame2(32,32, QImage::Format_ARGB32);
+    frame2.fill(Qt::blue);
+    frameList.push_back(frame2);
 }
 
+
+
 void Model::mouseDown(QPoint pos) {
+
 
     if(isPressed){
         if(isPos){
@@ -30,30 +44,27 @@ void Model::mouseDown(QPoint pos) {
 
     //qDebug() << "model: " <<pos;
 
-    switch (tool) {
 
+    switch (tool) {
     case PENCIL:
         // set pixel at location
         canvas.setPixelColor(pos, paintColor);
 
         //canvas.setPixelColor(pos, toolColor);
 
-        break;
 
+        break;
     case ERASER:
         canvas.setPixelColor(pos, Qt::white);
 
-        emit updateCanvas(&canvas);
         break;
-
     default:
         break;
-
     }
 
     //Ruini's Edit:
     // update view
-    emit updateCanvas(&canvas);
+    emit updateCanvas(&canvas, &frameList);
 }
 
 void Model::mousePressed(bool pressed){
@@ -75,11 +86,16 @@ void Model::drawLine(QPoint posOne,QPoint posTwo){
     painter.setPen(pen);
     painter.drawLine(posOne.x(),posOne.y(),posTwo.x(),posTwo.y());
 
-    emit updateCanvas(&canvas);
+    emit updateCanvas(&canvas, &frameList);
 }
 
 void Model::setPenSize(int size){
     penSize = size/10;
+
+    //Andy Tran: update frameList and update view
+    frameList[currentFrame] = canvas;
+    emit updateCanvas(&canvas, &frameList);
+
 }
 
 // we
@@ -88,18 +104,17 @@ void Model::mouseMove(QPoint pos) {
 
     case PENCIL:
         canvas.setPixelColor(pos, paintColor);
-        emit updateCanvas(&canvas);
         break;
-
     case ERASER:
         canvas.setPixelColor(pos, Qt::white);
-        emit updateCanvas(&canvas);
         break;
-
     default:
         break;
-
     }
+
+    //Andy Tran: update frameList and update view
+    frameList[currentFrame] = canvas;
+    emit updateCanvas(&canvas, &frameList);
 }
 
 void Model::mouseUp(QPoint) {
@@ -132,8 +147,6 @@ void Model::updateAlpha(int newAlphaSliderValue)
                 paintColor.green()<<" "
                <<paintColor.blue()<<" "
               <<paintColor.alpha();
-
-
 }
 
 void Model::createNewCanvas(int width, int height){
@@ -141,7 +154,8 @@ void Model::createNewCanvas(int width, int height){
     //Create an canvas with given width and height.
     canvas = QImage(width,height, QImage::Format_ARGB32);
     canvas.fill(Qt::white);
-    //Update view
-    emit updateCanvas(&canvas);
 
+    //Andy Tran: update frameList and update view
+    frameList[currentFrame] = canvas;
+    emit updateCanvas(&canvas, &frameList);
 }

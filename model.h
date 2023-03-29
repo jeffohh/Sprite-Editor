@@ -3,6 +3,7 @@
 
 #include "qimage.h"
 #include <QObject>
+using std::vector;
 
 // global declaration so view can access too?
 enum Tool {
@@ -18,9 +19,10 @@ class Model : public QObject
 
 public:
     explicit Model(QObject *parent = nullptr);
-
     QImage canvas;
-
+    //Andy Tran:: may be should this
+    vector<QImage> frameList;
+    int currentFrame = 0;
 public slots:
     void mouseDown(QPoint);
     void mouseMove(QPoint);
@@ -41,8 +43,6 @@ public slots:
 
     //Duong
     void createNewCanvas(int width, int height);
-
-
 private:
     Tool tool = PENCIL;
     QColor paintColor; //It is initialized in the constructor, uniform convention with the UI.
@@ -75,7 +75,7 @@ signals:
      *
      * @param QImage        the canvas
      */
-    void updateCanvas(QImage* canvas);
+    void updateCanvas(QImage* canvas, vector<QImage>* frameList);
 
     //Renee, Tzhou
     void updateColorPickerPanel(QColor newColor);

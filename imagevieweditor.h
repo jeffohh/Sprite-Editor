@@ -13,14 +13,12 @@ class ImageViewEditor : public QGraphicsView
 
 public:
     explicit ImageViewEditor(QWidget *parent = nullptr);
-
     void updatePixmap(QImage*);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
-
     void wheelEvent(QWheelEvent*) override;
 
 private:
@@ -38,7 +36,6 @@ signals:
 
     void mouseMove(QPoint);
     void mouseRelease(QPoint);
-
     void changeTool(Tool);
 
     //Ruini Tong

@@ -534,7 +534,7 @@
          </font>
         </property>
         <property name="text">
-         <string>FPS</string>
+         <string>size</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
