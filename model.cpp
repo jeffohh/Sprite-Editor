@@ -41,18 +41,10 @@ void Model::mouseDown(QPoint pos) {
 
     drawLine(posBegin,posEnd);
 
-
-    //qDebug() << "model: " <<pos;
-
-
     switch (tool) {
     case PENCIL:
         // set pixel at location
         canvas.setPixelColor(pos, paintColor);
-
-        //canvas.setPixelColor(pos, toolColor);
-
-
         break;
     case ERASER:
         canvas.setPixelColor(pos, Qt::white);
@@ -62,9 +54,6 @@ void Model::mouseDown(QPoint pos) {
         break;
     }
 
-    //Ruini's Edit:
-    // update view
-    emit updateCanvas(&canvas, &frameList);
 
     //Andy Tran: update frameList and update view
     frameList[currentFrame] = canvas;
@@ -74,11 +63,12 @@ void Model::mouseDown(QPoint pos) {
 
 void Model::mousePressed(bool pressed){
     isPressed = pressed;
-    qDebug() << isPressed;
+//    qDebug() << isPressed;
 }
 
 void Model::drawLine(QPoint posOne,QPoint posTwo){
 
+    //qDebug() << tool;
     QPainter painter(&canvas);
     QPen pen;
     pen.setWidth(penSize);

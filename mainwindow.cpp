@@ -128,7 +128,9 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             ui->btnPencil->setEnabled(true);
             ui->btnEraser->setEnabled(false);
         });
-    connect(ui->canvasView, &ImageViewEditor::changeTool, &model, &Model::changeTool);
+
+    //Ruini Edited
+    connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
 
     //Duong
     //Handle clicking on new
