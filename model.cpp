@@ -25,7 +25,6 @@ Model::Model(QObject *parent)
 
 void Model::mouseDown(QPoint pos) {
 
-
     if(isPressed){
         if(isPos){
             posEnd = pos;
@@ -63,7 +62,7 @@ void Model::mouseDown(QPoint pos) {
 
 void Model::mousePressed(bool pressed){
     isPressed = pressed;
-//    qDebug() << isPressed;
+    //qDebug() << isPressed;
 }
 
 void Model::drawLine(QPoint posOne,QPoint posTwo){
@@ -95,7 +94,7 @@ void Model::setPenSize(int size){
 
 void Model::changeTool(Tool currentTool){
     tool = currentTool;
-    qDebug() << "changeTool called";
+    //qDebug() << "changeTool called";
 }
 
 //Renee, Tzhou

@@ -19,12 +19,12 @@ void ImageViewEditor::updatePixmap(QImage* image) {
     imageItem->setPixmap(QPixmap::fromImage(*image));
 }
 
-void ImageViewEditor::mousePressEvent(QMouseEvent *) {
-//    if (event->button() == Qt::LeftButton) {
-//        QPoint pos = mapToScene(event->pos()).toPoint();
-//        emit mouseDown(pos);
+void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
+    if (event->button() == Qt::LeftButton) {
+        QPoint pos = mapToScene(event->pos()).toPoint();
+        emit mouseDown(pos);
 
-//    }
+    }
 
       emit mousePressed(true);
 }
