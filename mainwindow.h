@@ -19,6 +19,9 @@ using std::vector;
 #include<QColor>
 //-------------------
 
+//Ruini Tong
+#include "QtGui/qpainter.h"
+//-------------------
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -37,6 +40,10 @@ public:
     //----------------------
 signals:
     void updateColor(QColor);
+
+    //Ruini Tong
+    void changeTool(Tool);
+    //----------------------
 
 public slots:
     void updateCanvas(QImage*); // jeff!!
@@ -70,6 +77,7 @@ private:
     void setCurrentRbga(QColor* newColor);
     //----------------------
 
+
 private slots:
     //TZhou: color picker area
     void on_changeColorBtn_clicked();
@@ -77,5 +85,6 @@ private slots:
     //-------------------------------------------
 
     void on_fpsSlider_valueChanged(int value);
+
 };
 #endif // MAINWINDOW_H

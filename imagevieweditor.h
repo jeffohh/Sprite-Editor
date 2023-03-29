@@ -15,8 +15,6 @@ public:
     explicit ImageViewEditor(QWidget *parent = nullptr);
 
     void updatePixmap(QImage*);
-    void pencilClicked();
-    void eraserClicked();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -30,11 +28,18 @@ private:
     bool pencil = false;
     bool eraser = false;
 
+    //Ruini Tong for testing mouse movement
+    int count = 0;
+
     QGraphicsPixmapItem* imageItem;
 
 signals:
     void mouseDown(QPoint);
-    void changeTool(Tool);
+
+    //Ruini Tong
+    void mousePressed(bool pressed);
+    //-------------------------------------------
+
 };
 
 #endif // IMAGEVIEWEDITOR_H

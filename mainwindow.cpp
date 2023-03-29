@@ -67,7 +67,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     ui->alphaSlider->setValue(10);
     //-----------------------------------
 
-
     // INITIALIZE VIEW
     //Andy Tran Added
     //Zoom the canvasView by default 1500%
@@ -85,20 +84,31 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     //Ruini Tong
     //handle pencil event
-    connect(ui->btnPencil,&QPushButton::clicked,ui->canvasView,&ImageViewEditor::pencilClicked);
+    connect(ui->btnPencil,&QPushButton::clicked,this,[=](){
+        emit changeTool(PENCIL);
+    });
     connect(ui->btnPencil,&QPushButton::clicked,this, [=](){
             ui->btnPencil->setEnabled(false);
             ui->btnEraser->setEnabled(true);
         });
 
+    //tool size
+    connect(ui->toolSlider, &QSlider::valueChanged, &model, &Model::setPenSize);
+
+    //track mouse movenment
+    connect(ui->canvasView, &ImageViewEditor::mousePressed, &model, &Model::mousePressed);
+
+
     //Andy Tran Added
     //handle eraser event
-    connect(ui->btnEraser,&QPushButton::clicked,ui->canvasView,&ImageViewEditor::eraserClicked);
+    connect(ui->btnEraser,&QPushButton::clicked,this,[=](){
+        emit changeTool(ERASER);
+    });
     connect(ui->btnEraser,&QPushButton::clicked,this, [=](){
             ui->btnPencil->setEnabled(true);
             ui->btnEraser->setEnabled(false);
         });
-    connect(ui->canvasView, &ImageViewEditor::changeTool, &model, &Model::changeTool);
+    connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
 
     connect(this,&MainWindow::updateColor,&model,&Model::setToolColor);
 }
@@ -111,6 +121,8 @@ MainWindow::~MainWindow()
 // Jeffrey Le *sunglasses_emoji*
 void MainWindow::updateCanvas(QImage* canvas) {
     // we can update preview elements here?
+//    count++;
+//    qDebug() << "Canvas: " <<count;
     ui->canvasView->updatePixmap(canvas);
 }
 

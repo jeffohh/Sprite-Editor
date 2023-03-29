@@ -34,12 +34,24 @@ public slots:
     //Andy Tran Added
     void changeTool(Tool currentTool);
 
+    //Ruini Tong
+    void mousePressed(bool pressed);
+    void setPenSize(int size);
+
 private:
-    Tool tool = PENCIL;
+    Tool tool = ERASER;
     QColor toolColor = Qt::black;
 
-private slots:
+    //Ruini Tong
+    QPoint posBegin;
+    QPoint posEnd;
+    bool isPos = false;
+    QPoint newPoint;
+    bool isPressed = false;
+    int penSize = 1;
 
+private slots:
+    void drawLine(QPoint posOne,QPoint posTwo);
 
 signals:
     /**
@@ -52,6 +64,9 @@ signals:
      * @param QImage        the canvas
      */
     void updateCanvas(QImage* canvas);
+
+    //Ruini Tong
+    void newPosition(QPoint pos);
 
 };
 
