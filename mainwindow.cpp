@@ -33,7 +33,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     //Tzhou
     // Initializes the current color to be black, and its buttons.
     //currentColor = DEFAULT_PAINT_COLOR;
-    setPaintColorView(DEFAULT_PAINT_COLOR);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
+    updatePaintColor(DEFAULT_PAINT_COLOR);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
     ui->alphaSlider->setMinimum(0);
     ui->alphaSlider->setMaximum(10);
     ui->alphaSlider->setValue(10);
@@ -50,6 +50,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
     connect(ui->canvasView, &ImageViewEditor::mouseMove, &model, &Model::mouseMove);
     connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
+    connect(ui->fpsSlider, &QSlider::valueChanged,
+            this, &MainWindow::changeFpsSliderValue);
 
     //Ruini Tong
     //handle pencil event
@@ -64,19 +66,23 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     //-----------------TZHou: Color Picker----------------------
     //handle color picker change color event
+
+    //To remove the warning.
+    connect(ui->changeColorBtn, &QPushButton::pressed,
+            this, &MainWindow::changeColorBtnIsPressed);
+
     //1. user pick a color => model's paintColor change.
-    connect(this, &MainWindow::updateColor,
-            &model, &Model::updatePaintColor);
+    connect(this, &MainWindow::paintColorChanged,
+            &model, &Model::paintColorChanged);
     //2. Model informs View to change color
-    connect(&model, &Model::updateColorPickerPanel,
-            this, &MainWindow::setPaintColorView);
+    connect(&model, &Model::updatePaintColor,
+            this, &MainWindow::updatePaintColor);
 
     //handle alpha value changed
     connect(ui->alphaSlider, &QSlider::valueChanged,
             &model, &Model::updateAlpha);
     connect(&model, &Model::updateAlphaSliderLabel,
             ui->alphaValueLabel, &QLabel::setText);
-
     connect(&model, &Model::resetAlphaSlider,
             ui->alphaSlider, &QSlider::setValue );
     //-------------------------------------------------------------
@@ -141,7 +147,6 @@ void MainWindow::onTimerTimeout() {
     previewScene->setFocusItem(&pixmapItem);
 }
 
-
 //void MainWindow::on_fpsSlider_valueChanged(int value)
 //{
 //    QString textValue = QString::number(value);
@@ -174,7 +179,7 @@ void MainWindow::on_fpsSlider_valueChanged(int value)
 
 
 //Tzhou
-void MainWindow::setPaintColorView(QColor newColor)
+void MainWindow::updatePaintColor(QColor newColor)
 {
     QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
 
@@ -183,14 +188,12 @@ void MainWindow::setPaintColorView(QColor newColor)
 
 }
 
-void MainWindow::on_changeColorBtn_clicked()
+void MainWindow::changeColorBtnIsPressed()
 {
-    bool OKBtnIsPressed;
     QColor color = QColorDialog::getColor(DEFAULT_PAINT_COLOR,this);
-    if(&OKBtnIsPressed && color.isValid())
+    if(color.isValid()) //If the "OK" button is pressed.
     {
-       //comment edited:  update paint color in Model - tzhou
-       emit updateColor(color); //Ruini Tong
+       emit paintColorChanged(color); //Ruini Tong
     }
 }
 

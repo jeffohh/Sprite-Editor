@@ -38,7 +38,7 @@ public slots:
      *        It emits a signal to view to update color picker panel.
      * @param newColor The new color to set to.
      */
-    void updatePaintColor(const QColor newColor);//Tzhou, Ruini Tong
+    void paintColorChanged(const QColor newColor);//Tzhou, Ruini Tong
     void updateAlpha(int newAlphaSliderValue);
 
     //Duong
@@ -78,7 +78,7 @@ signals:
     void updateCanvas(QImage* canvas, vector<QImage>* frameList);
 
     //Renee, Tzhou
-    void updateColorPickerPanel(QColor newColor);
+    void updatePaintColor(QColor newColor);
     //Tzhou
     void updateAlphaSliderLabel(QString alphaSliderReading);
     void resetAlphaSlider(int max);

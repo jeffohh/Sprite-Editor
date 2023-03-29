@@ -41,6 +41,17 @@ public slots:
 
     //Andy Tran
     void onTimerTimeout();
+    void changeFpsSliderValue(int value);
+    //------------------------------------------
+
+
+    //-----------------TZhou: color picker area----------------------
+    void updatePaintColor(QColor newColor);
+    void changeColorBtnIsPressed();
+    //-------------------------------------------
+
+    //Andy D
+    void handleNewCanvas();
 
 private:
     Ui::MainWindow *ui;
@@ -71,13 +82,13 @@ private slots:
 
     void on_fpsSlider_valueChanged(int value);
 
-    void handleNewCanvas();
+//    void handleNewCanvas();
 
 signals:
 
     //Renee
     // used by any color change
-    void updateColor(QColor);
+    void paintColorChanged(QColor);
     void newCanvasRequested(int width, int height);
 
     //Ruini Tong
