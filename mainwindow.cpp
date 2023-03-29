@@ -45,9 +45,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     //Tzhou
     // Initializes the current color to be black, and its buttons.
-    QColor* black = new QColor(0,0,0, 255);
-    currentColor = black;
-    setCurrentColorBtnTo();// alpha value: [0, 225], 0 means transparent, 225 means opaque.
+    //currentColor = DEFAULT_PAINT_COLOR;
+    setPaintColorView(DEFAULT_PAINT_COLOR);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
     ui->alphaSlider->setMinimum(0);
     ui->alphaSlider->setMaximum(10);
     ui->alphaSlider->setValue(10);
@@ -71,6 +70,23 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             ui->btnEraser->setEnabled(true);
         });
 
+    //-----------------TZHou: Color Picker----------------------
+    //handle color picker change color event
+    //1. user pick a color => model's paintColor change.
+    connect(this, &MainWindow::updateColor,
+            &model, &Model::updatePaintColor);
+    //2. Model informs View to change color
+    connect(&model, &Model::updateColorPickerPanel,
+            this, &MainWindow::setPaintColorView);
+
+    //handle alpha value changed
+    connect(ui->alphaSlider, &QSlider::valueChanged,
+            &model, &Model::updateAlpha);
+    connect(&model, &Model::updateAlphaSliderLabel,
+            ui->alphaValueLabel, &QLabel::setText);
+    //-------------------------------------------------------------
+
+
     //Andy Tran Added
     //handle eraser event
     connect(ui->btnEraser,&QPushButton::clicked,ui->canvasView,&ImageViewEditor::eraserClicked);
@@ -80,7 +96,11 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         });
     connect(ui->canvasView, &ImageViewEditor::changeTool, &model, &Model::changeTool);
 
-    connect(this,&MainWindow::updateColor,&model,&Model::setToolColor);
+    connect(this, &MainWindow::updateColor,
+            &model,&Model::setToolColor);
+
+    connect(&model, &Model::resetAlphaSlider,
+            ui->alphaSlider, &QSlider::setValue );
 }
 
 MainWindow::~MainWindow()
@@ -151,75 +171,30 @@ void MainWindow::on_fpsSlider_valueChanged(int value)
 }
 //----------------------------------------------------------------
 
+
 //Tzhou
+void MainWindow::setPaintColorView(QColor newColor)
+{
+    QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
+
+    ui->currentColorBtn->setStyleSheet(style.arg(newColor.red()).arg(newColor.green())
+            .arg(newColor.blue()).arg(newColor.alpha()));
+
+}
+
 void MainWindow::on_changeColorBtn_clicked()
 {
     bool OKBtnIsPressed;
-    QColor color = QColorDialog::getColor(*currentColor, this);
-    if(&OKBtnIsPressed)
+    QColor color = QColorDialog::getColor(DEFAULT_PAINT_COLOR,this);
+    if(&OKBtnIsPressed && color.isValid())
     {
-        currentColor = &color;
-        on_alphaSlider_valueChanged(10);
-        setCurrentColorBtnTo();
-
-        qDebug()<<currentColor->red()<<currentColor->green()<<currentColor->blue()<<currentColor->alpha();
+       //comment edited:  update paint color in Model - tzhou
+       emit updateColor(color); //Ruini Tong
     }
 }
 
-//Tzhou
-void MainWindow::setCurrentColorBtnTo()
-{
 
-    setCurrentRbga(currentColor);
-    QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
 
-    ui->currentColorBtn->setStyleSheet(style.arg(currentRgba[0]).arg(currentRgba[1])
-            .arg(currentRgba[2]).arg(currentRgba[3]));
-
-    // show team : this doesn't work.
-    //ui->currentColorBtn->setStyleSheet(style.arg(currentColor->red()).arg(currentColor->green())
-    //            .arg(currentColor->blue()).arg(currentColor->alpha()));
-
-    qDebug()<<"currentColor: "<<currentColor->red()<<currentColor->green()
-           <<currentColor->blue()<<currentColor->alpha();
-
-}
-
-//TZhou
-void MainWindow::setCurrentRbga(QColor *newColor)
-{
-    //update pencil color
-    emit updateColor(*newColor); //Ruini Tong
-
-    currentRgba[0] = newColor->red();
-    currentRgba[1] = newColor->green();
-    currentRgba[2]  = newColor->blue();
-    currentRgba[3] = newColor->alpha();
-}
-
-//TZhou
-void MainWindow::on_alphaSlider_valueChanged(int value)
-{
-    QString realValue = QString::number(value/10.0, 'f', 1);
-    ui->alphaValueLabel->setText(realValue);
-    int alpha = 255*value/10.0;
-    ui->alphaSlider->setValue(value);
-
-    currentColor->setAlpha(alpha);
-    currentRgba[3] = alpha;
-
-    /*** setCurrentColorBtnTo(currentColor) doesn't work *****/
-    QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
-    ui->currentColorBtn->setStyleSheet(style.arg(currentRgba[0]).arg(currentRgba[1])
-            .arg(currentRgba[2]).arg(currentRgba[3]));
-
-    // show team
-    //setCurrentColorBtnTo();
-    /*******************************************************/
-
-    qDebug()<<"int array: "<<currentColor->red()<<currentColor->green()<<currentColor->blue()<<currentColor->alpha();
-
-}
 
 
 

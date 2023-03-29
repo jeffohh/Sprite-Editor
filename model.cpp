@@ -6,6 +6,7 @@ Model::Model(QObject *parent)
     , canvas(32, 32, QImage::Format_ARGB32)
 {
     canvas.fill(Qt::white);
+    paintColor = Qt::black;
 }
 
 void Model::mouseDown(QPoint pos) {
@@ -65,4 +66,28 @@ void Model::changeTool(Tool currentTool){
     qDebug() << "changeTool called";
 }
 
+void Model::updatePaintColor(QColor newColor)
+{
+    paintColor=newColor;
+    emit updateColorPickerPanel(paintColor);
+    emit resetAlphaSlider(10);
+}
+
+void Model::updateAlpha(int newAlphaSliderValue)
+{
+    int newAlpha = 255*newAlphaSliderValue/10.0;;
+    paintColor.setAlpha(newAlpha);
+    QString alphaSliderReading = QString::number(newAlphaSliderValue/10.0, 'f', 1);
+
+    emit updateColorPickerPanel(paintColor);
+    emit updateAlphaSliderLabel(alphaSliderReading);
+
+    toolColor=paintColor;// this could be removed after combining paintColor.
+    qDebug() << "paint: "<<paintColor.red()<<" "<<
+                paintColor.green()<<" "
+               <<paintColor.blue()<<" "
+              <<paintColor.alpha();
+
+
+}
 

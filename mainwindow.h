@@ -41,6 +41,7 @@ public slots:
 
     //Andy Tran
     void onTimerTimeout();
+
 private:
     Ui::MainWindow *ui;
 
@@ -53,21 +54,22 @@ private:
     //------------------------
 
     //TZhou
-    QColor* currentColor; // The current color of the pen, default black.
-    int currentRgba[4]; // I have good reason to have this variable.
-    void setCurrentColorBtnTo();
-    void setCurrentRbga(QColor* newColor);
+    QColor DEFAULT_PAINT_COLOR = Qt::black; // Default pen or brush color
     //----------------------
 
 private slots:
-    //TZhou: color picker area
+
+    //-----------------TZhou: color picker area----------------------
+    void setPaintColorView(QColor newColor);
     void on_changeColorBtn_clicked();
-    void on_alphaSlider_valueChanged(int value);
     //-------------------------------------------
 
     void on_fpsSlider_valueChanged(int value);
 
 signals:
+
+    //Renee
+    // used by any color change
     void updateColor(QColor);
 
 };
