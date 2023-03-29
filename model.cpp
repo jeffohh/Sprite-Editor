@@ -15,7 +15,7 @@ void Model::mouseDown(QPoint pos) {
 
     case PENCIL:
         // set pixel at location
-        canvas.setPixelColor(pos, toolColor);
+        canvas.setPixelColor(pos, paintColor);
         // update view
         emit updateCanvas(&canvas);
         break;
@@ -36,7 +36,7 @@ void Model::mouseMove(QPoint pos) {
     switch (tool) {
 
     case PENCIL:
-        canvas.setPixelColor(pos, toolColor);
+        canvas.setPixelColor(pos, paintColor);
         emit updateCanvas(&canvas);
         break;
 
@@ -55,17 +55,12 @@ void Model::mouseUp(QPoint) {
 
 }
 
-
-
-void Model::setToolColor(const QColor newColor){
-    toolColor = newColor;
-}
-
 void Model::changeTool(Tool currentTool){
     tool = currentTool;
     qDebug() << "changeTool called";
 }
 
+//Renee, Tzhou
 void Model::updatePaintColor(QColor newColor)
 {
     paintColor=newColor;
@@ -73,6 +68,7 @@ void Model::updatePaintColor(QColor newColor)
     emit resetAlphaSlider(10);
 }
 
+//Tzhou
 void Model::updateAlpha(int newAlphaSliderValue)
 {
     int newAlpha = 255*newAlphaSliderValue/10.0;;
@@ -81,8 +77,6 @@ void Model::updateAlpha(int newAlphaSliderValue)
 
     emit updateColorPickerPanel(paintColor);
     emit updateAlphaSliderLabel(alphaSliderReading);
-
-    toolColor=paintColor;// this could be removed after combining paintColor.
     qDebug() << "paint: "<<paintColor.red()<<" "<<
                 paintColor.green()<<" "
                <<paintColor.blue()<<" "

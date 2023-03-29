@@ -87,9 +87,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(&model, &Model::updateAlphaSliderLabel,
             ui->alphaValueLabel, &QLabel::setText);
 
-    connect(this, &MainWindow::updateColor,
-            &model,&Model::setToolColor);
-
     connect(&model, &Model::resetAlphaSlider,
             ui->alphaSlider, &QSlider::setValue );
     //-------------------------------------------------------------
@@ -103,8 +100,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             ui->btnEraser->setEnabled(false);
         });
     connect(ui->canvasView, &ImageViewEditor::changeTool, &model, &Model::changeTool);
-
-    connect(this,&MainWindow::updateColor,&model,&Model::setToolColor);
 
     //Duong
     //Handle clicking on new

@@ -19,9 +19,6 @@ class Model : public QObject
 public:
     explicit Model(QObject *parent = nullptr);
 
-    //Ruini Tong
-    void setToolColor(const QColor newColor);
-
     QImage canvas;
 
 public slots:
@@ -39,7 +36,7 @@ public slots:
      *        It emits a signal to view to update color picker panel.
      * @param newColor The new color to set to.
      */
-    void updatePaintColor(const QColor newColor);
+    void updatePaintColor(const QColor newColor);//Tzhou, Ruini Tong
     void updateAlpha(int newAlphaSliderValue);
 
     //Duong
@@ -48,9 +45,6 @@ public slots:
 
 private:
     Tool tool = PENCIL;
-    QColor toolColor = Qt::black;
-
-    //Tzhou: this should be combined with setToolColor, but need Renee's consent.
     QColor paintColor; //It is initialized in the constructor, uniform convention with the UI.
 
 private slots:
@@ -68,10 +62,12 @@ signals:
      */
     void updateCanvas(QImage* canvas);
 
-    //Tzhou
+    //Renee, Tzhou
     void updateColorPickerPanel(QColor newColor);
+    //Tzhou
     void updateAlphaSliderLabel(QString alphaSliderReading);
     void resetAlphaSlider(int max);
+    //---------------------------------------------
 };
 
 #endif // MODEL_H
