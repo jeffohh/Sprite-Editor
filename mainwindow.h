@@ -43,6 +43,7 @@ public slots:
     void onTimerTimeout();
 private:
     Ui::MainWindow *ui;
+    Model& model;
 
     //Andy Tran
     vector<QImage> frameList;
@@ -67,8 +68,11 @@ private slots:
 
     void on_fpsSlider_valueChanged(int value);
 
+    void handleNewCanvas();
+
 signals:
     void updateColor(QColor);
+    void newCanvasRequested(int width, int height);
 
 };
 #endif // MAINWINDOW_H

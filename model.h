@@ -31,6 +31,9 @@ public slots:
     //Andy Tran Added
     void changeTool(Tool currentTool);
 
+    //Duong
+    void createNewCanvas(int width, int height);
+
 private:
     Tool tool = PENCIL;
     QColor toolColor = Qt::black;
