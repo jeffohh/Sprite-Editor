@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "canvasform.h"
-#include "model.h"
 #include "ui_mainwindow.h"
+#include "model.h"
 
 #include <iostream>
 
@@ -39,6 +39,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     ui->alphaSlider->setValue(10);
     //-----------------------------------
 
+
     // INITIALIZE VIEW
     ui->btnPencil->setEnabled(false);
     ui->canvasView->updatePixmap(&model.canvas);
@@ -48,7 +49,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
 
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
-    connect(ui->canvasView, &ImageViewEditor::mouseMove, &model, &Model::mouseMove);
+    //Ruin Eddit
+    //connect(ui->canvasView, &ImageViewEditor::mouseMove, &model, &Model::mouseMove);
     connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
     connect(ui->fpsSlider, &QSlider::valueChanged,
             this, &MainWindow::changeFpsSliderValue);
@@ -62,6 +64,11 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             ui->btnPencil->setEnabled(false);
             ui->btnEraser->setEnabled(true);
         });
+    //tool size
+    connect(ui->toolSlider, &QSlider::valueChanged, &model, &Model::setPenSize);
+
+    //track mouse movenment
+    connect(ui->canvasView, &ImageViewEditor::mousePressed, &model, &Model::mousePressed);
 
 
     //-----------------TZHou: Color Picker----------------------
@@ -87,6 +94,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             ui->alphaSlider, &QSlider::setValue );
     //-------------------------------------------------------------
 
+
     //Andy Tran Added
     //handle eraser event
     connect(ui->btnEraser,&QPushButton::clicked,this,[=](){
@@ -96,7 +104,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             ui->btnPencil->setEnabled(true);
             ui->btnEraser->setEnabled(false);
         });
-    connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
+    connect(ui->canvasView, &ImageViewEditor::changeTool, &model, &Model::changeTool);
 
     //Duong
     //Handle clicking on new
@@ -112,8 +120,6 @@ MainWindow::~MainWindow()
 // Jeffrey Le *sunglasses_emoji*
 void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* frameList) {
     // we can update preview elements here?
-//    count++;
-//    qDebug() << "Canvas: " <<count;
     ui->canvasView->updatePixmap(canvas);
 
 
@@ -147,15 +153,7 @@ void MainWindow::onTimerTimeout() {
     previewScene->setFocusItem(&pixmapItem);
 }
 
-//void MainWindow::on_fpsSlider_valueChanged(int value)
-//{
-//    QString textValue = QString::number(value);
-//    ui->fpsValueLabel->setText(textValue);
-//    fps = value;
-//    previewAnimation();
-//}
-
-void MainWindow::on_fpsSlider_valueChanged(int value)
+void MainWindow::changeFpsSliderValue(int value)
 {
     QString textValue = QString::number(value);
     ui->fpsValueLabel->setText(textValue);
@@ -174,7 +172,6 @@ void MainWindow::on_fpsSlider_valueChanged(int value)
     }
 
 }
-
 //----------------------------------------------------------------
 
 
@@ -204,5 +201,4 @@ void MainWindow::handleNewCanvas() {
     connect(&form, &CanvasForm::canvasSizeChanged, &model, &Model::createNewCanvas);
     form.exec();
 }
-
 

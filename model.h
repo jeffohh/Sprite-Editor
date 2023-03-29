@@ -25,8 +25,8 @@ public:
     int currentFrame = 0;
 public slots:
     void mouseDown(QPoint);
-    void mouseMove(QPoint);
-    void mouseUp(QPoint);
+    //void mouseMove(QPoint);
+    //void mouseUp(QPoint);
 
     //Andy Tran Added
     void changeTool(Tool currentTool);
@@ -43,16 +43,15 @@ public slots:
 
     //Duong
     void createNewCanvas(int width, int height);
-private:
-    Tool tool = PENCIL;
-    QColor paintColor; //It is initialized in the constructor, uniform convention with the UI.
 
     //Ruini Tong
     void mousePressed(bool pressed);
     void setPenSize(int size);
+    void drawLine(QPoint posOne,QPoint posTwo);
 
 private:
-    QColor toolColor = Qt::black;
+    Tool tool = PENCIL;
+    QColor paintColor; //It is initialized in the constructor, uniform convention with the UI.
 
     //Ruini Tong
     QPoint posBegin;
@@ -61,9 +60,6 @@ private:
     QPoint newPoint;
     bool isPressed = false;
     int penSize = 1;
-
-private slots:
-    void drawLine(QPoint posOne,QPoint posTwo);
 
 signals:
     /**

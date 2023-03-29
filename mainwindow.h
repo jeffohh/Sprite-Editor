@@ -73,17 +73,6 @@ private:
     //----------------------
 
 
-private slots:
-
-    //-----------------TZhou: color picker area----------------------
-    void setPaintColorView(QColor newColor);
-    void on_changeColorBtn_clicked();
-    //-------------------------------------------
-
-    void on_fpsSlider_valueChanged(int value);
-
-//    void handleNewCanvas();
-
 signals:
 
     //Renee

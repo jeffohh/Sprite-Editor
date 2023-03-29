@@ -65,6 +65,11 @@ void Model::mouseDown(QPoint pos) {
     //Ruini's Edit:
     // update view
     emit updateCanvas(&canvas, &frameList);
+
+    //Andy Tran: update frameList and update view
+    frameList[currentFrame] = canvas;
+    emit updateCanvas(&canvas, &frameList);
+
 }
 
 void Model::mousePressed(bool pressed){
@@ -91,35 +96,12 @@ void Model::drawLine(QPoint posOne,QPoint posTwo){
 
 void Model::setPenSize(int size){
     penSize = size/10;
-
-    //Andy Tran: update frameList and update view
-    frameList[currentFrame] = canvas;
-    emit updateCanvas(&canvas, &frameList);
-
 }
 
-// we
-void Model::mouseMove(QPoint pos) {
-    switch (tool) {
 
-    case PENCIL:
-        canvas.setPixelColor(pos, paintColor);
-        break;
-    case ERASER:
-        canvas.setPixelColor(pos, Qt::white);
-        break;
-    default:
-        break;
-    }
+//void Model::mouseUp(QPoint) {
 
-    //Andy Tran: update frameList and update view
-    frameList[currentFrame] = canvas;
-    emit updateCanvas(&canvas, &frameList);
-}
-
-void Model::mouseUp(QPoint) {
-
-}
+//}
 
 void Model::changeTool(Tool currentTool){
     tool = currentTool;
