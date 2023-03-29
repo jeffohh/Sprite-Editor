@@ -13,7 +13,6 @@ class ImageViewEditor : public QGraphicsView
 
 public:
     explicit ImageViewEditor(QWidget *parent = nullptr);
-
     void updatePixmap(QImage*);
     void pencilClicked();
     void eraserClicked();
@@ -22,7 +21,6 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
-
     void wheelEvent(QWheelEvent*) override;
 
 private:
@@ -36,7 +34,6 @@ signals:
     void mouseDown(QPoint);
     void mouseMove(QPoint);
     void mouseRelease(QPoint);
-
     void changeTool(Tool);
 };
 

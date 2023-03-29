@@ -33,11 +33,11 @@ public:
     ~MainWindow();
 
     //Andy Tran
-    void previewAnimation();
+    void startPreview();
     //----------------------
 
 public slots:
-    void updateCanvas(QImage*); // jeff!!
+    void updateCanvas(QImage*, vector<QImage>*); // jeff!!
 
     //Andy Tran
     void onTimerTimeout();
@@ -47,11 +47,14 @@ private:
     Model& model;
 
     //Andy Tran
-    vector<QImage> frameList;
-    QGraphicsScene* scene = new QGraphicsScene(this);
+    vector<std::shared_ptr<QImage>> frameList;
+    QGraphicsScene* previewScene = new QGraphicsScene(this);
     QTimer *timer = new QTimer(this);
     int fps = 12;
-    int frameDuration;
+    int frameDuration = 1000/12;
+    vector<QPixmap> pixmapFrames;
+    QGraphicsPixmapItem pixmapItem;
+    QSize viewSize;
     //------------------------
 
     //TZhou

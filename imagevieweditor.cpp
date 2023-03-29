@@ -38,18 +38,11 @@ void ImageViewEditor::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void ImageViewEditor::pencilClicked(){
-    //Andy Tran Edited
-//    pencil = true;
-//    eraser = false;
     emit changeTool(PENCIL);
 };
 
 void ImageViewEditor::eraserClicked(){
-    //Andy Tran Edited
-//    pencil = false;
-//    eraser = true;
     emit changeTool(ERASER);
-    qDebug() << "eraser called";
 };
 
 void ImageViewEditor::wheelEvent(QWheelEvent *event)
