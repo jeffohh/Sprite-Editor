@@ -32,6 +32,7 @@ public slots:
     //Andy Tran Added
     void changeTool(Tool currentTool);
 
+<<<<<<< HEAD
     //Tzhou: this should be combined with setToolColor, but need Renee's consent.
     /**
      * @brief Sets the paint color to a given color.
@@ -41,6 +42,10 @@ public slots:
      */
     void updatePaintColor(const QColor newColor);
     void updateAlpha(int newAlphaSliderValue);
+=======
+    //Duong
+    void createNewCanvas(int width, int height);
+>>>>>>> main
 
 private:
     Tool tool = PENCIL;

@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "canvasform.h"
 #include "ui_mainwindow.h"
 #include "model.h"
 
@@ -18,6 +19,7 @@ bool needsRestart = false;
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , model(model)
 {
     ui->setupUi(this);
 
@@ -84,6 +86,12 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             &model, &Model::updateAlpha);
     connect(&model, &Model::updateAlphaSliderLabel,
             ui->alphaValueLabel, &QLabel::setText);
+
+    connect(this, &MainWindow::updateColor,
+            &model,&Model::setToolColor);
+
+    connect(&model, &Model::resetAlphaSlider,
+            ui->alphaSlider, &QSlider::setValue );
     //-------------------------------------------------------------
 
 
@@ -96,11 +104,12 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         });
     connect(ui->canvasView, &ImageViewEditor::changeTool, &model, &Model::changeTool);
 
-    connect(this, &MainWindow::updateColor,
-            &model,&Model::setToolColor);
+    connect(this,&MainWindow::updateColor,&model,&Model::setToolColor);
 
-    connect(&model, &Model::resetAlphaSlider,
-            ui->alphaSlider, &QSlider::setValue );
+    //Duong
+    //Handle clicking on new
+    connect(ui->actionNew_Project, &QAction::triggered, this, &MainWindow::handleNewCanvas);
+
 }
 
 MainWindow::~MainWindow()
@@ -196,5 +205,11 @@ void MainWindow::on_changeColorBtn_clicked()
 
 
 
+//Duong
+void MainWindow::handleNewCanvas() {
+    CanvasForm form(this);
+    connect(&form, &CanvasForm::canvasSizeChanged, &model, &Model::createNewCanvas);
+    form.exec();
+}
 
 

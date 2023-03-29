@@ -91,3 +91,12 @@ void Model::updateAlpha(int newAlphaSliderValue)
 
 }
 
+void Model::createNewCanvas(int width, int height){
+
+    //Create an canvas with given width and height.
+    canvas = QImage(width,height, QImage::Format_ARGB32);
+    canvas.fill(Qt::white);
+    //Update view
+    emit updateCanvas(&canvas);
+
+}
