@@ -50,6 +50,7 @@ public slots:
 
     //Duong
     void createNewCanvas(int width, int height);
+    void frameSelected(int index);
 
     //Ruini Tong
     void mousePressed(bool pressed, QGraphicsPixmapItem* frame);
@@ -97,6 +98,10 @@ signals:
 
     //Ruini Tong
     void newPosition(QPoint pos);
+
+    //Duong
+    void newCanvasCreated();
+
 
 };
 

@@ -49,14 +49,14 @@ public slots:
     void addFrameWidget(QHBoxLayout *framesHorizontalLayout);
     //------------------------------------------
 
+    //Duong
+    void handleNewCanvas();
+    void newCanvasCreated();
 
     //-----------------TZhou: color picker area----------------------
     void updatePaintColor(QColor newColor);
     void changeColorBtnIsPressed();
     //-------------------------------------------
-
-    //Andy D
-    void handleNewCanvas();
 
     //Ruini Tong
     void changeSizeSliderValue(int value);
@@ -96,6 +96,9 @@ signals:
     //Ruini Tong
     void changeTool(Tool);
     //----------------------
+
+    //Duong
+    void frameSelected(int index);
 
 };
 #endif // MAINWINDOW_H

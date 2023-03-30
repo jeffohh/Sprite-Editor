@@ -122,6 +122,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     //Duong
     //Handle clicking on new
     connect(ui->actionNew_Project, &QAction::triggered, this, &MainWindow::handleNewCanvas);
+    connect(&model, &Model::newCanvasCreated, this, &MainWindow::newCanvasCreated);
+    connect(this, &MainWindow::frameSelected, &model, &Model::frameSelected);
 
 }
 
@@ -157,6 +159,11 @@ void MainWindow::addFrameWidget(QHBoxLayout *framesHorizontalLayout)
     //need to move the scroll bar to the right where the new frame was created
 
     addFrame(newFrame);
+
+    //Duong
+    if(currentFrame == 0){
+        emit frameSelected(0);
+    }
 }
 
 void MainWindow::addFrame(ImageViewEditor* newFrame){
@@ -262,6 +269,21 @@ void MainWindow::handleNewCanvas() {
     form.exec();
 }
 
+void MainWindow::newCanvasCreated() {
+
+    // Delete all existing frame widgets (except the add frame button)
+       int itemCount = framesHorizontalLayout->count() - 1;
+       for (int i = itemCount - 1; i >= 0; i--) {
+           QLayoutItem *item = framesHorizontalLayout->takeAt(i);
+           delete item->widget();
+           delete item;
+       }
+
+       // Create a new frame widget for the new canvas
+       addFrameWidget(framesHorizontalLayout);
+   }
+
+
 
 //Ruini Tong
 void MainWindow::changeSizeSliderValue(int value){
@@ -288,4 +310,6 @@ void MainWindow::disableTool(Tool tool){
         break;
     }
 }
+
+
 

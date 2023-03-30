@@ -138,6 +138,7 @@ void Model::updateAlpha(int newAlphaSliderValue)
               <<paintColor.alpha();
 }
 
+//Duong
 void Model::createNewCanvas(int width, int height){
 
     //Create an canvas with given width and height.
@@ -148,4 +149,11 @@ void Model::createNewCanvas(int width, int height){
     currentFrame = 0;
     initializeFrames();
     emit updateCanvas(&canvas, &frameList, currentFrame);
+
+    emit newCanvasCreated();
+}
+
+void Model::frameSelected(int index) {
+    currentFrame = index;
+    canvas = frameList[currentFrame];
 }
