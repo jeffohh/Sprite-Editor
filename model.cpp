@@ -2,25 +2,36 @@
 #include "QtGui/qpainter.h"
 #include "qdebug.h"
 
+
 Model::Model(QObject *parent)
     : QObject{parent}
     , canvas(32, 32, QImage::Format_ARGB32)
 {
     canvas.fill(Qt::white);
     paintColor = Qt::black;
-    frameList.push_back(canvas);
-
-    //Testing purpose
-    QImage frame1(32,32, QImage::Format_ARGB32);
-    frame1.fill(Qt::red);
-    frameList.push_back(frame1);
-
-    //Testing purpose
-    QImage frame2(32,32, QImage::Format_ARGB32);
-    frame2.fill(Qt::blue);
-    frameList.push_back(frame2);
+    initializeFrames();
 }
 
+//Andy Tran - Frames part
+void Model::onAddFrame(){
+    qDebug() << "onAddFrame called";
+    canvas = QImage(32, 32, QImage::Format_ARGB32);
+    canvas.fill(Qt::white);
+    frameList.push_back(canvas);
+    currentFrame++;
+    emit updateCanvas(&canvas, &frameList, currentFrame);
+}
+
+void Model::initializeFrames(){
+    frameList.clear();
+    QImage scaledCanvas= canvas.scaled(previewSize, Qt::KeepAspectRatio, Qt::FastTransformation);
+    frameList.push_back(scaledCanvas);
+}
+
+//void Model::updateFrames(){
+//    frameList[currentFrame] = canvas;
+//}
+//-------------------------------------------------------
 
 //Ruini
 //----------------------Tool part -------------------------
@@ -43,13 +54,16 @@ void Model::mouseDown(QPoint pos) {
 
     //Andy Tran: update frameList and update view
     frameList[currentFrame] = canvas;
-    emit updateCanvas(&canvas, &frameList);
-
+    emit updateCanvas(&canvas, &frameList, currentFrame);
 }
 
-void Model::mousePressed(bool pressed){
+void Model::mousePressed(bool pressed, QGraphicsPixmapItem* frame){
     isPressed = pressed;
-    //qDebug() << isPressed;
+
+    //Andy Tran - need to keep track of currentFrame -> update the canvas
+//    QPixmap pixmap = frame->pixmap();
+//    canvas = pixmap.toImage();
+
 }
 
 void Model::drawLine(QPoint posOne,QPoint posTwo){
@@ -76,7 +90,7 @@ void Model::drawLine(QPoint posOne,QPoint posTwo){
     painter.setPen(pen);
     painter.drawLine(posOne.x(),posOne.y(),posTwo.x(),posTwo.y());
 
-    emit updateCanvas(&canvas, &frameList);
+    emit updateCanvas(&canvas, &frameList, currentFrame);
 }
 
 void Model::setPenSize(int size){
@@ -131,6 +145,7 @@ void Model::createNewCanvas(int width, int height){
     canvas.fill(Qt::white);
 
     //Andy Tran: update frameList and update view
-    frameList[currentFrame] = canvas;
-    emit updateCanvas(&canvas, &frameList);
+    currentFrame = 0;
+    initializeFrames();
+    emit updateCanvas(&canvas, &frameList, currentFrame);
 }

@@ -11,6 +11,8 @@
 #include <QPixmap>
 #include <QVector>
 #include <QTimer>
+#include "imagevieweditor.h"
+#include "QHBoxLayout"
 using std::vector;
 //----------------
 
@@ -37,11 +39,14 @@ public:
     //----------------------
 
 public slots:
-    void updateCanvas(QImage*, vector<QImage>*); // jeff!!
+    void updateCanvas(QImage*, vector<QImage>*, int); // jeff!!
 
     //Andy Tran
     void onTimerTimeout();
+    void onFrameListUpdate();
     void changeFpsSliderValue(int value);
+    void addFrame(ImageViewEditor* newFrame);
+    void addFrameWidget(QHBoxLayout *framesHorizontalLayout);
     //------------------------------------------
 
 
@@ -63,14 +68,17 @@ private:
     Model& model;
 
     //Andy Tran
-    vector<std::shared_ptr<QImage>> frameList;
+    vector<QImage> frameList;
+    QHBoxLayout* framesHorizontalLayout = new QHBoxLayout(this);
     QGraphicsScene* previewScene = new QGraphicsScene(this);
     QTimer *timer = new QTimer(this);
     int fps = 12;
     int frameDuration = 1000/12;
-    vector<QPixmap> pixmapFrames;
     QGraphicsPixmapItem pixmapItem;
     QSize viewSize;
+    int currentFrame = 0;
+    unsigned int currentFrameIndex = 0;
+    bool needsRestart = false;
     //------------------------
 
     //TZhou

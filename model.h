@@ -3,6 +3,10 @@
 
 #include "qimage.h"
 #include <QObject>
+
+//Andy Tran
+#include <QPixmap>
+#include <QGraphicsPixmapItem>
 using std::vector;
 
 // global declaration so view can access too?
@@ -19,10 +23,10 @@ class Model : public QObject
 
 public:
     explicit Model(QObject *parent = nullptr);
+
+    // main canvas
     QImage canvas;
-    //Andy Tran:: may be should this
-    vector<QImage> frameList;
-    int currentFrame = 0;
+
 public slots:
     void mouseDown(QPoint);
     //void mouseMove(QPoint);
@@ -30,6 +34,9 @@ public slots:
 
     //Andy Tran Added
     void changeTool(Tool currentTool);
+//    void updateFrames();
+    void initializeFrames();
+    void onAddFrame();
 
     //Tzhou: this should be combined with setToolColor, but need Renee's consent.
     /**
@@ -45,7 +52,7 @@ public slots:
     void createNewCanvas(int width, int height);
 
     //Ruini Tong
-    void mousePressed(bool pressed);
+    void mousePressed(bool pressed, QGraphicsPixmapItem* frame);
     void setPenSize(int size);
     void drawLine(QPoint posOne,QPoint posTwo);
 
@@ -63,6 +70,12 @@ private:
     bool isPressed = false;
     int penSize = 1;
 
+    //Andy Tran:: may be should this
+//    vector<QPixmap> pixmapFrames;
+    vector<QImage> frameList;
+    int currentFrame = 0;
+    QSize previewSize = QSize(150,150);
+
 signals:
     /**
      * @brief Sends canvas to View
@@ -73,7 +86,7 @@ signals:
      *
      * @param QImage        the canvas
      */
-    void updateCanvas(QImage* canvas, vector<QImage>* frameList);
+    void updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame);
 
     //Renee, Tzhou
     void updatePaintColor(QColor newColor);

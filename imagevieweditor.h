@@ -39,9 +39,12 @@ signals:
     void changeTool(Tool);
 
     //Ruini Tong
-    void mousePressed(bool pressed);
+    void mousePressed(bool pressed, QGraphicsPixmapItem* frame);
     void getColor(QPoint);
     //-------------------------------------------
+
+    //Andy Tran
+
 
 };
 

@@ -26,7 +26,7 @@ void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
         emit getColor(pos);
     }
 
-      emit mousePressed(true);
+      emit mousePressed(true, imageItem);
 }
 
 void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
@@ -37,9 +37,9 @@ void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
 
 }
 
-void ImageViewEditor::mouseReleaseEvent(QMouseEvent *) {
+void ImageViewEditor::mouseReleaseEvent(QMouseEvent *event) {
     //Ruini Tong
-    emit mousePressed(false);
+    emit mousePressed(false, imageItem);
 }
 
 void ImageViewEditor::wheelEvent(QWheelEvent *event)
@@ -56,3 +56,4 @@ void ImageViewEditor::wheelEvent(QWheelEvent *event)
     // Set the new zoom level
     setTransform(QTransform().scale(scale, scale));
 }
+
