@@ -55,6 +55,7 @@ public slots:
 
     //Ruini Tong
     void changeSizeSliderValue(int value);
+    void disableTool(Tool);
     //-------------------------------------------
 
 private:

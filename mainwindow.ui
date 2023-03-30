@@ -38,7 +38,7 @@
        <height>601</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout" name="toolLayout">
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -112,7 +112,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QToolButton" name="toolButton_3">
+       <widget class="QToolButton" name="btnPicker">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -129,7 +129,7 @@
          <enum>Qt::LeftToRight</enum>
         </property>
         <property name="text">
-         <string>Brush</string>
+         <string>Picker</string>
         </property>
        </widget>
       </item>

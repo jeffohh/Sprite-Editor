@@ -8,7 +8,7 @@ using std::vector;
 // global declaration so view can access too?
 enum Tool {
     PENCIL,
-    BRUSH,
+    PICKER,
     ERASER,
     BUCKET
 };
@@ -48,6 +48,8 @@ public slots:
     void mousePressed(bool pressed);
     void setPenSize(int size);
     void drawLine(QPoint posOne,QPoint posTwo);
+
+    void getColor(QPoint pos);
 
 private:
     Tool tool = PENCIL;

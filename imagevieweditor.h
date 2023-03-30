@@ -40,6 +40,7 @@ signals:
 
     //Ruini Tong
     void mousePressed(bool pressed);
+    void getColor(QPoint);
     //-------------------------------------------
 
 };

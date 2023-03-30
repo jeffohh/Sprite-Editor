@@ -79,21 +79,36 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->fpsSlider, &QSlider::valueChanged,
             this, &MainWindow::changeFpsSliderValue);
 
-    //Ruini Tong
+    //-----------------Tool Box----------------------
+    //Ruini
+    connect(this, &MainWindow::changeTool, this, &MainWindow::disableTool);
     //handle pencil event
     connect(ui->btnPencil,&QPushButton::clicked,this,[=](){
         emit changeTool(PENCIL);
     });
-    connect(ui->btnPencil,&QPushButton::clicked,this, [=](){
-            ui->btnPencil->setEnabled(false);
-            ui->btnEraser->setEnabled(true);
-        });
+    //handle color picker event
+    connect(ui->btnPicker,&QPushButton::clicked,this,[=](){
+        emit changeTool(PICKER);
+    });
+    //Andy Tran Added
+    //handle eraser event
+    connect(ui->btnEraser,&QPushButton::clicked,this,[=](){
+        emit changeTool(ERASER);
+    });
+
+    //Ruini Edited
+    connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
+
     //tool size
     connect(ui->toolSlider, &QSlider::valueChanged, &model, &Model::setPenSize);
     connect(ui->toolSlider, &QSlider::valueChanged,this,&MainWindow::changeSizeSliderValue);
 
     //track mouse movenment
     connect(ui->canvasView, &ImageViewEditor::mousePressed, &model, &Model::mousePressed);
+
+    //color picker
+    connect(ui->canvasView, &ImageViewEditor::getColor, &model, &Model::getColor);
+    //-------------------------------------------------------------
 
 
     //-----------------TZHou: Color Picker----------------------
@@ -119,19 +134,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             ui->alphaSlider, &QSlider::setValue );
     //-------------------------------------------------------------
 
-
-    //Andy Tran Added
-    //handle eraser event
-    connect(ui->btnEraser,&QPushButton::clicked,this,[=](){
-        emit changeTool(ERASER);
-    });
-    connect(ui->btnEraser,&QPushButton::clicked,this, [=](){
-            ui->btnPencil->setEnabled(true);
-            ui->btnEraser->setEnabled(false);
-        });
-
-    //Ruini Edited
-    connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
 
     //Duong
     //Handle clicking on new
@@ -229,9 +231,30 @@ void MainWindow::handleNewCanvas() {
     form.exec();
 }
 
+
 //Ruini Tong
 void MainWindow::changeSizeSliderValue(int value){
     QString textValue = QString::number(value);
     ui->sizeValueLabel->setText(textValue);
+}
+
+void MainWindow::disableTool(Tool tool){
+    ui->btnPencil->setEnabled(true);
+    ui->btnPicker->setEnabled(true);
+    ui->btnEraser->setEnabled(true);
+
+    switch (tool) {
+    case PENCIL:
+        ui->btnPencil->setEnabled(false);
+        break;
+    case PICKER:
+        ui->btnPicker->setEnabled(false);
+        break;
+    case ERASER:
+        ui->btnEraser->setEnabled(false);
+        break;
+    default:
+        break;
+    }
 }
 

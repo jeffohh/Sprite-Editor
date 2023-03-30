@@ -22,7 +22,8 @@ Model::Model(QObject *parent)
 }
 
 
-
+//Ruini
+//----------------------Tool part -------------------------
 void Model::mouseDown(QPoint pos) {
 
     if(isPressed){
@@ -62,6 +63,8 @@ void Model::drawLine(QPoint posOne,QPoint posTwo){
     case PENCIL:
         pen.setColor(paintColor);
         break;
+    case PICKER:
+        return;
     case ERASER:
         pen.setColor(Qt::white);
 
@@ -80,15 +83,23 @@ void Model::setPenSize(int size){
     penSize = size/10;
 }
 
-
 //void Model::mouseUp(QPoint) {
 
 //}
 
 void Model::changeTool(Tool currentTool){
     tool = currentTool;
-    //qDebug() << "changeTool called";
+    qDebug() << "changeTool called" << tool;
 }
+
+void Model::getColor(QPoint pos){
+    if(tool == PICKER){
+        QColor pixelColor = canvas.pixelColor(pos);
+        emit paintColorChanged(pixelColor);
+    }
+}
+
+//----------------------Tool part -------------------------
 
 //Renee, Tzhou
 void Model::paintColorChanged(QColor newColor)
