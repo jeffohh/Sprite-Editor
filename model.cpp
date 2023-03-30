@@ -109,7 +109,7 @@ void Model::changeTool(Tool currentTool){
 void Model::getColor(QPoint pos){
     if(tool == PICKER){
         QColor pixelColor = canvas.pixelColor(pos);
-        emit paintColorChanged(pixelColor);
+        paintColorChanged(pixelColor);
     }
 }
 

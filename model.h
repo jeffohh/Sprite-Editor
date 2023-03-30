@@ -71,7 +71,7 @@ private:
     int penSize = 1;
 
     //Andy Tran:: may be should this
-//    vector<QPixmap> pixmapFrames;
+    //vector<QPixmap> pixmapFrames;
     vector<QImage> frameList;
     int currentFrame = 0;
     QSize previewSize = QSize(150,150);
