@@ -122,6 +122,9 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     //Duong
     //Handle clicking on new
     connect(ui->actionNew_Project, &QAction::triggered, this, &MainWindow::handleNewCanvas);
+    connect(ui->actionSave_Project, &QAction::triggered, this, &MainWindow::handleSaveCanvas);
+    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::handleOpenCanvas);
+
     connect(&model, &Model::newCanvasCreated, this, &MainWindow::newCanvasCreated);
     connect(this, &MainWindow::frameSelected, &model, &Model::frameSelected);
 
@@ -283,7 +286,37 @@ void MainWindow::newCanvasCreated() {
        addFrameWidget(framesHorizontalLayout);
    }
 
+void MainWindow::handleSaveCanvas()
+{
+    QString filter = "Sprite Sheet Project (*.ssp)";
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Sprite Sheet Project"), "", filter, &filter);
 
+    if (!fileName.isEmpty()) {
+        if (!fileName.endsWith(".ssp")) {
+            fileName += ".ssp";
+        }
+        model.saveFile(fileName);
+    }
+}
+
+void MainWindow::handleOpenCanvas()
+{
+    QString filter = "Sprite Sheet Project (*.ssp)";
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Sprite Sheet Project"), "", filter, &filter);
+
+    if (!fileName.isEmpty()) {
+        model.openFile(fileName);
+    }
+}
+
+void MainWindow::frameLoaded(ImageViewEditor *frame)
+{
+    frame->setFixedSize(64, 64);
+    frame->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    frame->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->horizontalLayout->addWidget(frame);
+    addFrame(frame);
+}
 
 //Ruini Tong
 void MainWindow::changeSizeSliderValue(int value){

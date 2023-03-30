@@ -4,6 +4,12 @@
 #include "qimage.h"
 #include <QObject>
 
+//Duong
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QFile>
+
 //Andy Tran
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
@@ -51,6 +57,9 @@ public slots:
     //Duong
     void createNewCanvas(int width, int height);
     void frameSelected(int index);
+    void saveFile(const QString &filename);
+    void openFile(const QString &filename);
+
 
     //Ruini Tong
     void mousePressed(bool pressed, QGraphicsPixmapItem* frame);
@@ -101,6 +110,7 @@ signals:
 
     //Duong
     void newCanvasCreated();
+
 
 
 };

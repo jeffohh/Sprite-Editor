@@ -157,3 +157,90 @@ void Model::frameSelected(int index) {
     currentFrame = index;
     canvas = frameList[currentFrame];
 }
+
+void Model::saveFile(const QString &filename)
+{
+    QJsonObject project;
+    project["height"] = canvas.height();
+    project["width"] = canvas.width();
+    project["numberOfFrames"] = static_cast<int>(frameList.size());
+
+    QJsonArray frames;
+
+    for (size_t i = 0; i < frameList.size(); ++i) {
+        QJsonArray frameData;
+
+        QImage frame = frameList[i];
+        for (int y = 0; y < frame.height(); ++y) {
+            QJsonArray row;
+            for (int x = 0; x < frame.width(); ++x) {
+                QColor color = frame.pixelColor(x, y);
+                QJsonArray pixel = {color.red(), color.green(), color.blue(), color.alpha()};
+                row.append(pixel);
+            }
+            frameData.append(row);
+        }
+
+        QString frameName = QString("frame%1").arg(i);
+        frames.append(QJsonObject({{frameName, frameData}}));
+    }
+
+    project["frames"] = frames;
+
+    QFile file(filename);
+    if (file.open(QIODevice::WriteOnly)) {
+        QJsonDocument doc(project);
+        file.write(doc.toJson());
+    }
+}
+
+//Known bugs: Open File does not reset the frame when open. Open File does not display all frame when open (but will shows old frames if click news)
+//Open File sometime does not create new canvas and frame when open (If one already exist, it does not close and exit out everything, but just added ontop of the old canvas)
+void Model::openFile(const QString &filename)
+{
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning("Failed to open the file for reading.");
+        return;
+    }
+
+    QByteArray data = file.readAll();
+    QJsonDocument doc(QJsonDocument::fromJson(data));
+    QJsonObject project = doc.object();
+
+    int height = project["height"].toInt();
+    int width = project["width"].toInt();
+    int numberOfFrames = project["numberOfFrames"].toInt();
+    QJsonArray frames = project["frames"].toArray();
+
+    frameList.clear();
+
+    for (int i = 0; i < numberOfFrames; ++i) {
+        QJsonObject frameObject = frames[i].toObject();
+        QString frameName = QString("frame%1").arg(i);
+        QJsonArray frameData = frameObject[frameName].toArray();
+
+        QImage frame(width, height, QImage::Format_ARGB32);
+
+        for (int y = 0; y < height; ++y) {
+            QJsonArray row = frameData[y].toArray();
+            for (int x = 0; x < width; ++x) {
+                QJsonArray pixel = row[x].toArray();
+                int r = pixel[0].toInt();
+                int g = pixel[1].toInt();
+                int b = pixel[2].toInt();
+                int a = pixel[3].toInt();
+                QColor color(r, g, b, a);
+                frame.setPixelColor(x, y, color);
+            }
+        }
+
+        frameList.push_back(frame);
+
+
+    // Update the current canvas and frames
+    currentFrame = 0;
+    canvas = frameList[currentFrame];
+    emit updateCanvas(&canvas, &frameList, currentFrame);
+}
+}

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "model.h"
+#include <QFileDialog>
 
 //Added by Andy Tran
 #include <QGraphicsScene>
@@ -52,6 +53,8 @@ public slots:
     //Duong
     void handleNewCanvas();
     void newCanvasCreated();
+    void handleOpenCanvas();
+    void handleSaveCanvas();
 
     //-----------------TZhou: color picker area----------------------
     void updatePaintColor(QColor newColor);
