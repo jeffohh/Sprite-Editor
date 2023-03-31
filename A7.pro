@@ -14,14 +14,14 @@ SOURCES += \
     imagevieweditor.cpp \
     main.cpp \
     mainwindow.cpp \
-    model.cpp
+    model.cpp \
 
 HEADERS += \
     canvasform.h \
     frameview.h \
     imagevieweditor.h \
     mainwindow.h \
-    model.h
+    model.h \
 
 FORMS += \
     mainwindow.ui
