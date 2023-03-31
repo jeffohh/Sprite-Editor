@@ -1,19 +1,13 @@
 #include "mainwindow.h"
-#include "canvasform.h"
 #include "ui_mainwindow.h"
+
 #include "model.h"
+#include "canvasform.h"
+#include "frameview.h"
 
 #include <iostream>
-
-//Tzhou
 #include<QString>
 #include<QDebug>
-//-----------------------
-
-
-//Andy Tran
-#include "frameview.h"
-//-------------
 
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
@@ -23,8 +17,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     ui->setupUi(this);
 
 
-
-    // INITIALIZE VIEW
+    // [=== INITIALIZE SECTION ===]
     {
         //Tzhou
         // Initializes the current color to be black, and its buttons.
@@ -37,76 +30,68 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         initializeFrameView();
     }
 
-    // CONNECTIONS START HERE
-    //Andy Tran - Connection for Preview
-    connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
-    connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::onChangeFpsSliderValue);
 
-    //Canvas Click Events
-    connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
 
-    //Ruin Eddit
-    //connect(ui->canvasView, &ImageViewEditor::mouseMove, &model, &Model::mouseMove);
+    // [=== CANVAS CONNECTIONS ===] @Jeffrey
     connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
 
-    //-----------------Tool Box----------------------
-    //Ruini
-    connect(this, &MainWindow::changeTool, this, &MainWindow::disableTool);
-    //handle pencil event
+    // --- Canvas Input ---
+    connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
+    connect(ui->canvasView, &ImageViewEditor::mousePressed, &model, &Model::mousePressed);
+
+
+
+    // [=== PREVIEW CONNECTIONS ===] @Andy Tran
+    connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout); // Andy Tran - connection for preview
+    connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::onChangeFpsSliderValue);
+
+
+
+    // [=== TOOL CONNECTIONS ===] @Ruini
+    // --- Tool Select ---
     connect(ui->btnPencil,&QPushButton::clicked,this,[=](){
         emit changeTool(PENCIL);
     });
-    //handle color picker event
     connect(ui->btnPicker,&QPushButton::clicked,this,[=](){
         emit changeTool(PICKER);
     });
-    //handle eraser event     //Andy Tran Added
     connect(ui->btnEraser,&QPushButton::clicked,this,[=](){
         emit changeTool(ERASER);
     });
-    //handle fill bucket event
     connect(ui->btnBucket,&QPushButton::clicked,this,[=](){
         emit changeTool(BUCKET);
     });
-    connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
 
-    //tool size
+    connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
+    connect(this, &MainWindow::changeTool, this, &MainWindow::disableTool); // Ruini
+
+    // --- Tool Settings ---
     connect(ui->toolSlider, &QSlider::valueChanged, &model, &Model::setPenSize);
     connect(ui->toolSlider, &QSlider::valueChanged,this,&MainWindow::changeSizeSliderValue);
 
-    //track mouse movenment
-    connect(ui->canvasView, &ImageViewEditor::mousePressed, &model, &Model::mousePressed);
-
-    //color picker
-    connect(ui->canvasView, &ImageViewEditor::getColor, &model, &Model::getColor);
-    //-------------------------------------------------------------
+    // --- Tool: Color Picker ---
+    connect(ui->canvasView, &ImageViewEditor::getColor, &model, &Model::getColor); // Jeffrey: ideally, Model will have a "Picker" tool enum then just use mouseDown?
 
 
-    //-----------------TZHou: Color Picker----------------------
-    //handle color picker change color event
 
-    //To remove the warning.
-    connect(ui->changeColorBtn, &QPushButton::pressed,
-            this, &MainWindow::changeColorBtnIsPressed);
+    // [=== COLOR CONNECTIONS ===] @TZHou @Ruini
+    // --- Color Dialog ---
+    connect(ui->changeColorBtn, &QPushButton::pressed, this, &MainWindow::changeColorBtnIsPressed);
 
+    // --- Color Model-View Updates ---
     //1. user pick a color => model's paintColor change.
-    connect(this, &MainWindow::paintColorChanged,
-            &model, &Model::paintColorChanged);
+    connect(this, &MainWindow::paintColorChanged, &model, &Model::paintColorChanged);
     //2. Model informs View to change color
-    connect(&model, &Model::updatePaintColor,
-            this, &MainWindow::updatePaintColor);
+    connect(&model, &Model::updatePaintColor, this, &MainWindow::updatePaintColor);
 
-    //handle alpha value changed
-    connect(ui->alphaSlider, &QSlider::valueChanged,
-            &model, &Model::updateAlpha);
-    connect(&model, &Model::updateAlphaSliderLabel,
-            ui->alphaValueLabel, &QLabel::setText);
-    connect(&model, &Model::resetAlphaSlider,
-            ui->alphaSlider, &QSlider::setValue );
-    //-------------------------------------------------------------
+    // --- Color Alpha Channels ---
+    connect(ui->alphaSlider, &QSlider::valueChanged, &model, &Model::updateAlpha);
+    connect(&model, &Model::updateAlphaSliderLabel, ui->alphaValueLabel, &QLabel::setText);
+    connect(&model, &Model::resetAlphaSlider, ui->alphaSlider, &QSlider::setValue );
 
 
-    //Duong
+
+    // [=== MENU CONNECTIONS ===] @Duong
     //Handle clicking on new
     connect(ui->actionNew_Project, &QAction::triggered, this, &MainWindow::handleNewCanvas);
     connect(ui->actionSave_Project, &QAction::triggered, this, &MainWindow::handleSaveCanvas);
@@ -122,28 +107,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// Jeffrey Le *sunglasses_emoji*
-void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame) {
-    ui->canvasView->updatePixmap(canvas);
 
-    //Andy Tran - Update frameList
-    this->currentFrame = currentFrame;
-    frameList.clear();
-    frameList.resize(list->size());
-    frameList = *list;
 
-    //update Frames
-    onFrameListUpdate();
-
-    //Use once
-    if(isInit){
-        initializeView();
-        isInit = false;
-    }
-}
-
-//Andy Tran
-void MainWindow:: initializeFrameView(){
+// [=== INITIALIZE SECTION ===] @Andy Tran
+void MainWindow::initializeFrameView(){
     numFrames = 0;
 
     QPushButton* addFrameBtn = new QPushButton("+");
@@ -161,15 +128,6 @@ void MainWindow:: initializeFrameView(){
     });
 
     addFrameWidget(framesHorizontalLayout);
-}
-
-void MainWindow::initializeView() {
-    //Initialize - Preview
-    toPixmapItem.setPixmap(QPixmap::fromImage(frameList.front()));
-    previewScene->addItem(&toPixmapItem);
-    previewScene->setFocusItem(&toPixmapItem);
-    ui->graphicsView->setScene(previewScene);   
-    timer->start(frameDuration);
 }
 
 void MainWindow::addFrameWidget(QHBoxLayout *framesHorizontalLayout)
@@ -196,6 +154,37 @@ void MainWindow::addFrameWidget(QHBoxLayout *framesHorizontalLayout)
 
 }
 
+void MainWindow::initializeView() {
+    //Initialize - Preview
+    toPixmapItem.setPixmap(QPixmap::fromImage(frameList.front()));
+    previewScene->addItem(&toPixmapItem);
+    previewScene->setFocusItem(&toPixmapItem);
+    ui->graphicsView->setScene(previewScene);
+    timer->start(frameDuration);
+}
+
+
+
+// [=== CANVAS SECTION ===] @Jeffrey @Andy Tran
+void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame) {
+    ui->canvasView->updatePixmap(canvas);
+
+    //Andy Tran - Update frameList
+    this->currentFrame = currentFrame;
+    frameList.clear();
+    frameList.resize(list->size());
+    frameList = *list;
+
+    //update Frames
+    onFrameListUpdate();
+
+    //Use once
+    if(isInit){
+        initializeView();
+        isInit = false;
+    }
+}
+
 void MainWindow::onFrameListUpdate(){
     //Update the FrameView when modified Canvas
     FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(currentFrame)->widget());
@@ -204,6 +193,40 @@ void MainWindow::onFrameListUpdate(){
     }
 }
 
+
+// [=== TOOL SECTION ===] @Ruini
+void MainWindow::disableTool(Tool tool){
+    ui->btnPencil->setEnabled(true);
+    ui->btnPicker->setEnabled(true);
+    ui->btnEraser->setEnabled(true);
+    ui->btnBucket->setEnabled(true);
+
+    switch (tool) {
+    case PENCIL:
+        ui->btnPencil->setEnabled(false);
+        break;
+    case PICKER:
+        ui->btnPicker->setEnabled(false);
+        break;
+    case ERASER:
+        ui->btnEraser->setEnabled(false);
+        break;
+    case BUCKET:
+        ui->btnBucket->setEnabled(false);
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::changeSizeSliderValue(int value){
+    QString textValue = QString::number(value);
+    ui->sizeValueLabel->setText(textValue);
+}
+
+
+
+// [=== PREVIEW SECTION ===] @Andy Tran
 void MainWindow::onTimerTimeout() {
     //Move to the next frame when QTimer timeout
     curPreviewIndex = (curPreviewIndex + 1) % frameList.size();
@@ -232,10 +255,10 @@ void MainWindow::onChangeFpsSliderValue(int value)
     }
 
 }
-//----------------------------------------------------------------
 
 
-//Tzhou
+
+// [=== COLOR SECTION ===] @TZHou @Ruini
 void MainWindow::updatePaintColor(QColor newColor)
 {
     QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
@@ -255,7 +278,8 @@ void MainWindow::changeColorBtnIsPressed()
 }
 
 
-//Duong
+
+// [=== MENU SECTION ===] @Duong
 void MainWindow::handleNewCanvas() {
     CanvasForm form(this);
     connect(&form, &CanvasForm::canvasSizeChanged, &model, &Model::createNewCanvas);
@@ -300,35 +324,6 @@ void MainWindow::handleOpenCanvas()
     }
 }
 
-//Ruini Tong
-void MainWindow::changeSizeSliderValue(int value){
-    QString textValue = QString::number(value);
-    ui->sizeValueLabel->setText(textValue);
-}
-
-void MainWindow::disableTool(Tool tool){
-    ui->btnPencil->setEnabled(true);
-    ui->btnPicker->setEnabled(true);
-    ui->btnEraser->setEnabled(true);
-    ui->btnBucket->setEnabled(true);
-
-    switch (tool) {
-    case PENCIL:
-        ui->btnPencil->setEnabled(false);
-        break;
-    case PICKER:
-        ui->btnPicker->setEnabled(false);
-        break;
-    case ERASER:
-        ui->btnEraser->setEnabled(false);
-        break;
-    case BUCKET:
-        ui->btnBucket->setEnabled(false);
-        break;
-    default:
-        break;
-    }
-}
 
 
 
