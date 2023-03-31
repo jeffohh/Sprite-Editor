@@ -81,8 +81,9 @@ void Model::drawLine(QPoint posOne,QPoint posTwo){
         return;
     case ERASER:
         pen.setColor(Qt::white);
-
         break;
+    case BUCKET:
+        return;
     default:
         break;
     }
@@ -107,13 +108,81 @@ void Model::changeTool(Tool currentTool){
 }
 
 void Model::getColor(QPoint pos){
-    if(tool == PICKER){
-        QColor pixelColor = canvas.pixelColor(pos);
+    QColor pixelColor = canvas.pixelColor(pos);
+
+    qDebug()<< pos<<" "<< pixelColor;
+
+    switch (tool) {
+    case PICKER:
         paintColorChanged(pixelColor);
+        return;
+    case BUCKET:
+        fillColor(pixelColor, pos);
+        return;
+    default:
+        break;
     }
 }
 
-//----------------------Tool part -------------------------
+void Model::fillColor(QColor originColor, QPoint pos){
+
+//recursive method, crash sometimes because stack overflow
+//    //if pos's color == the originColor, update that color
+//    QColor pixelColor = canvas.pixelColor(pos);
+//    if (pixelColor == originColor){
+//        canvas.setPixelColor(pos, paintColor);
+//        emit updateCanvas(&canvas, &frameList, currentFrame);
+//    }else{//no more same color to fill
+//        return;
+//    }
+
+//    //expand top
+//    QPoint topPoint(pos.x(), pos.y()+1);
+//    fillColor(originColor,topPoint);
+
+//    //expand bottom
+//    QPoint bottomPoint(pos.x(), pos.y()-1);
+//    fillColor(originColor,bottomPoint);
+
+//    //expand left
+//    QPoint leftPoint(pos.x()-1, pos.y());
+//    fillColor(originColor,leftPoint);
+
+//    //expand right
+//    QPoint rightPoint(pos.x()+1, pos.y());
+//    fillColor(originColor,rightPoint);
+
+    QList<QPoint> stack;
+    stack <<pos;
+    while(!stack.empty()){
+        QPoint current = stack.takeLast();
+        QColor pixelColor = canvas.pixelColor(current);
+        if (pixelColor == originColor){
+            canvas.setPixelColor(current, paintColor);
+            emit updateCanvas(&canvas, &frameList, currentFrame);
+
+            //    //expand top
+                QPoint topPoint(current.x(), current.y()+1);
+                stack<<topPoint;
+
+            //    //expand bottom
+                QPoint bottomPoint(current.x(), current.y()-1);
+                stack<<bottomPoint;
+
+            //    //expand left
+                QPoint leftPoint(current.x()-1, current.y());
+                stack<<leftPoint;
+
+            //    //expand right
+                QPoint rightPoint(current.x()+1, current.y());
+                stack<<rightPoint;
+
+        }
+    }
+
+}
+
+//----------------------Color part -------------------------
 
 //Renee, Tzhou
 void Model::paintColorChanged(QColor newColor)
