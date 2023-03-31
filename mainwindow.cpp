@@ -74,13 +74,14 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->btnPicker,&QPushButton::clicked,this,[=](){
         emit changeTool(PICKER);
     });
-    //Andy Tran Added
-    //handle eraser event
+    //handle eraser event     //Andy Tran Added
     connect(ui->btnEraser,&QPushButton::clicked,this,[=](){
         emit changeTool(ERASER);
     });
-
-    //Ruini Edited
+    //handle fill bucket event
+    connect(ui->btnBucket,&QPushButton::clicked,this,[=](){
+        emit changeTool(BUCKET);
+    });
     connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
 
     //tool size
@@ -309,14 +310,14 @@ void MainWindow::handleOpenCanvas()
     }
 }
 
-void MainWindow::frameLoaded(ImageViewEditor *frame)
-{
-    frame->setFixedSize(64, 64);
-    frame->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    frame->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ui->horizontalLayout->addWidget(frame);
-    addFrame(frame);
-}
+//void MainWindow::frameLoaded(ImageViewEditor *frame)
+//{
+//    frame->setFixedSize(64, 64);
+//    frame->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//    frame->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//    ui->horizontalLayout->addWidget(frame);
+//    addFrame(frame);
+//}
 
 //Ruini Tong
 void MainWindow::changeSizeSliderValue(int value){
@@ -328,6 +329,7 @@ void MainWindow::disableTool(Tool tool){
     ui->btnPencil->setEnabled(true);
     ui->btnPicker->setEnabled(true);
     ui->btnEraser->setEnabled(true);
+    ui->btnBucket->setEnabled(true);
 
     switch (tool) {
     case PENCIL:
@@ -338,6 +340,9 @@ void MainWindow::disableTool(Tool tool){
         break;
     case ERASER:
         ui->btnEraser->setEnabled(false);
+        break;
+    case BUCKET:
+        ui->btnBucket->setEnabled(false);
         break;
     default:
         break;

@@ -67,6 +67,7 @@ public slots:
     void drawLine(QPoint posOne,QPoint posTwo);
 
     void getColor(QPoint pos);
+    void fillColor(QColor currentColor, QPoint pos);
 
 private:
     Tool tool = PENCIL;
