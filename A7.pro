@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     canvasform.cpp \
+    frameview.cpp \
     imagevieweditor.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
 
 HEADERS += \
     canvasform.h \
+    frameview.h \
     imagevieweditor.h \
     mainwindow.h \
     model.h

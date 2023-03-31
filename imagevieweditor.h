@@ -5,7 +5,6 @@
 #include <QGraphicsView>
 #include <QObject>
 #include <QDebug>
-#include "model.h"
 
 class ImageViewEditor : public QGraphicsView
 {
@@ -33,18 +32,13 @@ private:
 
 signals:
     void mouseDown(QPoint);
-
     void mouseMove(QPoint);
     void mouseRelease(QPoint);
-    void changeTool(Tool);
 
     //Ruini Tong
-    void mousePressed(bool pressed, QGraphicsPixmapItem* frame);
+    void mousePressed(bool pressed);
     void getColor(QPoint);
     //-------------------------------------------
-
-    //Andy Tran
-
 
 };
 

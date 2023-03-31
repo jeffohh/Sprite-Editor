@@ -33,6 +33,9 @@ public:
     // main canvas
     QImage canvas;
 
+    //shared variable
+    static int frameIndex;
+
 public slots:
     void mouseDown(QPoint);
     //void mouseMove(QPoint);
@@ -40,8 +43,8 @@ public slots:
 
     //Andy Tran Added
     void changeTool(Tool currentTool);
-//    void updateFrames();
-    void initializeFrames();
+    void mouseClicked(QGraphicsPixmapItem*, int);
+    void initializeModel();
     void onAddFrame();
 
     //Tzhou: this should be combined with setToolColor, but need Renee's consent.
@@ -56,16 +59,15 @@ public slots:
 
     //Duong
     void createNewCanvas(int width, int height);
-    void frameSelected(int index);
+//    void frameSelected(int index);
     void saveFile(const QString &filename);
     void openFile(const QString &filename);
 
 
     //Ruini Tong
-    void mousePressed(bool pressed, QGraphicsPixmapItem* frame);
+    void mousePressed(bool pressed);
     void setPenSize(int size);
     void drawLine(QPoint posOne,QPoint posTwo);
-
     void getColor(QPoint pos);
 
 private:
@@ -80,11 +82,9 @@ private:
     bool isPressed = false;
     int penSize = 1;
 
-    //Andy Tran:: may be should this
-    //vector<QPixmap> pixmapFrames;
+    //Andy Tran
     vector<QImage> frameList;
     int currentFrame = 0;
-    QSize previewSize = QSize(150,150);
 
 signals:
     /**

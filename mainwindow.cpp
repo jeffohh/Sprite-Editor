@@ -12,7 +12,7 @@
 
 
 //Andy Tran
-
+#include "frameview.h"
 //-------------
 
 MainWindow::MainWindow(Model& model, QWidget *parent)
@@ -22,46 +22,32 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 {
     ui->setupUi(this);
 
-    //Andy Tran - Initialize Preview
-    startPreview();
 
-    //Tzhou
-    // Initializes the current color to be black, and its buttons.
-    updatePaintColor(DEFAULT_PAINT_COLOR);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
-    //-----------------------------------
 
     // INITIALIZE VIEW
-    ui->btnPencil->setEnabled(false);
-    ui->canvasView->updatePixmap(&model.canvas);
     {
-        QPushButton* addFrameBtn = new QPushButton("+");
-        addFrameBtn->setFixedSize(50, 50);
-        framesHorizontalLayout->setAlignment(Qt::AlignLeft);
-        framesHorizontalLayout->addWidget(addFrameBtn);
-        ui->framesContents->setLayout(framesHorizontalLayout);
+        //Tzhou
+        // Initializes the current color to be black, and its buttons.
+        updatePaintColor(DEFAULT_PAINT_COLOR);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
+        //-----------------------------------
+        //Canvas
+        ui->canvasView->updatePixmap(&model.canvas);
 
-        // NOTE, THIS IS A PREVIEW (BAREBONE CONCEPT)
-        // Think about how to apply Model-View!
-        // user clicks -> model creates new frame -> view creates
-        // a bit tricky since we have to destroy frames too
-        connect(addFrameBtn, &QPushButton::clicked, &model, &Model::onAddFrame);
-        connect(addFrameBtn, &QPushButton::clicked, this, [=]() {
-            addFrameWidget(framesHorizontalLayout);
-        });
+        //Frame View
+        initializeFrameView();
     }
 
     // CONNECTIONS START HERE
     //Andy Tran - Connection for Preview
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
-//    connect(frameTimer, &QTimer::timeout, this, &MainWindow::onFrameListUpdate);
+    connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::onChangeFpsSliderValue);
 
+    //Canvas Click Events
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
 
     //Ruin Eddit
     //connect(ui->canvasView, &ImageViewEditor::mouseMove, &model, &Model::mouseMove);
     connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
-    connect(ui->fpsSlider, &QSlider::valueChanged,
-            this, &MainWindow::changeFpsSliderValue);
 
     //-----------------Tool Box----------------------
     //Ruini
@@ -126,7 +112,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::handleOpenCanvas);
 
     connect(&model, &Model::newCanvasCreated, this, &MainWindow::newCanvasCreated);
-    connect(this, &MainWindow::frameSelected, &model, &Model::frameSelected);
+//    connect(this, &MainWindow::frameSelected, &model, &Model::frameSelected);
 
 }
 
@@ -147,88 +133,91 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
 
     //update Frames
     onFrameListUpdate();
-}
 
-//Andy Tran
-void MainWindow::addFrameWidget(QHBoxLayout *framesHorizontalLayout)
-{
-    //Andy Tran - need to fix the scroll bar issue
-    ImageViewEditor* newFrame = new ImageViewEditor();
-    newFrame->setFixedSize(64, 64);
-    newFrame->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    newFrame->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    framesHorizontalLayout->insertWidget(currentFrame, newFrame);
-
-    //need to move the scroll bar to the right where the new frame was created
-
-    addFrame(newFrame);
-
-    //Duong
-    if(currentFrame == 0){
-        emit frameSelected(0);
+    //Use once
+    if(isInit){
+        initializeView();
+        isInit = false;
     }
 }
 
-void MainWindow::addFrame(ImageViewEditor* newFrame){
-    //Andy Tran - need to fix the size issue
-    newFrame->updatePixmap(&frameList[currentFrame]);
-    newFrame->setSceneRect(0, 0, frameList[currentFrame].width(), frameList[currentFrame].height()); // set scene rect to image size
-    newFrame->setTransform(QTransform::fromScale(newFrame->width() / (qreal)frameList[currentFrame].width(),
-                                             newFrame->height() / (qreal)frameList[currentFrame].height()));
+//Andy Tran
+void MainWindow:: initializeFrameView(){
+    numFrames = 0;
+
+    QPushButton* addFrameBtn = new QPushButton("+");
+    addFrameBtn->setFixedSize(50, 50);
+
+    //Frames Layout
+    framesHorizontalLayout->setAlignment(Qt::AlignLeft);
+    framesHorizontalLayout->addWidget(addFrameBtn);
+    ui->framesContents->setLayout(framesHorizontalLayout);
+
+    //Add Frame Button Connection
+    connect(addFrameBtn, &QPushButton::clicked, &model, &Model::onAddFrame);
+    connect(addFrameBtn, &QPushButton::clicked, this, [=]() {
+        addFrameWidget(framesHorizontalLayout);
+    });
+
+    addFrameWidget(framesHorizontalLayout);
 }
 
-void MainWindow::startPreview() {
-    viewSize = ui->graphicsView->viewport()->size();
-    QImage blankCanvas(32,32, QImage::Format_ARGB32);
-    blankCanvas.fill(Qt::white);
-    QImage scaledCanvas = blankCanvas.scaled(viewSize, Qt::KeepAspectRatio, Qt::FastTransformation);
-    frameList.push_back(scaledCanvas);
-
-    pixmapItem.setPixmap(QPixmap::fromImage(frameList.front()));
-    previewScene->addItem(&pixmapItem);
-
-    // Set the focus item to the first pixmap item
-    previewScene->setFocusItem(&pixmapItem);
+void MainWindow::initializeView() {
+    //Initialize - Preview
+    toPixmapItem.setPixmap(QPixmap::fromImage(frameList.front()));
+    previewScene->addItem(&toPixmapItem);
+    previewScene->setFocusItem(&toPixmapItem);
     ui->graphicsView->setScene(previewScene);   
     timer->start(frameDuration);
+}
 
-    //Andy Tran - need to fix the size issue
-    //Initialize for frame menu
-    ImageViewEditor* newFrame = new ImageViewEditor();
-    newFrame->setFixedSize(64, 64);
-    newFrame->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    newFrame->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    framesHorizontalLayout->insertWidget(0, newFrame);
+void MainWindow::addFrameWidget(QHBoxLayout *framesHorizontalLayout)
+{
+    //Andy Tran - need to fix the scroll bar issue
+    QImage currentImage = model.canvas;
 
-    newFrame->updatePixmap(&blankCanvas);
-    newFrame->setSceneRect(0, 0, blankCanvas.width(), blankCanvas.height()); // set scene rect to image size
-    newFrame->setTransform(QTransform::fromScale(newFrame->width() / (qreal)blankCanvas.width(),
-                                             newFrame->height() / (qreal)blankCanvas.height()));
+    if(!isInit){
+        currentImage = frameList[currentFrame];
+    }
+
+    //Add new Frame View and Widget
+    FrameView* newFrame = new FrameView();
+    framesHorizontalLayout->insertWidget(numFrames++, newFrame);
+
+    //need to move the scroll bar to the right where the new frame was created
+
+    newFrame->updatePixmap(&currentImage);
+
+    newFrame->setSceneRect(0, 0, currentImage.width(), currentImage.height()); // set scene rect to image size
+    newFrame->setTransform(QTransform::fromScale(newFrame->width() / currentImage.width(),
+                                             newFrame->height() / currentImage.height()));
+    connect(newFrame, &FrameView::mouseClicked, &model, &Model::mouseClicked);
 
 }
 
-//This is good I guess
 void MainWindow::onFrameListUpdate(){
-    ImageViewEditor *frame = qobject_cast<ImageViewEditor *>(framesHorizontalLayout->itemAt(currentFrame)->widget());
+    //Update the FrameView when modified Canvas
+    FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(currentFrame)->widget());
     if(frame){
         frame->updatePixmap(&frameList[currentFrame]);
     }
 }
 
 void MainWindow::onTimerTimeout() {
-    currentFrameIndex = (currentFrameIndex + 1) % frameList.size();
-    pixmapItem.setPixmap(QPixmap::fromImage(frameList[currentFrameIndex]));
-
-    // Set the focus item to the current pixmap item
-    previewScene->setFocusItem(&pixmapItem);
+    //Move to the next frame when QTimer timeout
+    curPreviewIndex = (curPreviewIndex + 1) % frameList.size();
+    toPixmapItem.setPixmap(QPixmap::fromImage(frameList[curPreviewIndex]));
+    previewScene->setFocusItem(&toPixmapItem);
 }
 
-void MainWindow::changeFpsSliderValue(int value)
+void MainWindow::onChangeFpsSliderValue(int value)
 {
+    //Change FPS label
     QString textValue = QString::number(value);
     ui->fpsValueLabel->setText(textValue);
     fps = value;
 
+    //Reset Timer with new FPS and Frame Duration
     if(fps == 0){
         frameDuration = 0;
         timer->stop();
@@ -273,18 +262,19 @@ void MainWindow::handleNewCanvas() {
 }
 
 void MainWindow::newCanvasCreated() {
+    //Andy Tran Edited
 
-    // Delete all existing frame widgets (except the add frame button)
-       int itemCount = framesHorizontalLayout->count() - 1;
-       for (int i = itemCount - 1; i >= 0; i--) {
-           QLayoutItem *item = framesHorizontalLayout->takeAt(i);
-           delete item->widget();
-           delete item;
-       }
+    // Delete all existing frame widgets
+    for (int i = framesHorizontalLayout->count() - 1; i >= 0; i--) {
+        QLayoutItem *item = framesHorizontalLayout->takeAt(i);
+        delete item->widget();
+        delete item;
+    }
 
-       // Create a new frame widget for the new canvas
-       addFrameWidget(framesHorizontalLayout);
-   }
+    //Reset entire View
+    initializeFrameView();
+    initializeView();
+ }
 
 void MainWindow::handleSaveCanvas()
 {
@@ -307,15 +297,6 @@ void MainWindow::handleOpenCanvas()
     if (!fileName.isEmpty()) {
         model.openFile(fileName);
     }
-}
-
-void MainWindow::frameLoaded(ImageViewEditor *frame)
-{
-    frame->setFixedSize(64, 64);
-    frame->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    frame->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ui->horizontalLayout->addWidget(frame);
-    addFrame(frame);
 }
 
 //Ruini Tong

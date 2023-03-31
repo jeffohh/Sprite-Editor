@@ -12,8 +12,8 @@
 #include <QPixmap>
 #include <QVector>
 #include <QTimer>
-#include "imagevieweditor.h"
 #include "QHBoxLayout"
+
 using std::vector;
 //----------------
 
@@ -35,24 +35,20 @@ public:
     MainWindow(Model& model,QWidget *parent = nullptr);
     ~MainWindow();
 
-    //Andy Tran
-    void startPreview();
-    //----------------------
-
 public slots:
     void updateCanvas(QImage*, vector<QImage>*, int); // jeff!!
 
     //Andy Tran
     void onTimerTimeout();
     void onFrameListUpdate();
-    void changeFpsSliderValue(int value);
-    void addFrame(ImageViewEditor* newFrame);
+    void onChangeFpsSliderValue(int value);
     void addFrameWidget(QHBoxLayout *framesHorizontalLayout);
-    //------------------------------------------
+    void initializeView();
+    void initializeFrameView();
 
     //Duong
-    void handleNewCanvas();
     void newCanvasCreated();
+    void handleNewCanvas();
     void handleOpenCanvas();
     void handleSaveCanvas();
 
@@ -71,17 +67,25 @@ private:
     Model& model;
 
     //Andy Tran
+    bool isInit = true;
+
+    //Clone from Model's frameList
     vector<QImage> frameList;
+
+
+    //Frame View
+    int numFrames;
+    int currentFrame = 0;
     QHBoxLayout* framesHorizontalLayout = new QHBoxLayout(this);
+
+    //Preview
+    QSize viewSize;
     QGraphicsScene* previewScene = new QGraphicsScene(this);
+    QGraphicsPixmapItem toPixmapItem;
     QTimer *timer = new QTimer(this);
     int fps = 12;
     int frameDuration = 1000/12;
-    QGraphicsPixmapItem pixmapItem;
-    QSize viewSize;
-    int currentFrame = 0;
-    unsigned int currentFrameIndex = 0;
-    bool needsRestart = false;
+    unsigned int curPreviewIndex = 0;
     //------------------------
 
     //TZhou
@@ -90,6 +94,8 @@ private:
 
 
 signals:
+    //Andy Tran
+
 
     //Renee
     // used by any color change
@@ -101,7 +107,7 @@ signals:
     //----------------------
 
     //Duong
-    void frameSelected(int index);
+//    void frameSelected(int index);
 
 };
 #endif // MAINWINDOW_H

@@ -2,6 +2,8 @@
 #include "QtGui/qpainter.h"
 #include "qdebug.h"
 
+//Initialize static variable
+int Model::frameIndex = 0;
 
 Model::Model(QObject *parent)
     : QObject{parent}
@@ -9,10 +11,22 @@ Model::Model(QObject *parent)
 {
     canvas.fill(Qt::white);
     paintColor = Qt::black;
-    initializeFrames();
+    initializeModel();
 }
 
 //Andy Tran - Frames part
+
+void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
+    this->currentFrame = frameIndex;
+
+    qDebug() << "Model::mouseClicked "<<frameIndex;
+    //Andy Tran - need to keep track of currentFrame -> update the canvas
+    QPixmap pixmap = frame->pixmap();
+    canvas = pixmap.toImage();
+    frameList[currentFrame] = canvas;
+    emit updateCanvas(&canvas, &frameList, currentFrame);
+}
+
 void Model::onAddFrame(){
     qDebug() << "onAddFrame called";
     canvas = QImage(32, 32, QImage::Format_ARGB32);
@@ -22,16 +36,15 @@ void Model::onAddFrame(){
     emit updateCanvas(&canvas, &frameList, currentFrame);
 }
 
-void Model::initializeFrames(){
+void Model::initializeModel(){
+    frameIndex = 0;
+    currentFrame = 0;
     frameList.clear();
-    QImage scaledCanvas= canvas.scaled(previewSize, Qt::KeepAspectRatio, Qt::FastTransformation);
-    frameList.push_back(scaledCanvas);
-}
+    frameList.push_back(canvas);
 
-//void Model::updateFrames(){
-//    frameList[currentFrame] = canvas;
-//}
-//-------------------------------------------------------
+    emit updateCanvas(&canvas, &frameList, currentFrame);
+    qDebug() << "initializeModel called";
+}
 
 //Ruini
 //----------------------Tool part -------------------------
@@ -57,13 +70,8 @@ void Model::mouseDown(QPoint pos) {
     emit updateCanvas(&canvas, &frameList, currentFrame);
 }
 
-void Model::mousePressed(bool pressed, QGraphicsPixmapItem* frame){
+void Model::mousePressed(bool pressed){
     isPressed = pressed;
-
-    //Andy Tran - need to keep track of currentFrame -> update the canvas
-//    QPixmap pixmap = frame->pixmap();
-//    canvas = pixmap.toImage();
-
 }
 
 void Model::drawLine(QPoint posOne,QPoint posTwo){
@@ -145,18 +153,16 @@ void Model::createNewCanvas(int width, int height){
     canvas = QImage(width,height, QImage::Format_ARGB32);
     canvas.fill(Qt::white);
 
-    //Andy Tran: update frameList and update view
-    currentFrame = 0;
-    initializeFrames();
-    emit updateCanvas(&canvas, &frameList, currentFrame);
-
+    //Andy Tran Edited
+    initializeModel();
     emit newCanvasCreated();
 }
 
-void Model::frameSelected(int index) {
-    currentFrame = index;
-    canvas = frameList[currentFrame];
-}
+//Andy Tran: I think we don't need use this one any more since I had combine your part and mine
+//void Model::frameSelected(int index) {
+//    currentFrame = index;
+//    canvas = frameList[currentFrame];
+//}
 
 void Model::saveFile(const QString &filename)
 {
@@ -239,7 +245,6 @@ void Model::openFile(const QString &filename)
 
 
     // Update the current canvas and frames
-    currentFrame = 0;
     canvas = frameList[currentFrame];
     emit updateCanvas(&canvas, &frameList, currentFrame);
 }

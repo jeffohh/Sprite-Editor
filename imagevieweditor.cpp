@@ -20,13 +20,13 @@ void ImageViewEditor::updatePixmap(QImage* image) {
 }
 
 void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
-    if (event->button() == Qt::LeftButton) {
-        QPoint pos = mapToScene(event->pos()).toPoint();
-        emit mouseDown(pos);
-        emit getColor(pos);
-    }
 
-      emit mousePressed(true, imageItem);
+        if (event->button() == Qt::LeftButton) {
+            QPoint pos = mapToScene(event->pos()).toPoint();
+            emit mouseDown(pos);
+            emit getColor(pos);
+        }
+        emit mousePressed(true);
 }
 
 void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
@@ -38,22 +38,26 @@ void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void ImageViewEditor::mouseReleaseEvent(QMouseEvent *event) {
+    event->ignore();
+
     //Ruini Tong
-    emit mousePressed(false, imageItem);
+    emit mousePressed(false);
 }
 
 void ImageViewEditor::wheelEvent(QWheelEvent *event)
 {
-    // Get the current zoom level
 
-    // Zoom in or out based on the wheel delta
-    if (event->angleDelta().y() > 0) {
-        scale *= 1.2;
-    } else {
-        scale /= 1.2;
-    }
+        // Get the current zoom level
 
-    // Set the new zoom level
-    setTransform(QTransform().scale(scale, scale));
+        // Zoom in or out based on the wheel delta
+        if (event->angleDelta().y() > 0) {
+            scale *= 1.2;
+        } else {
+            scale /= 1.2;
+        }
+
+        // Set the new zoom level
+        setTransform(QTransform().scale(scale, scale));
 }
+
 
