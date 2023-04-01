@@ -194,37 +194,6 @@ void MainWindow::onFrameListUpdate(){
 }
 
 
-// [=== TOOL SECTION ===] @Ruini
-void MainWindow::disableTool(Tool tool){
-    ui->btnPencil->setEnabled(true);
-    ui->btnPicker->setEnabled(true);
-    ui->btnEraser->setEnabled(true);
-    ui->btnBucket->setEnabled(true);
-
-    switch (tool) {
-    case PENCIL:
-        ui->btnPencil->setEnabled(false);
-        break;
-    case PICKER:
-        ui->btnPicker->setEnabled(false);
-        break;
-    case ERASER:
-        ui->btnEraser->setEnabled(false);
-        break;
-    case BUCKET:
-        ui->btnBucket->setEnabled(false);
-        break;
-    default:
-        break;
-    }
-}
-
-void MainWindow::changeSizeSliderValue(int value){
-    QString textValue = QString::number(value);
-    ui->sizeValueLabel->setText(textValue);
-}
-
-
 
 // [=== PREVIEW SECTION ===] @Andy Tran
 void MainWindow::onTimerTimeout() {
@@ -254,6 +223,38 @@ void MainWindow::onChangeFpsSliderValue(int value)
         timer->start(frameDuration);
     }
 
+}
+
+
+
+// [=== TOOL SECTION ===] @Ruini
+void MainWindow::disableTool(Tool tool){
+    ui->btnPencil->setEnabled(true);
+    ui->btnPicker->setEnabled(true);
+    ui->btnEraser->setEnabled(true);
+    ui->btnBucket->setEnabled(true);
+
+    switch (tool) {
+    case PENCIL:
+        ui->btnPencil->setEnabled(false);
+        break;
+    case PICKER:
+        ui->btnPicker->setEnabled(false);
+        break;
+    case ERASER:
+        ui->btnEraser->setEnabled(false);
+        break;
+    case BUCKET:
+        ui->btnBucket->setEnabled(false);
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::changeSizeSliderValue(int value){
+    QString textValue = QString::number(value);
+    ui->sizeValueLabel->setText(textValue);
 }
 
 
