@@ -90,6 +90,7 @@ private:
 
     //TZhou
     QColor DEFAULT_PAINT_COLOR = Qt::black; // Default pen or brush color
+    void setIconToToolBtns();
     //----------------------
 
 

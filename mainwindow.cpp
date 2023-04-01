@@ -5,6 +5,8 @@
 #include "canvasform.h"
 #include "frameview.h"
 
+#include <QDir>
+#include <QCoreApplication>
 #include <iostream>
 #include<QString>
 #include<QDebug>
@@ -22,7 +24,9 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         //Tzhou
         // Initializes the current color to be black, and its buttons.
         updatePaintColor(DEFAULT_PAINT_COLOR);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
-        //-----------------------------------
+
+        setIconToToolBtns();
+
         //Canvas
         ui->canvasView->updatePixmap(&model.canvas);
 
@@ -325,6 +329,14 @@ void MainWindow::handleOpenCanvas()
     }
 }
 
+//-------------------Extra Features ----------------------
 
+void MainWindow::setIconToToolBtns(){
 
-
+    ui->btnPencil->setIcon(QIcon(QPixmap(":/image/image/pencil.png")));
+    ui->btnPencil->setIconSize(QSize(30,30));
+    ui->btnBucket->setIcon(QIcon(QPixmap(":/image/image/bucket.png")));
+    ui->btnBucket->setIconSize(QSize(30,30));
+    ui->btnEraser->setIcon(QIcon(QPixmap(":/image/image/eraser.png")));
+    ui->btnEraser->setIconSize(QSize(30,30));
+}
