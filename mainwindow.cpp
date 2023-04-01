@@ -333,10 +333,12 @@ void MainWindow::handleOpenCanvas()
 
 void MainWindow::setIconToToolBtns(){
 
-    ui->btnPencil->setIcon(QIcon(QPixmap(":/image/image/pencil.png")));
+    ui->btnPencil->setIcon(QIcon(QPixmap(":/image/image/pencil1.png")));
     ui->btnPencil->setIconSize(QSize(30,30));
-    ui->btnBucket->setIcon(QIcon(QPixmap(":/image/image/bucket.png")));
+    ui->btnBucket->setIcon(QIcon(QPixmap(":/image/image/bucket1.png")));
     ui->btnBucket->setIconSize(QSize(30,30));
-    ui->btnEraser->setIcon(QIcon(QPixmap(":/image/image/eraser.png")));
+    ui->btnEraser->setIcon(QIcon(QPixmap(":/image/image/eraser1.png")));
     ui->btnEraser->setIconSize(QSize(30,30));
+    ui->btnPicker->setIcon(QIcon(QPixmap(":/image/image/picker1.png")));
+    ui->btnPicker->setIconSize(QSize(30,30));
 }

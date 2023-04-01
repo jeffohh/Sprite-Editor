@@ -3,5 +3,11 @@
         <file>image/pencil.png</file>
         <file>image/eraser.png</file>
         <file>image/bucket.png</file>
+        <file>image/picker1.png</file>
+        <file>image/bucket1.png</file>
+        <file>image/bucket2.png</file>
+        <file>image/pencil1.png</file>
+        <file>image/eraser1.png</file>
+        <file>image/bucket3.png</file>
     </qresource>
 </RCC>
