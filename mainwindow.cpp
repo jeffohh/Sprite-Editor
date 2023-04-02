@@ -128,7 +128,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::handleOpenCanvas);
 
     connect(&model, &Model::newCanvasCreated, this, &MainWindow::newCanvasCreated);
-//    connect(this, &MainWindow::frameSelected, &model, &Model::frameSelected);
+
 
 }
 
@@ -375,18 +375,21 @@ void MainWindow::handleNewCanvas() {
 }
 
 void MainWindow::newCanvasCreated() {
-    //Andy Tran Edited
+    // Clear the current frame widgets
+       while (!framesHorizontalLayout->isEmpty()) {
+           QLayoutItem* item = framesHorizontalLayout->takeAt(0);
+           delete item->widget();
+           delete item;
+       }
 
-    // Delete all existing frame widgets
-    for (int i = framesHorizontalLayout->count() - 1; i >= 0; i--) {
-        QLayoutItem *item = framesHorizontalLayout->takeAt(i);
-        delete item->widget();
-        delete item;
-    }
+       // Create frame widgets for each frame in the frameList
+       for (size_t i = 0; i < frameList.size(); ++i) {
+           addFrameWidget(framesHorizontalLayout);
+       }
 
-    //Reset entire View
-    initializeFrameView();
-    initializeView();
+       // Reinitialize the frame view and preview components
+       initializeFrameView();
+       initializeView();
  }
 
 void MainWindow::handleSaveCanvas()

@@ -251,11 +251,6 @@ void Model::createNewCanvas(int width, int height){
     emit newCanvasCreated();
 }
 
-//Andy Tran: I think we don't need use this one any more since I had combine your part and mine
-//void Model::frameSelected(int index) {
-//    currentFrame = index;
-//    canvas = frameList[currentFrame];
-//}
 
 void Model::saveFile(const QString &filename)
 {
@@ -298,49 +293,49 @@ void Model::saveFile(const QString &filename)
 void Model::openFile(const QString &filename)
 {
     QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qWarning("Failed to open the file for reading.");
-        return;
-    }
+       if (!file.open(QIODevice::ReadOnly)) {
+           qWarning("Failed to open the file for reading.");
+           return;
+       }
 
-    QByteArray data = file.readAll();
-    QJsonDocument doc(QJsonDocument::fromJson(data));
-    QJsonObject project = doc.object();
+       QByteArray data = file.readAll();
+       QJsonDocument doc(QJsonDocument::fromJson(data));
+       QJsonObject project = doc.object();
 
-    int height = project["height"].toInt();
-    int width = project["width"].toInt();
-    int numberOfFrames = project["numberOfFrames"].toInt();
-    QJsonArray frames = project["frames"].toArray();
+       int height = project["height"].toInt();
+       int width = project["width"].toInt();
+       int numberOfFrames = project["numberOfFrames"].toInt();
+       QJsonArray frames = project["frames"].toArray();
 
-    frameList.clear();
+       frameList.clear();
 
-    for (int i = 0; i < numberOfFrames; ++i) {
-        QJsonObject frameObject = frames[i].toObject();
-        QString frameName = QString("frame%1").arg(i);
-        QJsonArray frameData = frameObject[frameName].toArray();
+       for (int i = 0; i < numberOfFrames; ++i) {
+           QJsonObject frameObject = frames[i].toObject();
+           QString frameName = QString("frame%1").arg(i);
+           QJsonArray frameData = frameObject[frameName].toArray();
 
-        QImage frame(width, height, QImage::Format_ARGB32);
+           QImage frame(width, height, QImage::Format_ARGB32);
 
-        for (int y = 0; y < height; ++y) {
-            QJsonArray row = frameData[y].toArray();
-            for (int x = 0; x < width; ++x) {
-                QJsonArray pixel = row[x].toArray();
-                int r = pixel[0].toInt();
-                int g = pixel[1].toInt();
-                int b = pixel[2].toInt();
-                int a = pixel[3].toInt();
-                QColor color(r, g, b, a);
-                frame.setPixelColor(x, y, color);
-            }
-        }
+           for (int y = 0; y < height; ++y) {
+               QJsonArray row = frameData[y].toArray();
+               for (int x = 0; x < width; ++x) {
+                   QJsonArray pixel = row[x].toArray();
+                   int r = pixel[0].toInt();
+                   int g = pixel[1].toInt();
+                   int b = pixel[2].toInt();
+                   int a = pixel[3].toInt();
+                   QColor color(r, g, b, a);
+                   frame.setPixelColor(x, y, color);
+               }
+           }
 
-        frameList.push_back(frame);
+           frameList.push_back(frame);
+       }
 
-
-    // Update the current canvas and frames
-    canvas = frameList[currentFrame];
-    emit updateCanvas(&canvas, &frameList, currentFrame);
-}
+       // Set the current frame to the first frame
+       currentFrame = 0;
+       canvas = frameList[currentFrame];
+       emit updateCanvas(&canvas, &frameList, currentFrame);
 }
 
 //---------------------Extra Feature------------
