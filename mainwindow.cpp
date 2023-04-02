@@ -25,7 +25,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         // Initializes the current color to be black, and its buttons.
         updatePaintColor(DEFAULT_PAINT_COLOR);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
 
-        setIconToToolBtns();
+        setIconToToolBtns(); // Jeffrey: is there a way we can move this to only mainwindow.ui?
 
         //Canvas
         ui->canvasView->updatePixmap(&model.canvas);

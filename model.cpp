@@ -14,8 +14,9 @@ Model::Model(QObject *parent)
     initializeModel();
 }
 
-//Andy Tran - Frames part
 
+
+// [=== FRAMES SECTION ===] @Andy Tran
 void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
     this->currentFrame = frameIndex;
 
@@ -46,8 +47,10 @@ void Model::initializeModel(){
     qDebug() << "initializeModel called";
 }
 
-//Ruini
-//----------------------Tool part -------------------------
+
+
+// [=== TOOL SECTION ===] @Ruini
+// --- Tool Input ---
 void Model::mouseDown(QPoint pos) {
 
     if(isPressed){
@@ -74,6 +77,7 @@ void Model::mousePressed(bool pressed){
     isPressed = pressed;
 }
 
+// --- Tool Modify ---
 void Model::drawLine(QPoint posOne,QPoint posTwo){
 
     //qDebug() << tool;
@@ -100,36 +104,6 @@ void Model::drawLine(QPoint posOne,QPoint posTwo){
     painter.drawLine(posOne.x(),posOne.y(),posTwo.x(),posTwo.y());
 
     emit updateCanvas(&canvas, &frameList, currentFrame);
-}
-
-void Model::setPenSize(int size){
-    penSize = size/10;
-}
-
-//void Model::mouseUp(QPoint) {
-
-//}
-
-void Model::changeTool(Tool currentTool){
-    tool = currentTool;
-    qDebug() << "changeTool called" << tool;
-}
-
-void Model::getColor(QPoint pos){
-    QColor pixelColor = canvas.pixelColor(pos);
-
-    qDebug()<< pos<<" "<< pixelColor;
-
-    switch (tool) {
-    case PICKER:
-        paintColorChanged(pixelColor);
-        return;
-    case BUCKET:
-        fillColor(pixelColor, pos);
-        return;
-    default:
-        break;
-    }
 }
 
 void Model::fillColor(QColor originColor, QPoint pos){
@@ -190,9 +164,36 @@ void Model::fillColor(QColor originColor, QPoint pos){
 
 }
 
-//----------------------Color part -------------------------
+void Model::getColor(QPoint pos){
+    QColor pixelColor = canvas.pixelColor(pos);
 
-//Renee, Tzhou
+    qDebug()<< pos<<" "<< pixelColor;
+
+    switch (tool) {
+    case PICKER:
+        paintColorChanged(pixelColor);
+        return;
+    case BUCKET:
+        fillColor(pixelColor, pos);
+        return;
+    default:
+        break;
+    }
+}
+
+// --- Tool Settings ---
+void Model::changeTool(Tool currentTool){
+    tool = currentTool;
+    qDebug() << "changeTool called" << tool;
+}
+
+void Model::setPenSize(int size){
+    penSize = size/10;
+}
+
+
+
+// [=== COLOR SECTION ===] @Tzhou @Ruini
 void Model::paintColorChanged(QColor newColor)
 {
     paintColor=newColor;
@@ -215,6 +216,9 @@ void Model::updateAlpha(int newAlphaSliderValue)
               <<paintColor.alpha();
 }
 
+
+
+// [=== CANVAS SECTION ===] @Duong @Andy Tran
 //Duong
 void Model::createNewCanvas(int width, int height){
 

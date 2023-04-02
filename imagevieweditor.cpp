@@ -1,6 +1,8 @@
 #include "imagevieweditor.h"
 #include <QMouseEvent>
 
+#include <QDebug>
+
 ImageViewEditor::ImageViewEditor(QWidget *parent) :
     QGraphicsView(parent)
 {
@@ -15,10 +17,16 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
     this->setScene(scene);
 }
 
+
+
+// [=== CANVAS SECTION ===] @Jeffrey
 void ImageViewEditor::updatePixmap(QImage* image) {
     imageItem->setPixmap(QPixmap::fromImage(*image));
 }
 
+
+
+// [=== INPUT SECTION ===] @Jeffrey
 void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
         if (event->button() == Qt::LeftButton) {
             QPoint pos = mapToScene(event->pos()).toPoint();
