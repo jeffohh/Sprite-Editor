@@ -43,13 +43,12 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
     connect(ui->canvasView, &ImageViewEditor::mousePressed, &model, &Model::mousePressed);
 
-
-
     // [=== PREVIEW CONNECTIONS ===] @Andy Tran
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout); // Andy Tran - connection for preview
     connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::onChangeFpsSliderValue);
 
-
+    // [=== FRAME VIEW CONNECTIONS ===] @Andy Tran
+    connect(&model, &Model::deleteFrameWidget, this, &MainWindow::deleteFrameWidget);
 
     // [=== TOOL CONNECTIONS ===] @Ruini
     // --- Tool Select ---
@@ -115,14 +114,13 @@ MainWindow::~MainWindow()
 
 // [=== INITIALIZE SECTION ===] @Andy Tran
 void MainWindow::initializeFrameView(){
-    numFrames = 0;
-
     QPushButton* addFrameBtn = new QPushButton("+");
-    addFrameBtn->setFixedSize(50, 50);
+    addFrameBtn->setFixedSize(64, 64);
 
     //Frames Layout
     framesHorizontalLayout->setAlignment(Qt::AlignLeft);
     framesHorizontalLayout->addWidget(addFrameBtn);
+
     ui->framesContents->setLayout(framesHorizontalLayout);
 
     //Add Frame Button Connection
@@ -139,23 +137,96 @@ void MainWindow::addFrameWidget(QHBoxLayout *framesHorizontalLayout)
     //Andy Tran - need to fix the scroll bar issue
     QImage currentImage = model.canvas;
 
+    //Not Initializing -> set currentImage according to the frameList
     if(!isInit){
         currentImage = frameList[currentFrame];
     }
 
-    //Add new Frame View and Widget
     FrameView* newFrame = new FrameView();
-    framesHorizontalLayout->insertWidget(numFrames++, newFrame);
 
-    //need to move the scroll bar to the right where the new frame was created
+    //If the size is greater than 0 -> insert at index size - 1
+    if(frameList.size() > 0){
+        framesHorizontalLayout->insertWidget(frameList.size() - 1, newFrame);
+
+        //Set the border style for the previous and current widgets
+        framesHorizontalLayout->itemAt(previousFrame)->widget()->setStyleSheet("border: none");
+        framesHorizontalLayout->itemAt(frameList.size())->widget()->setStyleSheet("");
+        framesHorizontalLayout->itemAt(frameList.size() - 1)->widget()->setStyleSheet("border: 3px solid black;");
+    }
+    //Initialize Frame View - insert at index 0
+    else{
+        framesHorizontalLayout->insertWidget(0, newFrame);
+        framesHorizontalLayout->itemAt(0)->widget()->setStyleSheet("border: 3px solid black;");
+    }
 
     newFrame->updatePixmap(&currentImage);
-
     newFrame->setSceneRect(0, 0, currentImage.width(), currentImage.height()); // set scene rect to image size
     newFrame->setTransform(QTransform::fromScale(newFrame->width() / currentImage.width(),
                                              newFrame->height() / currentImage.height()));
-    connect(newFrame, &FrameView::mouseClicked, &model, &Model::mouseClicked);
 
+    //Connect events of FrameView and Model
+    connect(newFrame, &FrameView::mouseClicked, &model, &Model::mouseClicked);
+    connect(newFrame, &FrameView::deletePressed, &model, &Model::deletePressed);
+}
+
+void MainWindow::deleteFrameWidget(QImage* canvas, vector<QImage>* list, int currentFrame, int deletedIndex) {
+    //Can abtract to a method
+    //Update Canvas View
+    ui->canvasView->updatePixmap(canvas);
+
+    //Update current frame and frame list
+    previousFrame = currentFrame;
+    this->currentFrame = currentFrame;
+    frameList.clear();
+    frameList.resize(list->size());
+    frameList = *list;
+    //---------------------------------------------------------------
+    //Delete a Widget at deletedIndex
+    QLayoutItem *item = framesHorizontalLayout->takeAt(deletedIndex);
+    delete item->widget();
+    delete item;
+
+    //Update color of border according to the currcent frame view
+    framesHorizontalLayout->itemAt(this->currentFrame)->widget()->setStyleSheet("border: 3px solid black;");
+
+    //Shift the index of FrameView elements to Left - Need to exclude the Add Frame Button (last element of the layout)
+    for(int i = deletedIndex; i < framesHorizontalLayout->count() - 1;i++){
+        FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(i)->widget());
+        if((frame->getIndex() - 1) >= 0)
+            frame->updateIndex(frame->getIndex()-1);
+    }
+}
+
+// [=== CANVAS SECTION ===] @Jeffrey @Andy Tran
+void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame) {
+    //Can abtract to a method
+    //update Canvas View
+    ui->canvasView->updatePixmap(canvas);
+
+    //Update current frame and frame list
+    previousFrame = this->currentFrame;
+    this->currentFrame = currentFrame;
+    frameList.clear();
+    frameList.resize(list->size());
+    frameList = *list;
+    //---------------------------------------------------------------
+
+    //Update color of border according to the currcent frame view
+    framesHorizontalLayout->itemAt(previousFrame)->widget()->setStyleSheet("border: none");
+    framesHorizontalLayout->itemAt(this->currentFrame)->widget()->setStyleSheet("border: 3px solid black;");
+
+    //Update the FrameView when modified Canvas
+    QWidget* widget = framesHorizontalLayout->itemAt(currentFrame)->widget();
+    FrameView *frame = qobject_cast<FrameView*>(widget);
+    if(frame){
+        frame->updatePixmap(&frameList[currentFrame]);
+    }
+
+    //Initialize the View at the first place
+    if(isInit){
+        initializeView();
+        isInit = false;
+    }
 }
 
 void MainWindow::initializeView() {
@@ -166,38 +237,6 @@ void MainWindow::initializeView() {
     ui->graphicsView->setScene(previewScene);
     timer->start(frameDuration);
 }
-
-
-
-// [=== CANVAS SECTION ===] @Jeffrey @Andy Tran
-void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame) {
-    ui->canvasView->updatePixmap(canvas);
-
-    //Andy Tran - Update frameList
-    this->currentFrame = currentFrame;
-    frameList.clear();
-    frameList.resize(list->size());
-    frameList = *list;
-
-    //update Frames
-    onFrameListUpdate();
-
-    //Use once
-    if(isInit){
-        initializeView();
-        isInit = false;
-    }
-}
-
-void MainWindow::onFrameListUpdate(){
-    //Update the FrameView when modified Canvas
-    FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(currentFrame)->widget());
-    if(frame){
-        frame->updatePixmap(&frameList[currentFrame]);
-    }
-}
-
-
 
 // [=== PREVIEW SECTION ===] @Andy Tran
 void MainWindow::onTimerTimeout() {

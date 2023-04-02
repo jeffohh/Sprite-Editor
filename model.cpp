@@ -15,6 +15,25 @@ Model::Model(QObject *parent)
 }
 
 //Andy Tran - Frames part
+void Model::deletePressed(int deletedIndex){
+    frameIndex--;
+    frameList.erase(frameList.begin() + deletedIndex);
+    //Delete if have more than one frame
+    if(frameList.size() > 1){
+        //Shift to the left
+        if((deletedIndex - 1) >= 0){
+            currentFrame = deletedIndex - 1;
+        }else{ //Shift to the right
+            currentFrame = deletedIndex;
+        }
+
+        canvas = frameList[currentFrame];
+
+
+        emit deleteFrameWidget(&canvas, &frameList, currentFrame, deletedIndex);
+    }
+}
+
 
 void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
     this->currentFrame = frameIndex;
@@ -23,16 +42,17 @@ void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
     //Andy Tran - need to keep track of currentFrame -> update the canvas
     QPixmap pixmap = frame->pixmap();
     canvas = pixmap.toImage();
+
     frameList[currentFrame] = canvas;
+
     emit updateCanvas(&canvas, &frameList, currentFrame);
 }
 
 void Model::onAddFrame(){
-    qDebug() << "onAddFrame called";
     canvas = QImage(32, 32, QImage::Format_ARGB32);
     canvas.fill(Qt::white);
     frameList.push_back(canvas);
-    currentFrame++;
+    currentFrame = frameList.size() - 1;
     emit updateCanvas(&canvas, &frameList, currentFrame);
 }
 
@@ -75,8 +95,6 @@ void Model::mousePressed(bool pressed){
 }
 
 void Model::drawLine(QPoint posOne,QPoint posTwo){
-
-    //qDebug() << tool;
     QPainter painter(&canvas);
     QPen pen;
     pen.setWidth(penSize);

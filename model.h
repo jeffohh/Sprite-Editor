@@ -41,11 +41,12 @@ public slots:
     //void mouseMove(QPoint);
     //void mouseUp(QPoint);
 
-    //Andy Tran Added
+    //Andy Tran
     void changeTool(Tool currentTool);
     void mouseClicked(QGraphicsPixmapItem*, int);
     void initializeModel();
     void onAddFrame();
+    void deletePressed(int);
 
     //Tzhou: this should be combined with setToolColor, but need Renee's consent.
     /**
@@ -101,6 +102,7 @@ signals:
 
     //Renee, Tzhou
     void updatePaintColor(QColor newColor);
+
     //Tzhou
     void updateAlphaSliderLabel(QString alphaSliderReading);
     void resetAlphaSlider(int max);
@@ -112,8 +114,8 @@ signals:
     //Duong
     void newCanvasCreated();
 
-
-
+    //Andy Tran
+    void deleteFrameWidget(QImage*, vector<QImage>*, int, int);
 };
 
 #endif // MODEL_H

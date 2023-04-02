@@ -40,11 +40,11 @@ public slots:
 
     //Andy Tran
     void onTimerTimeout();
-    void onFrameListUpdate();
     void onChangeFpsSliderValue(int value);
     void addFrameWidget(QHBoxLayout *framesHorizontalLayout);
     void initializeView();
     void initializeFrameView();
+    void deleteFrameWidget(QImage*, vector<QImage>*, int, int);
 
     //Duong
     void newCanvasCreated();
@@ -74,8 +74,8 @@ private:
 
 
     //Frame View
-    int numFrames;
     int currentFrame = 0;
+    int previousFrame = 0;
     QHBoxLayout* framesHorizontalLayout = new QHBoxLayout(this);
 
     //Preview
