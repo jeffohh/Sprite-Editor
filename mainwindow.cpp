@@ -380,6 +380,7 @@ void MainWindow::handleOpenCanvas()
 
 //-------------------Extra Features ----------------------
 
+//tzhou
 void MainWindow::setIconToToolBtns(){
 
     ui->btnPencil->setIcon(QIcon(QPixmap(":/image/image/pencil1.png")));
