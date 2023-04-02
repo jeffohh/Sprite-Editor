@@ -6,7 +6,7 @@
 FrameView::FrameView(QWidget *parent) :
     QGraphicsView(parent)
 {
-    setFocusPolicy(Qt::StrongFocus);
+//    setFocusPolicy(Qt::StrongFocus);
     this->setFixedSize(64, 64);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

@@ -14,30 +14,29 @@ Model::Model(QObject *parent)
     initializeModel();
 }
 
-<<<<<<< HEAD
-=======
 //Andy Tran - Frames part
 void Model::deletePressed(int deletedIndex){
-    frameIndex--;
-    frameList.erase(frameList.begin() + deletedIndex);
     //Delete if have more than one frame
     if(frameList.size() > 1){
+
+        frameList.erase(frameList.begin() + deletedIndex);
+
         //Shift to the left
         if((deletedIndex - 1) >= 0){
             currentFrame = deletedIndex - 1;
+            qDebug() << "Shift Left: " << currentFrame;
         }else{ //Shift to the right
             currentFrame = deletedIndex;
+            qDebug() << "Shift right: " << currentFrame;
         }
-
         canvas = frameList[currentFrame];
 
+        //Update static variable
+        frameIndex--;
 
         emit deleteFrameWidget(&canvas, &frameList, currentFrame, deletedIndex);
     }
 }
-
->>>>>>> local
-
 
 // [=== FRAMES SECTION ===] @Andy Tran
 void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){

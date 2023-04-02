@@ -152,6 +152,9 @@ void MainWindow::addFrameWidget(QHBoxLayout *framesHorizontalLayout)
         framesHorizontalLayout->itemAt(previousFrame)->widget()->setStyleSheet("border: none");
         framesHorizontalLayout->itemAt(frameList.size())->widget()->setStyleSheet("");
         framesHorizontalLayout->itemAt(frameList.size() - 1)->widget()->setStyleSheet("border: 3px solid black;");
+
+        // Set focus on the newest FrameView
+        newFrame->setFocus();
     }
     //Initialize Frame View - insert at index 0
     else{
@@ -170,6 +173,7 @@ void MainWindow::addFrameWidget(QHBoxLayout *framesHorizontalLayout)
 }
 
 void MainWindow::deleteFrameWidget(QImage* canvas, vector<QImage>* list, int currentFrame, int deletedIndex) {
+    qDebug() << "deleted Index: " << deletedIndex;
     //Can abtract to a method
     //Update Canvas View
     ui->canvasView->updatePixmap(canvas);
@@ -190,11 +194,15 @@ void MainWindow::deleteFrameWidget(QImage* canvas, vector<QImage>* list, int cur
     framesHorizontalLayout->itemAt(this->currentFrame)->widget()->setStyleSheet("border: 3px solid black;");
 
     //Shift the index of FrameView elements to Left - Need to exclude the Add Frame Button (last element of the layout)
-    for(int i = deletedIndex; i < framesHorizontalLayout->count() - 1;i++){
+    for(int i = deletedIndex; i < framesHorizontalLayout->count() - 1; i++){
         FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(i)->widget());
         if((frame->getIndex() - 1) >= 0)
             frame->updateIndex(frame->getIndex()-1);
     }
+
+    // Set focus on the current FrameView
+    FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(this->currentFrame)->widget());
+    if(frame) frame->setFocus();
 }
 
 // [=== CANVAS SECTION ===] @Jeffrey @Andy Tran
@@ -216,10 +224,12 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
     framesHorizontalLayout->itemAt(this->currentFrame)->widget()->setStyleSheet("border: 3px solid black;");
 
     //Update the FrameView when modified Canvas
-    QWidget* widget = framesHorizontalLayout->itemAt(currentFrame)->widget();
-    FrameView *frame = qobject_cast<FrameView*>(widget);
+    FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(currentFrame)->widget());
     if(frame){
         frame->updatePixmap(&frameList[currentFrame]);
+
+        // Set focus on the current FrameView
+        frame->setFocus();
     }
 
     //Initialize the View at the first place
