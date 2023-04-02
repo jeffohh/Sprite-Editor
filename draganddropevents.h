@@ -15,6 +15,7 @@
 #include<QMimeData>
 #include<QSize>
 
+//tzhou
 class dragAndDropEvents
 {
 public:
