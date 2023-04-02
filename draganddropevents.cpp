@@ -35,6 +35,11 @@ void DragAndDropGraphicsView::dropEvent(QDropEvent *event)
     emit itemDrop(labelImage, this);
 }
 
+void DragAndDropGraphicsView::mousePressEvent(QMouseEvent *event)
+{
+    emit customColorIsSelected(this);
+}
+
 DragAndDropLabel::DragAndDropLabel(QWidget *widget)
 {
 

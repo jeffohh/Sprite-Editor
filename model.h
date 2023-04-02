@@ -13,6 +13,11 @@
 //Andy Tran
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
+
+//tzhou
+#include<QGraphicsView>
+#include<QMap>
+
 using std::vector;
 
 // global declaration so view can access too?
@@ -57,6 +62,8 @@ public slots:
      */
     void paintColorChanged(const QColor newColor);//Tzhou, Ruini Tong
     void updateAlpha(int newAlphaSliderValue);
+    void updateCustomColor(QGraphicsView* view);
+    void customColorIsSelected(QGraphicsView* view);
 
     //Duong
     void createNewCanvas(int width, int height);
@@ -88,6 +95,9 @@ private:
     vector<QImage> frameList;
     int currentFrame = 0;
 
+    //tzhou
+    QMap <QGraphicsView*, QColor> customColors;
+
 signals:
     /**
      * @brief Sends canvas to View
@@ -106,7 +116,6 @@ signals:
     //Tzhou
     void updateAlphaSliderLabel(QString alphaSliderReading);
     void resetAlphaSlider(int max);
-    //---------------------------------------------
 
     //Ruini Tong
     void newPosition(QPoint pos);

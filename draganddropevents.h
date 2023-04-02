@@ -30,7 +30,7 @@ private:
     void createDrag(const QPoint &pos, QWidget *widget );
 protected:
     void mousePressEvent(QMouseEvent *event) override;
-   using QLabel::QLabel;
+    using QLabel::QLabel;
 
 
 };
@@ -43,11 +43,13 @@ public:
    void dragLeaveEvent(QDragLeaveEvent* event) override;
    void dragMoveEvent(QDragMoveEvent* event) override;
    void dropEvent(QDropEvent* event) override;
+   void mousePressEvent(QMouseEvent *event) override;
    using QGraphicsView::QGraphicsView;
 
  signals:
 
     void itemDrop(QPixmap, QGraphicsView*);
+    void customColorIsSelected(QGraphicsView*);
 
 
 };

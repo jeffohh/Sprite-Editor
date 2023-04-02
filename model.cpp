@@ -238,7 +238,6 @@ void Model::updateAlpha(int newAlphaSliderValue)
 }
 
 
-
 // [=== CANVAS SECTION ===] @Duong @Andy Tran
 //Duong
 void Model::createNewCanvas(int width, int height){
@@ -343,3 +342,28 @@ void Model::openFile(const QString &filename)
     emit updateCanvas(&canvas, &frameList, currentFrame);
 }
 }
+
+//---------------------Extra Feature------------
+//Tzhou
+void Model::updateCustomColor(QGraphicsView *view)
+{
+    if(customColors.contains(view)){
+        customColors[view] = paintColor;
+    }
+    else
+        customColors.insert(view,paintColor);
+}
+
+//Tzhou
+void Model::customColorIsSelected(QGraphicsView* view)
+{
+    if(customColors.contains(view)){
+        paintColor=customColors[view];
+        emit updatePaintColor(paintColor);
+        qDebug()<<"selcted";
+        //emit resetAlphaSlider(10);
+    }
+
+}
+
+

@@ -93,6 +93,20 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             this, &MainWindow::imageEnter);
     connect(ui->customColorView5, &DragAndDropGraphicsView::itemDrop,
             this, &MainWindow::imageEnter);
+    connect(this, &MainWindow::updateCustomColor,
+            &model, &Model::updateCustomColor);
+    connect(ui->customColorView1, &DragAndDropGraphicsView::customColorIsSelected,
+            &model, &Model::customColorIsSelected);
+    connect(ui->customColorView2, &DragAndDropGraphicsView::customColorIsSelected,
+            &model, &Model::customColorIsSelected);
+    connect(ui->customColorView3, &DragAndDropGraphicsView::customColorIsSelected,
+            &model, &Model::customColorIsSelected);
+    connect(ui->customColorView4, &DragAndDropGraphicsView::customColorIsSelected,
+            &model, &Model::customColorIsSelected);
+    connect(ui->customColorView5, &DragAndDropGraphicsView::customColorIsSelected,
+            &model, &Model::customColorIsSelected);
+
+
 
     // --- Color Model-View Updates ---
     //1. user pick a color => model's paintColor change.
@@ -338,10 +352,9 @@ void MainWindow::updatePaintColor(QColor newColor)
     QPixmap pix(w, h); // give pixmap some size
     pix.fill( newColor);
     QPainter paint(&pix); // assign painter to it. note the &
-    //pix.fill(Qt::transparent);
-    //paint.setOpacity(0.2);
     ui->label->setPixmap(pix);
     ui->label->setParent(ui->colorPanel);
+    qDebug()<<"Update Panint color";
 
 }
 
@@ -435,5 +448,7 @@ void MainWindow::imageEnter(QPixmap pixmap, QGraphicsView *view)
     view->viewport()->update();
     view->update();
     view->show();
+
+    emit updateCustomColor(view);
 }
 
