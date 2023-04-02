@@ -225,7 +225,7 @@ void Model::paintColorChanged(QColor newColor)
 //Tzhou
 void Model::updateAlpha(int newAlphaSliderValue)
 {
-    int newAlpha = 255*newAlphaSliderValue/10.0;;
+    int newAlpha = 255*newAlphaSliderValue/10.0;
     paintColor.setAlpha(newAlpha);
     QString alphaSliderReading = QString::number(newAlphaSliderValue/10.0, 'f', 1);
 

@@ -52,10 +52,11 @@ public slots:
     void handleOpenCanvas();
     void handleSaveCanvas();
 
-    //-----------------TZhou: color picker area----------------------
+    //tzhou
     void updatePaintColor(QColor newColor);
     void changeColorBtnIsPressed();
-    //-------------------------------------------
+    void imageEnter(QPixmap pixmap, QGraphicsView *view);//Extra Feature
+
 
     //Ruini Tong
     void changeSizeSliderValue(int value);
@@ -90,7 +91,14 @@ private:
 
     //TZhou
     QColor DEFAULT_PAINT_COLOR = Qt::black; // Default pen or brush color
+    QGraphicsScene* customeColorScene1 = new QGraphicsScene();
+    QGraphicsScene* customeColorScene2 = new QGraphicsScene();
+    QGraphicsScene* customeColorScene3 = new QGraphicsScene();
+    QGraphicsScene* customeColorScene4 = new QGraphicsScene();
+    QGraphicsScene* customeColorScene5 = new QGraphicsScene();
     void setIconToToolBtns();
+    void setColorScenesToViews();
+
     //----------------------
 
 

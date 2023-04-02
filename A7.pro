@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     canvasform.cpp \
+    draganddropevents.cpp \
     frameview.cpp \
     imagevieweditor.cpp \
     main.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     canvasform.h \
+    draganddropevents.h \
     frameview.h \
     imagevieweditor.h \
     mainwindow.h \

@@ -10,6 +10,7 @@
 #include <iostream>
 #include<QString>
 #include<QDebug>
+#include<QPainter>
 
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
@@ -21,9 +22,9 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     // [=== INITIALIZE SECTION ===]
     {
-        //Tzhou
-        // Initializes the current color to be black, and its buttons.
-        updatePaintColor(DEFAULT_PAINT_COLOR);// alpha value: [0, 225], 0 means transparent, 225 means opaque.
+        updatePaintColor(DEFAULT_PAINT_COLOR);// Tzhou: initialize the current color label to black
+
+        setColorScenesToViews();// Tzhou: Initialize the views in color picker area.
 
         setIconToToolBtns(); // Jeffrey: is there a way we can move this to only mainwindow.ui?
 
@@ -80,6 +81,18 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     // [=== COLOR CONNECTIONS ===] @TZHou @Ruini
     // --- Color Dialog ---
     connect(ui->changeColorBtn, &QPushButton::pressed, this, &MainWindow::changeColorBtnIsPressed);
+
+    //Tzhou: EXtra feature
+    connect(ui->customColorView1, &DragAndDropGraphicsView::itemDrop,
+            this, &MainWindow::imageEnter);
+    connect(ui->customColorView2, &DragAndDropGraphicsView::itemDrop,
+            this, &MainWindow::imageEnter);
+    connect(ui->customColorView3, &DragAndDropGraphicsView::itemDrop,
+            this, &MainWindow::imageEnter);
+    connect(ui->customColorView4, &DragAndDropGraphicsView::itemDrop,
+            this, &MainWindow::imageEnter);
+    connect(ui->customColorView5, &DragAndDropGraphicsView::itemDrop,
+            this, &MainWindow::imageEnter);
 
     // --- Color Model-View Updates ---
     //1. user pick a color => model's paintColor change.
@@ -315,10 +328,20 @@ void MainWindow::changeSizeSliderValue(int value){
 // [=== COLOR SECTION ===] @TZHou @Ruini
 void MainWindow::updatePaintColor(QColor newColor)
 {
-    QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
+    //QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
 
-    ui->currentColorBtn->setStyleSheet(style.arg(newColor.red()).arg(newColor.green())
-            .arg(newColor.blue()).arg(newColor.alpha()));
+    //ui->currentColorBtn->setStyleSheet(style.arg(newColor.red()).arg(newColor.green())
+    //        .arg(newColor.blue()).arg(newColor.alpha()));
+
+    int h = ui->label->height();
+    int w = ui->label->width();
+    QPixmap pix(w, h); // give pixmap some size
+    pix.fill( newColor);
+    QPainter paint(&pix); // assign painter to it. note the &
+    //pix.fill(Qt::transparent);
+    //paint.setOpacity(0.2);
+    ui->label->setPixmap(pix);
+    ui->label->setParent(ui->colorPanel);
 
 }
 
@@ -330,8 +353,6 @@ void MainWindow::changeColorBtnIsPressed()
        emit paintColorChanged(color); //Ruini Tong
     }
 }
-
-
 
 // [=== MENU SECTION ===] @Duong
 void MainWindow::handleNewCanvas() {
@@ -392,3 +413,27 @@ void MainWindow::setIconToToolBtns(){
     ui->btnPicker->setIcon(QIcon(QPixmap(":/image/image/picker1.png")));
     ui->btnPicker->setIconSize(QSize(30,30));
 }
+//tzhou
+void MainWindow::setColorScenesToViews()
+{
+    ui->customColorView1->setScene(customeColorScene1);
+    ui->customColorView2->setScene(customeColorScene2);
+    ui->customColorView3->setScene(customeColorScene3);
+    ui->customColorView4->setScene(customeColorScene4);
+    ui->customColorView5->setScene(customeColorScene5);
+}
+
+//Tzhou
+void MainWindow::imageEnter(QPixmap pixmap, QGraphicsView *view)
+{
+    QGraphicsScene* scene = view->scene();
+    if(scene->items().count()>0){
+        scene->clear();
+    }
+    scene->addPixmap(pixmap.scaled(26,26));
+    view->setScene(scene);
+    view->viewport()->update();
+    view->update();
+    view->show();
+}
+
