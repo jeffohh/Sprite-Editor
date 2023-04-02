@@ -67,9 +67,8 @@ public slots:
 
     //Duong
     void createNewCanvas(int width, int height);
-//    void frameSelected(int index);
-    void saveFile(const QString &filename);
-    void openFile(const QString &filename);
+    bool saveFile(const QString &filename);
+    bool openFile(const QString &filename);
 
 
     //Ruini Tong

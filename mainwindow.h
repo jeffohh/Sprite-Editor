@@ -114,9 +114,6 @@ signals:
     //Ruini Tong
     void changeTool(Tool);
 
-    //Duong
-//    void frameSelected(int index);
-
     //Tzhou
     void updateCustomColor(QGraphicsView*);
 

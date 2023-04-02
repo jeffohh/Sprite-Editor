@@ -13,7 +13,7 @@ public:
     explicit CanvasForm(QWidget *parent = nullptr);
 
 signals:
-    void canvasSizeChanged(int width, int height);
+    void createNewCanvas(int width, int height);
 
 private slots:
     void handleSubmitButton();

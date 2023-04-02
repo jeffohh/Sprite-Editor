@@ -239,7 +239,7 @@ void Model::updateAlpha(int newAlphaSliderValue)
 
 
 // [=== CANVAS SECTION ===] @Duong @Andy Tran
-//Duong
+
 void Model::createNewCanvas(int width, int height){
 
     //Create an canvas with given width and height.
@@ -252,90 +252,97 @@ void Model::createNewCanvas(int width, int height){
 }
 
 
-void Model::saveFile(const QString &filename)
+bool Model::saveFile(const QString &filename)
 {
     QJsonObject project;
-    project["height"] = canvas.height();
-    project["width"] = canvas.width();
-    project["numberOfFrames"] = static_cast<int>(frameList.size());
+        project["height"] = canvas.height();
+        project["width"] = canvas.width();
+        project["numberOfFrames"] = static_cast<int>(frameList.size());
 
-    QJsonArray frames;
+    QJsonArray framesArray;
+        for (size_t frameIndex = 0; frameIndex < frameList.size(); ++frameIndex) {
+            const QImage &frame = frameList[frameIndex];
+            QJsonArray frameArray;
 
-    for (size_t i = 0; i < frameList.size(); ++i) {
-        QJsonArray frameData;
-
-        QImage frame = frameList[i];
-        for (int y = 0; y < frame.height(); ++y) {
-            QJsonArray row;
-            for (int x = 0; x < frame.width(); ++x) {
-                QColor color = frame.pixelColor(x, y);
-                QJsonArray pixel = {color.red(), color.green(), color.blue(), color.alpha()};
-                row.append(pixel);
+            for (int row = 0; row < canvas.height(); ++row) {
+                QJsonArray rowArray;
+                for (int col = 0; col < canvas.width(); ++col) {
+                    QColor pixel = frame.pixelColor(col, row);
+                    QJsonArray pixelArray{
+                        pixel.red(),
+                        pixel.green(),
+                        pixel.blue(),
+                        pixel.alpha()
+                    };
+                    rowArray.append(pixelArray);
+                }
+                frameArray.append(rowArray);
             }
-            frameData.append(row);
+
+            framesArray.append(frameArray);
         }
 
-        QString frameName = QString("frame%1").arg(i);
-        frames.append(QJsonObject({{frameName, frameData}}));
-    }
+        project["frames"] = framesArray;
 
-    project["frames"] = frames;
-
-    QFile file(filename);
-    if (file.open(QIODevice::WriteOnly)) {
         QJsonDocument doc(project);
-        file.write(doc.toJson());
-    }
-}
+        QFile file(filename);
+        if (!file.open(QIODevice::WriteOnly)) {
+            return false;
+        }
 
-//Known bugs: Open File does not reset the frame when open. Open File does not display all frame when open (but will shows old frames if click news)
-//Open File sometime does not create new canvas and frame when open (If one already exist, it does not close and exit out everything, but just added ontop of the old canvas)
-void Model::openFile(const QString &filename)
+        file.write(doc.toJson());
+        return true;
+    }
+
+
+bool Model::openFile(const QString &filename)
 {
     QFile file(filename);
-       if (!file.open(QIODevice::ReadOnly)) {
-           qWarning("Failed to open the file for reading.");
-           return;
-       }
+        if (!file.open(QIODevice::ReadOnly)) {
+            return false;
+        }
 
-       QByteArray data = file.readAll();
-       QJsonDocument doc(QJsonDocument::fromJson(data));
-       QJsonObject project = doc.object();
+        QByteArray data = file.readAll();
+        QJsonDocument doc(QJsonDocument::fromJson(data));
+        QJsonObject project = doc.object();
 
-       int height = project["height"].toInt();
-       int width = project["width"].toInt();
-       int numberOfFrames = project["numberOfFrames"].toInt();
-       QJsonArray frames = project["frames"].toArray();
+        int height = project["height"].toInt();
+        int width = project["width"].toInt();
 
-       frameList.clear();
+        int numberOfFrames = project["numberOfFrames"].toInt();
+        QJsonArray framesArray = project["frames"].toArray();
 
-       for (int i = 0; i < numberOfFrames; ++i) {
-           QJsonObject frameObject = frames[i].toObject();
-           QString frameName = QString("frame%1").arg(i);
-           QJsonArray frameData = frameObject[frameName].toArray();
+        frameList.clear();
+        frameList.reserve(static_cast<size_t>(numberOfFrames));
 
-           QImage frame(width, height, QImage::Format_ARGB32);
+        for (int frameIndex = 0; frameIndex < numberOfFrames; ++frameIndex) {
+            QJsonArray frameArray = framesArray[frameIndex].toArray();
+            QImage frame(width, height, QImage::Format_RGBA8888);
 
-           for (int y = 0; y < height; ++y) {
-               QJsonArray row = frameData[y].toArray();
-               for (int x = 0; x < width; ++x) {
-                   QJsonArray pixel = row[x].toArray();
-                   int r = pixel[0].toInt();
-                   int g = pixel[1].toInt();
-                   int b = pixel[2].toInt();
-                   int a = pixel[3].toInt();
-                   QColor color(r, g, b, a);
-                   frame.setPixelColor(x, y, color);
-               }
-           }
+            for (int row = 0; row < height; ++row) {
+                QJsonArray rowArray = frameArray[row].toArray();
 
-           frameList.push_back(frame);
-       }
+                for (int col = 0; col < width; ++col) {
+                    QJsonArray pixelArray = rowArray[col].toArray();
+                    QColor pixel(
+                        pixelArray[0].toInt(),
+                        pixelArray[1].toInt(),
+                        pixelArray[2].toInt(),
+                        pixelArray[3].toInt()
+                    );
+                    frame.setPixelColor(col, row, pixel);
+                }
+            }
+
+            frameList.push_back(frame);
+        }
 
        // Set the current frame to the first frame
        currentFrame = 0;
        canvas = frameList[currentFrame];
+
        emit updateCanvas(&canvas, &frameList, currentFrame);
+       return true;
 }
 
 //---------------------Extra Feature------------

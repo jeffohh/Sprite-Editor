@@ -31,7 +31,7 @@ void CanvasForm::handleSubmitButton(){
     int height = heightInput->text().toInt(&heightOK);
 
     if(widthOK && heightOK && width > 0 && height > 0){
-        emit canvasSizeChanged(width, height);
+        emit createNewCanvas(width, height);
         close();
     } else{
          QMessageBox::warning(this, "Invalid input", "Please enter valid values for width and height.");

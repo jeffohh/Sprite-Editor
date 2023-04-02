@@ -370,7 +370,7 @@ void MainWindow::changeColorBtnIsPressed()
 // [=== MENU SECTION ===] @Duong
 void MainWindow::handleNewCanvas() {
     CanvasForm form(this);
-    connect(&form, &CanvasForm::canvasSizeChanged, &model, &Model::createNewCanvas);
+    connect(&form, &CanvasForm::createNewCanvas, &model, &Model::createNewCanvas);
     form.exec();
 }
 
