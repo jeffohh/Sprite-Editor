@@ -42,7 +42,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     // --- Canvas Input ---
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
-    connect(ui->canvasView, &ImageViewEditor::mousePressed, &model, &Model::mousePressed);
+    connect(ui->canvasView, &ImageViewEditor::mouseMove, &model, &Model::mouseMove);
 
     // [=== PREVIEW CONNECTIONS ===] @Andy Tran
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout); // Andy Tran - connection for preview
@@ -77,7 +77,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->toolSlider, &QSlider::valueChanged,this,&MainWindow::changeSizeSliderValue);
 
     // --- Tool: Color Picker ---
-    connect(ui->canvasView, &ImageViewEditor::getColor, &model, &Model::getColor);
+    //connect(ui->canvasView, &ImageViewEditor::getColor, &model, &Model::getColor);
     // Jeffrey: ideally, Model will have a "Picker" tool enum then just use mouseDown?
 
 

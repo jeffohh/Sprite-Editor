@@ -52,7 +52,7 @@ public:
 
 public slots:
     void mouseDown(QPoint);
-    //void mouseMove(QPoint);
+    void mouseMove(QPoint);
     //void mouseUp(QPoint);
 
     //Andy Tran
@@ -81,10 +81,7 @@ public slots:
 
 
     //Ruini Tong
-    void mousePressed(bool pressed);
     void setPenSize(int size);
-    void drawLine(QPoint posOne,QPoint posTwo);
-    void getColor(QPoint pos);
     void fillColor(QColor currentColor, QPoint pos);
 
 private:
@@ -92,13 +89,10 @@ private:
     QColor paintColor; //It is initialized in the constructor, uniform convention with the UI.
 
     //Ruini Tong
-    QPoint posBegin;
-    QPoint posEnd;
-    bool isPos = false;
-    QPoint newPoint;
-    bool isPressed = false;
+    QPoint pixelCurrent;
     int penSize = 1;
-    QCursor pencilCursor;
+    QPainter painter;
+    QPen pen;
 
     //Andy Tran
     vector<QImage> frameList;

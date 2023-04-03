@@ -14,6 +14,7 @@ Model::Model(QObject *parent)
     paintColor = Qt::black;
     initializeModel();
 
+    painter.begin(&canvas);
 }
 
 //Andy Tran - Frames part
@@ -75,113 +76,61 @@ void Model::initializeModel(){
 // [=== TOOL SECTION ===] @Ruini
 // --- Tool Input ---
 void Model::mouseDown(QPoint pos) {
+    pixelCurrent = pos;
 
-    if(tool==BUCKET){
-        getColor(pos);
+    QColor pixelColor = canvas.pixelColor(pos);
+
+    pen.setWidth(penSize);
+    switch (tool) {
+    case PENCIL:
+        pen.setColor(paintColor);
+        break;
+    case PICKER:
+        paintColorChanged(pixelColor);
+        return;
+    case ERASER:
+        pen.setColor(Qt::white);
+        break;
+    case BUCKET:
+        fillColor(pixelColor, pos);
+        return;
+    default:
+        break;
     }
-
-    if(isPressed){
-        if(isPos){
-            posEnd = pos;
-            isPos = false;
-        }else{
-            posBegin = posEnd;
-            isPos = true;
-        }
-    }else{
-        posBegin = pos;
-        posEnd = pos;
-    }
-
-    //canvas.setPixelColor(pos,QColor(0, 0, 0, 0));
-
-    drawLine(posBegin,posEnd);
+    painter.setPen(pen);
 
     //Andy Tran: update frameList and update view
     frameList[currentFrame] = canvas;
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 }
 
-void Model::mousePressed(bool pressed){
-    isPressed = pressed;
-}
+void Model::mouseMove(QPoint pos) {
 
-// --- Tool Modify ---
-void Model::drawLine(QPoint posOne,QPoint posTwo){
-    QPainter painter(&canvas);
-    QPen pen;
-    pen.setWidth(penSize);
+    if((tool == PENCIL)||(tool == ERASER)){
+        painter.drawLine(pixelCurrent.x(),pixelCurrent.y(),pos.x(),pos.y());
+        pixelCurrent = pos;
 
-    switch (tool) {
-    case PENCIL:
-        pen.setColor(paintColor);
-        break;
-    case PICKER:
-        return;
-    case ERASER:
-        pen.setColor(Qt::white);
-        //pen.setColor(QColor(0, 0, 0, 0));//to transparent color
-        break;
-    case BUCKET:
-        return;
-    default:
-        break;
+        frameList[currentFrame] = canvas;
+        emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
     }
 
-    painter.setPen(pen);
-    painter.drawLine(posOne.x(),posOne.y(),posTwo.x(),posTwo.y());
-
-
-    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 }
-
+// --- Tool Modify ---
 void Model::fillColor(QColor originColor, QPoint pos){
-
-//recursive method, crash sometimes because stack overflow
-//    //if pos's color == the originColor, update that color
-//    QColor pixelColor = canvas.pixelColor(pos);
-//    if (pixelColor == originColor){
-//        canvas.setPixelColor(pos, paintColor);
-//        emit updateCanvas(&canvas, &frameList, currentFrame);
-//    }else{//no more same color to fill
-//        return;
-//    }
-
-//    //expand top
-//    QPoint topPoint(pos.x(), pos.y()+1);
-//    fillColor(originColor,topPoint);
-
-//    //expand bottom
-//    QPoint bottomPoint(pos.x(), pos.y()-1);
-//    fillColor(originColor,bottomPoint);
-
-//    //expand left
-//    QPoint leftPoint(pos.x()-1, pos.y());
-//    fillColor(originColor,leftPoint);
-
-//    //expand right
-//    QPoint rightPoint(pos.x()+1, pos.y());
-//    fillColor(originColor,rightPoint);
 
     //if the canvas color is the same as paintColor, don't need to fill
     QColor canvasColor = canvas.pixelColor(pos);
-    //qDebug() <<"return";
     int threshold = 1;
-    // get the RGB values of the two colors
-    QRgb rgb1 = canvasColor.toRgb().rgb();
-    QRgb rgb2 = paintColor.toRgb().rgb();
 
-    // calculate the difference between the RGB values
-    int rDiff = abs(qRed(rgb1) - qRed(rgb2));
-    int gDiff = abs(qGreen(rgb1) - qGreen(rgb2));
-    int bDiff = abs(qBlue(rgb1) - qBlue(rgb2));
+    int rDiff = abs(canvasColor.red() - paintColor.red());
+    int gDiff = abs(canvasColor.green() - paintColor.green());
+    int bDiff = abs(canvasColor.blue() - paintColor.blue());
 
     // check if the difference is within the threshold
-    if (rDiff <= threshold && gDiff <= threshold && bDiff <= threshold) {
+    if ((rDiff <= threshold) && (gDiff <= threshold) && (bDiff <= threshold)) {
         qDebug() <<"return";
         return;
     }
-
 
     QList<QPoint> stack;
     stack <<pos;
@@ -192,8 +141,6 @@ void Model::fillColor(QColor originColor, QPoint pos){
             QColor pixelColor = canvas.pixelColor(current); //get pixel color
             if (pixelColor == originColor){
                 canvas.setPixelColor(current, paintColor);
-                //qDebug() <<current;
-                //emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 
                 //expand top
                 QPoint topPoint(current.x(), current.y()+1);
@@ -214,25 +161,9 @@ void Model::fillColor(QColor originColor, QPoint pos){
             }
         }
     }
+    frameList[currentFrame] = canvas;
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 
-}
-
-void Model::getColor(QPoint pos){
-    QColor pixelColor = canvas.pixelColor(pos);
-
-    qDebug()<< pos<<" "<< pixelColor;
-
-    switch (tool) {
-    case PICKER:
-        paintColorChanged(pixelColor);
-        return;
-    case BUCKET:
-        fillColor(pixelColor, pos);
-        return;
-    default:
-        break;
-    }
 }
 
 // --- Tool Settings ---

@@ -45,7 +45,8 @@ void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
 
     //Andy Tran Edited
     QPoint pos = mapToScene(event->pos()).toPoint();
-    emit mouseDown(pos);
+    //emit mouseDown(pos);
+    emit mouseMove(pos);
 
 }
 
