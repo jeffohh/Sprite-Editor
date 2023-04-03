@@ -73,7 +73,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->toolSlider, &QSlider::valueChanged,this,&MainWindow::changeSizeSliderValue);
 
     // --- Tool: Color Picker ---
-    connect(ui->canvasView, &ImageViewEditor::getColor, &model, &Model::getColor); // Jeffrey: ideally, Model will have a "Picker" tool enum then just use mouseDown?
+    connect(ui->canvasView, &ImageViewEditor::getColor, &model, &Model::getColor);
+    // Jeffrey: ideally, Model will have a "Picker" tool enum then just use mouseDown?
 
 
 
@@ -259,6 +260,8 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
     ui->canvasView->updatePixmap(canvas);
     this->action = action;
     previousFrame = currentFrame;
+
+    //qDebug()<< "update canvas";
 
     //Update current frame and frame list
     switch(action){

@@ -74,6 +74,10 @@ void Model::initializeModel(){
 // --- Tool Input ---
 void Model::mouseDown(QPoint pos) {
 
+    if(tool==BUCKET){
+        getColor(pos);
+    }
+
     if(isPressed){
         if(isPos){
             posEnd = pos;
@@ -122,6 +126,7 @@ void Model::drawLine(QPoint posOne,QPoint posTwo){
     painter.setPen(pen);
     painter.drawLine(posOne.x(),posOne.y(),posTwo.x(),posTwo.y());
 
+
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 }
 
@@ -153,33 +158,58 @@ void Model::fillColor(QColor originColor, QPoint pos){
 //    QPoint rightPoint(pos.x()+1, pos.y());
 //    fillColor(originColor,rightPoint);
 
+    //if the canvas color is the same as paintColor, don't need to fill
+    QColor canvasColor = canvas.pixelColor(pos);
+    //qDebug() <<"return";
+    int threshold = 1;
+    // get the RGB values of the two colors
+    QRgb rgb1 = canvasColor.toRgb().rgb();
+    QRgb rgb2 = paintColor.toRgb().rgb();
+
+    // calculate the difference between the RGB values
+    int rDiff = abs(qRed(rgb1) - qRed(rgb2));
+    int gDiff = abs(qGreen(rgb1) - qGreen(rgb2));
+    int bDiff = abs(qBlue(rgb1) - qBlue(rgb2));
+
+    // check if the difference is within the threshold
+    if (rDiff <= threshold && gDiff <= threshold && bDiff <= threshold) {
+        qDebug() <<"return";
+        return;
+    }
+
+
     QList<QPoint> stack;
     stack <<pos;
     while(!stack.empty()){
         QPoint current = stack.takeLast();
-        QColor pixelColor = canvas.pixelColor(current);
-        if (pixelColor == originColor){
-            canvas.setPixelColor(current, paintColor);
-            emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
+        QRect canvasRect = canvas.rect();// get canvas size
+        if (canvasRect.contains(current)) { // check if pixel is out of bound
+            QColor pixelColor = canvas.pixelColor(current); //get pixel color
+            if (pixelColor == originColor){
+                canvas.setPixelColor(current, paintColor);
+                //qDebug() <<current;
+                //emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 
-            //    //expand top
+                //expand top
                 QPoint topPoint(current.x(), current.y()+1);
                 stack<<topPoint;
 
-            //    //expand bottom
+                //expand bottom
                 QPoint bottomPoint(current.x(), current.y()-1);
                 stack<<bottomPoint;
 
-            //    //expand left
+                //expand left
                 QPoint leftPoint(current.x()-1, current.y());
                 stack<<leftPoint;
 
-            //    //expand right
+                //expand right
                 QPoint rightPoint(current.x()+1, current.y());
                 stack<<rightPoint;
 
+            }
         }
     }
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 
 }
 
@@ -207,7 +237,7 @@ void Model::changeTool(Tool currentTool){
 }
 
 void Model::setPenSize(int size){
-    penSize = size/10;
+    penSize = size/5;
 }
 
 
