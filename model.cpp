@@ -34,7 +34,7 @@ void Model::deletePressed(int deletedIndex){
         //Update static variable
         frameIndex--;
 
-        emit deleteFrameWidget(&canvas, &frameList, currentFrame, deletedIndex);
+        emit updateCanvas(&canvas, &frameList, currentFrame, DELETE_FRAME, deletedIndex);
     }
 }
 
@@ -49,7 +49,7 @@ void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
 
     frameList[currentFrame] = canvas;
 
-    emit updateCanvas(&canvas, &frameList, currentFrame);
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 }
 
 void Model::onAddFrame(){
@@ -57,7 +57,7 @@ void Model::onAddFrame(){
     canvas.fill(Qt::white);
     frameList.push_back(canvas);
     currentFrame = frameList.size() - 1;
-    emit updateCanvas(&canvas, &frameList, currentFrame);
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 }
 
 void Model::initializeModel(){
@@ -65,9 +65,7 @@ void Model::initializeModel(){
     currentFrame = 0;
     frameList.clear();
     frameList.push_back(canvas);
-
-    emit updateCanvas(&canvas, &frameList, currentFrame);
-    qDebug() << "initializeModel called";
+//    emit updateCanvas(&canvas, &frameList, currentFrame, INIT);
 }
 
 
@@ -93,7 +91,7 @@ void Model::mouseDown(QPoint pos) {
 
     //Andy Tran: update frameList and update view
     frameList[currentFrame] = canvas;
-    emit updateCanvas(&canvas, &frameList, currentFrame);
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 }
 
 void Model::mousePressed(bool pressed){
@@ -124,7 +122,7 @@ void Model::drawLine(QPoint posOne,QPoint posTwo){
     painter.setPen(pen);
     painter.drawLine(posOne.x(),posOne.y(),posTwo.x(),posTwo.y());
 
-    emit updateCanvas(&canvas, &frameList, currentFrame);
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 }
 
 void Model::fillColor(QColor originColor, QPoint pos){
@@ -162,7 +160,7 @@ void Model::fillColor(QColor originColor, QPoint pos){
         QColor pixelColor = canvas.pixelColor(current);
         if (pixelColor == originColor){
             canvas.setPixelColor(current, paintColor);
-            emit updateCanvas(&canvas, &frameList, currentFrame);
+            emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 
             //    //expand top
                 QPoint topPoint(current.x(), current.y()+1);
@@ -248,7 +246,8 @@ void Model::createNewCanvas(int width, int height){
 
     //Andy Tran Edited
     initializeModel();
-    emit newCanvasCreated();
+//    emit newCanvasCreated();
+    emit updateCanvas(&canvas, &frameList, currentFrame, CREATE_NEW);
 }
 
 
@@ -309,8 +308,11 @@ bool Model::openFile(const QString &filename)
         int height = project["height"].toInt();
         int width = project["width"].toInt();
 
-        int numberOfFrames = project["numberOfFrames"].toInt();
+        int numberOfFrames = project["numberOfFrames"].toInt();       
         QJsonArray framesArray = project["frames"].toArray();
+
+        //Andy Tran editted
+        Model::frameIndex = 0;
 
         frameList.clear();
         frameList.reserve(static_cast<size_t>(numberOfFrames));
@@ -337,11 +339,14 @@ bool Model::openFile(const QString &filename)
             frameList.push_back(frame);
         }
 
+       qDebug() << "frameIndex: " << frameIndex;
+       qDebug() << "frameList.size(): " << frameList.size();
+
        // Set the current frame to the first frame
        currentFrame = 0;
        canvas = frameList[currentFrame];
 
-       emit updateCanvas(&canvas, &frameList, currentFrame);
+       emit updateCanvas(&canvas, &frameList, currentFrame, OPEN_FILE);
        return true;
 }
 
@@ -362,7 +367,7 @@ void Model::customColorIsSelected(QGraphicsView* view)
     if(customColors.contains(view)){
         paintColor=customColors[view];
         emit updatePaintColor(paintColor);
-        qDebug()<<"selcted";
+        qDebug()<<"selected";
         //emit resetAlphaSlider(10);
     }
 

@@ -36,15 +36,17 @@ public:
     ~MainWindow();
 
 public slots:
-    void updateCanvas(QImage*, vector<QImage>*, int); // jeff!!
+    // jeff!!
+    void updateCanvas(QImage*, vector<QImage>*, int, Action, int);
 
     //Andy Tran
     void onTimerTimeout();
     void onChangeFpsSliderValue(int value);
-    void addFrameWidget(QHBoxLayout *framesHorizontalLayout);
+    void addFrameWidget(QHBoxLayout* framesHorizontalLayout);
     void initializeView();
     void initializeFrameView();
-    void deleteFrameWidget(QImage*, vector<QImage>*, int, int);
+    void deleteFrameWidget(int);
+    void loadWidgets();
 
     //Duong
     void newCanvasCreated();
@@ -69,6 +71,8 @@ private:
 
     //Andy Tran
     bool isInit = true;
+    Action action = UPDATE;
+
 
     //Clone from Model's frameList
     vector<QImage> frameList;
@@ -104,7 +108,6 @@ private:
 
 signals:
     //Andy Tran
-
 
     //Renee
     // used by any color change

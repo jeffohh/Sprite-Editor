@@ -27,6 +27,12 @@ enum Tool {
     ERASER,
     BUCKET
 };
+enum Action{
+    UPDATE,
+    DELETE_FRAME,
+    OPEN_FILE,
+    CREATE_NEW
+};
 
 class Model : public QObject
 {
@@ -107,7 +113,7 @@ signals:
      *
      * @param QImage        the canvas
      */
-    void updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame);
+    void updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action, int deletedIndex = -1);
 
     //Renee, Tzhou
     void updatePaintColor(QColor newColor);
@@ -120,10 +126,10 @@ signals:
     void newPosition(QPoint pos);
 
     //Duong
-    void newCanvasCreated();
+//    void newCanvasCreated();
 
     //Andy Tran
-    void deleteFrameWidget(QImage*, vector<QImage>*, int, int);
+    void deleteFrameWidget(int);
 };
 
 #endif // MODEL_H
