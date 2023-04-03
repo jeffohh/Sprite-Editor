@@ -11,8 +11,20 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
 
     imageItem = new QGraphicsPixmapItem();
 
+    // create cross pattern, apply it to RectItem's background
+    QBrush cross(Qt::CrossPattern);
+    QPen noPen(Qt::NoPen);
+
+    rectBackground = new QGraphicsRectItem(imageItem->boundingRect());
+    rectBackground->setBrush(cross);
+    rectBackground->setPen(noPen);
+
+    // the imageItem's Pixmap is now "parented" to "rectBackground"
+    imageItem->setParentItem(rectBackground);
+
+    // create a scene, add the "rectBackground" to the scene
     QGraphicsScene* scene = new QGraphicsScene();
-    scene->addItem(imageItem);
+    scene->addItem(rectBackground);
 
     this->setScene(scene);
 
@@ -27,6 +39,7 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
 // [=== CANVAS SECTION ===] @Jeffrey
 void ImageViewEditor::updatePixmap(QImage* image) {
     imageItem->setPixmap(QPixmap::fromImage(*image));
+    rectBackground->setRect(imageItem->boundingRect());
 }
 
 

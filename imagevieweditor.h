@@ -30,6 +30,7 @@ private:
     double scale = 15; //Andy Tran: default 1500%
 
     QGraphicsPixmapItem* imageItem;
+    QGraphicsRectItem* rectBackground;
 
 signals:
     void mouseDown(QPoint);
