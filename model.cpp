@@ -9,8 +9,7 @@ Model::Model(QObject *parent)
     : QObject{parent}
     , canvas(32, 32, QImage::Format_ARGB32)
 {
-    //canvas.fill(Qt::white);
-    canvas.fill(QColor(0, 0, 0, 0));
+    canvas.fill(Qt::transparent);
     paintColor = Qt::black;
     initializeModel();
 
@@ -57,7 +56,7 @@ void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
 
 void Model::onAddFrame(){
     canvas = QImage(32, 32, QImage::Format_ARGB32);
-    canvas.fill(Qt::white);
+    canvas.fill(Qt::transparent);
     frameList.push_back(canvas);
     currentFrame = frameList.size() - 1;
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
