@@ -350,18 +350,22 @@ void MainWindow::onChangeFpsSliderValue(int value)
     ui->fpsValueLabel->setText(textValue);
     fps = value;
 
-    //Reset Timer with new FPS and Frame Duration
-    if(fps == 0){
-        frameDuration = 0;
-        timer->stop();
-    }
-    else{
-        frameDuration = 1000 / fps;
-        if(timer->isActive()) {
+    if(frameList.size()>1){ //YO!Andy I added this-tzhou
+
+        //Reset Timer with new FPS and Frame Duration
+        if(fps == 0){
+            frameDuration = 0;
             timer->stop();
         }
-        timer->start(frameDuration);
+        else{
+            frameDuration = 1000 / fps;
+            if(timer->isActive()) {
+                timer->stop();
+            }
+            timer->start(frameDuration);
+        }
     }
+
 
 }
 
