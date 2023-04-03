@@ -14,7 +14,7 @@ Model::Model(QObject *parent)
     paintColor = Qt::black;
     initializeModel();
 
-    painter.begin(&canvas);
+    canvasRect = canvas.rect();// get canvas size
 }
 
 //Andy Tran - Frames part
@@ -78,26 +78,24 @@ void Model::initializeModel(){
 void Model::mouseDown(QPoint pos) {
     pixelCurrent = pos;
 
+    if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
+
     QColor pixelColor = canvas.pixelColor(pos);
 
-    pen.setWidth(penSize);
     switch (tool) {
     case PENCIL:
-        pen.setColor(paintColor);
-        break;
+        return;
     case PICKER:
         paintColorChanged(pixelColor);
         return;
     case ERASER:
-        pen.setColor(Qt::white);
-        break;
+        return;
     case BUCKET:
         fillColor(pixelColor, pos);
         return;
     default:
         break;
     }
-    painter.setPen(pen);
 
     //Andy Tran: update frameList and update view
     frameList[currentFrame] = canvas;
@@ -106,13 +104,33 @@ void Model::mouseDown(QPoint pos) {
 
 void Model::mouseMove(QPoint pos) {
 
-    if((tool == PENCIL)||(tool == ERASER)){
-        painter.drawLine(pixelCurrent.x(),pixelCurrent.y(),pos.x(),pos.y());
-        pixelCurrent = pos;
+    if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
 
-        frameList[currentFrame] = canvas;
-        emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
+    QPainter painter(&canvas);
+    QPen pen;
+    pen.setWidth(penSize);
+
+    switch (tool) {
+    case PENCIL:
+        pen.setColor(paintColor);
+        break;
+    case PICKER:
+        return;
+    case ERASER:
+        pen.setColor(Qt::white);
+        break;
+    case BUCKET:
+        return;
+    default:
+        break;
     }
+    painter.setPen(pen);
+
+    painter.drawLine(pixelCurrent.x(),pixelCurrent.y(),pos.x(),pos.y());
+    pixelCurrent = pos;
+
+    frameList[currentFrame] = canvas;
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 
 }
 // --- Tool Modify ---
@@ -136,7 +154,6 @@ void Model::fillColor(QColor originColor, QPoint pos){
     stack <<pos;
     while(!stack.empty()){
         QPoint current = stack.takeLast();
-        QRect canvasRect = canvas.rect();// get canvas size
         if (canvasRect.contains(current)) { // check if pixel is out of bound
             QColor pixelColor = canvas.pixelColor(current); //get pixel color
             if (pixelColor == originColor){

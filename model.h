@@ -91,8 +91,7 @@ private:
     //Ruini Tong
     QPoint pixelCurrent;
     int penSize = 1;
-    QPainter painter;
-    QPen pen;
+    QRect canvasRect;
 
     //Andy Tran
     vector<QImage> frameList;
