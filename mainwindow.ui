@@ -422,7 +422,7 @@
         <property name="minimumSize">
          <size>
           <width>120</width>
-          <height>0</height>
+          <height>20</height>
          </size>
         </property>
         <property name="maximum">
@@ -438,7 +438,7 @@
          <enum>QSlider::TicksBelow</enum>
         </property>
         <property name="tickInterval">
-         <number>10</number>
+         <number>1</number>
         </property>
        </widget>
       </item>

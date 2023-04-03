@@ -402,16 +402,11 @@ void MainWindow::changeSizeSliderValue(int value){
 // [=== COLOR SECTION ===] @TZHou @Ruini
 void MainWindow::updatePaintColor(QColor newColor)
 {
-    //QString style = QString("QPushButton {background-color: rgba(%1,%2,%3,%4);}");
-
-    //ui->currentColorBtn->setStyleSheet(style.arg(newColor.red()).arg(newColor.green())
-    //        .arg(newColor.blue()).arg(newColor.alpha()));
-
     int h = ui->label->height();
     int w = ui->label->width();
-    QPixmap pix(w, h); // give pixmap some size
+    QPixmap pix(w, h);
     pix.fill( newColor);
-    QPainter paint(&pix); // assign painter to it. note the &
+    QPainter paint(&pix);
     ui->label->setPixmap(pix);
     ui->label->setParent(ui->colorPanel);
     qDebug()<<"Update Panint color";
