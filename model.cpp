@@ -78,13 +78,14 @@ void Model::initializeModel(){
 void Model::mouseDown(QPoint pos) {
     pixelCurrent = pos;
 
-    if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
+    //if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
 
     QColor pixelColor = canvas.pixelColor(pos);
 
     switch (tool) {
     case PENCIL:
-        return;
+        canvas.setPixelColor(pos, paintColor);
+        break;
     case PICKER:
         paintColorChanged(pixelColor);
         return;
@@ -141,14 +142,17 @@ void Model::fillColor(QColor originColor, QPoint pos){
 
     //if the canvas color is the same as paintColor, don't need to fill
     QColor canvasColor = canvas.pixelColor(pos);
-    int threshold = 1;
+    double threshold = 0.1;
+    qDebug()<<canvasColor;
+    qDebug()<<paintColor;
 
-    int rDiff = abs(canvasColor.red() - paintColor.red());
-    int gDiff = abs(canvasColor.green() - paintColor.green());
-    int bDiff = abs(canvasColor.blue() - paintColor.blue());
+    double aDiff = abs(canvasColor.alpha() - paintColor.alpha());
+    double rDiff = abs(canvasColor.red() - paintColor.red());
+    double gDiff = abs(canvasColor.green() - paintColor.green());
+    double bDiff = abs(canvasColor.blue() - paintColor.blue());
 
     // check if the difference is within the threshold
-    if ((rDiff <= threshold) && (gDiff <= threshold) && (bDiff <= threshold)) {
+    if ((aDiff <= threshold)&&(rDiff <= threshold) && (gDiff <= threshold) && (bDiff <= threshold)) {
         qDebug() <<"return";
         return;
     }
