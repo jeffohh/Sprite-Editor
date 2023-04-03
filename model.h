@@ -18,6 +18,9 @@
 #include<QGraphicsView>
 #include<QMap>
 
+//Ruini Tong
+#include <QCursor>
+
 using std::vector;
 
 // global declaration so view can access too?
@@ -95,6 +98,7 @@ private:
     QPoint newPoint;
     bool isPressed = false;
     int penSize = 1;
+    QCursor pencilCursor;
 
     //Andy Tran
     vector<QImage> frameList;

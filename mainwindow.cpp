@@ -66,6 +66,10 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     });
 
     connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
+    connect(this, &MainWindow::pencilCursor, ui->canvasView, &ImageViewEditor::pencilCursor);
+    connect(this, &MainWindow::eraserCursor, ui->canvasView, &ImageViewEditor::eraserCursor);
+    connect(this, &MainWindow::pickerCursor, ui->canvasView, &ImageViewEditor::pickerCursor);
+    connect(this, &MainWindow::bucketCursor, ui->canvasView, &ImageViewEditor::bucketCursor);
     connect(this, &MainWindow::changeTool, this, &MainWindow::disableTool); // Ruini
 
     // --- Tool Settings ---
@@ -384,15 +388,19 @@ void MainWindow::disableTool(Tool tool){
     switch (tool) {
     case PENCIL:
         ui->btnPencil->setEnabled(false);
+        emit pencilCursor();
         break;
     case PICKER:
         ui->btnPicker->setEnabled(false);
+        emit pickerCursor();
         break;
     case ERASER:
         ui->btnEraser->setEnabled(false);
+        emit eraserCursor();
         break;
     case BUCKET:
         ui->btnBucket->setEnabled(false);
+        emit bucketCursor();
         break;
     default:
         break;

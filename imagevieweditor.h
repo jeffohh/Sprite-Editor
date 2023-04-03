@@ -14,6 +14,12 @@ public:
     explicit ImageViewEditor(QWidget *parent = nullptr);
     void updatePixmap(QImage*);
 
+    //Ruini Tong cursor
+    void pencilCursor();
+    void eraserCursor();
+    void pickerCursor();
+    void bucketCursor();
+
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -22,11 +28,6 @@ protected:
 
 private:
     double scale = 15; //Andy Tran: default 1500%
-    bool pencil = false;
-    bool eraser = false;
-
-    //Ruini Tong for testing mouse movement
-    int count = 0;
 
     QGraphicsPixmapItem* imageItem;
 
@@ -38,6 +39,7 @@ signals:
     //Ruini Tong
     void mousePressed(bool pressed);
     void getColor(QPoint);
+
     //-------------------------------------------
 
 };

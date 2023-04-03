@@ -10,8 +10,10 @@ Model::Model(QObject *parent)
     , canvas(32, 32, QImage::Format_ARGB32)
 {
     canvas.fill(Qt::white);
+    //canvas.fill(QColor(0, 0, 0, 0));
     paintColor = Qt::black;
     initializeModel();
+
 }
 
 //Andy Tran - Frames part
@@ -91,6 +93,8 @@ void Model::mouseDown(QPoint pos) {
         posEnd = pos;
     }
 
+    //canvas.setPixelColor(pos,QColor(0, 0, 0, 0));
+
     drawLine(posBegin,posEnd);
 
     //Andy Tran: update frameList and update view
@@ -116,6 +120,7 @@ void Model::drawLine(QPoint posOne,QPoint posTwo){
         return;
     case ERASER:
         pen.setColor(Qt::white);
+        //pen.setColor(QColor(0, 0, 0, 0));//to transparent color
         break;
     case BUCKET:
         return;

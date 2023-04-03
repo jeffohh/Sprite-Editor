@@ -116,6 +116,10 @@ signals:
 
     //Ruini Tong
     void changeTool(Tool);
+    void pencilCursor();
+    void eraserCursor();
+    void pickerCursor();
+    void bucketCursor();
 
     //Tzhou
     void updateCustomColor(QGraphicsView*);
