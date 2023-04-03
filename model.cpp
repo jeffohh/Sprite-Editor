@@ -9,8 +9,8 @@ Model::Model(QObject *parent)
     : QObject{parent}
     , canvas(32, 32, QImage::Format_ARGB32)
 {
-    canvas.fill(Qt::white);
-    //canvas.fill(QColor(0, 0, 0, 0));
+    //canvas.fill(Qt::white);
+    canvas.fill(QColor(0, 0, 0, 0));
     paintColor = Qt::black;
     initializeModel();
 
@@ -113,17 +113,20 @@ void Model::mouseMove(QPoint pos) {
     switch (tool) {
     case PENCIL:
         pen.setColor(paintColor);
+        painter.setCompositionMode(QPainter::CompositionMode_Source);
         break;
     case PICKER:
         return;
     case ERASER:
-        pen.setColor(Qt::white);
+        painter.setCompositionMode(QPainter::CompositionMode_Clear);
+        //pen.setColor(Qt::white);
         break;
     case BUCKET:
         return;
     default:
         break;
     }
+
     painter.setPen(pen);
 
     painter.drawLine(pixelCurrent.x(),pixelCurrent.y(),pos.x(),pos.y());
