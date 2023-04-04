@@ -38,6 +38,7 @@ public:
 public slots:
     // jeff!!
     void updateCanvas(QImage*, vector<QImage>*, int, Action, int);
+    void updatePreviewCanvas(QImage*);
 
     //Andy Tran
     void onTimerTimeout();
