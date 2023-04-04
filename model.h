@@ -46,6 +46,7 @@ public:
 
     // main canvas
     QImage canvas;
+    QImage mergeCanvas;
 
     //shared variable
     static int frameIndex;
@@ -53,7 +54,7 @@ public:
 public slots:
     void mouseDown(QPoint);
     void mouseMove(QPoint);
-    //void mouseUp(QPoint);
+    void mouseRelease(QPoint);
 
     //Andy Tran
     void changeTool(Tool currentTool);

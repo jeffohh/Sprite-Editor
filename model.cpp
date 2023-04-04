@@ -77,13 +77,15 @@ void Model::initializeModel(){
 void Model::mouseDown(QPoint pos) {
     pixelCurrent = pos;
 
+    mergeCanvas = QImage(canvas.width(), canvas.height(), canvas.format());
+    mergeCanvas.fill(Qt::transparent);
     //if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
 
     QColor pixelColor = canvas.pixelColor(pos);
 
     switch (tool) {
     case PENCIL:
-        canvas.setPixelColor(pos, paintColor);
+        mergeCanvas.setPixelColor(pos, paintColor);
         break;
     case PICKER:
         paintColorChanged(pixelColor);
@@ -106,7 +108,7 @@ void Model::mouseMove(QPoint pos) {
 
     if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
 
-    QPainter painter(&canvas);
+    QPainter painter(&mergeCanvas);
     QPen pen;
     pen.setWidth(penSize);
 
@@ -135,6 +137,15 @@ void Model::mouseMove(QPoint pos) {
     frameList[currentFrame] = canvas;
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 
+}
+
+void Model::mouseRelease(QPoint pos) {
+    QPainter painter(&canvas);
+    painter.drawImage(0, 0, mergeCanvas);
+    painter.end();
+
+    frameList[currentFrame] = canvas;
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 }
 // --- Tool Modify ---
 void Model::fillColor(QColor originColor, QPoint pos){
@@ -231,7 +242,7 @@ void Model::createNewCanvas(int width, int height){
 
     //Create an canvas with given width and height.
     canvas = QImage(width,height, QImage::Format_ARGB32);
-    canvas.fill(Qt::white);
+    canvas.fill(Qt::transparent);
 
     //Andy Tran Edited
     initializeModel();

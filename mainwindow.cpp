@@ -43,6 +43,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     // --- Canvas Input ---
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
     connect(ui->canvasView, &ImageViewEditor::mouseMove, &model, &Model::mouseMove);
+    connect(ui->canvasView, &ImageViewEditor::mouseRelease, &model, &Model::mouseRelease);
 
     // [=== PREVIEW CONNECTIONS ===] @Andy Tran
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout); // Andy Tran - connection for preview

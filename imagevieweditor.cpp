@@ -64,6 +64,9 @@ void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void ImageViewEditor::mouseReleaseEvent(QMouseEvent *event) {
+    QPoint pos = mapToScene(event->pos()).toPoint();
+    emit mouseRelease(pos);
+
     event->ignore();
 
     //Ruini Tong
