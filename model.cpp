@@ -85,7 +85,8 @@ void Model::mouseDown(QPoint pos) {
 
     switch (tool) {
     case PENCIL:
-        mergeCanvas.setPixelColor(pos, paintColor);
+        drawLine(pixelCurrent, pos, &mergeCanvas, QPainter::CompositionMode_Source); // Jeffrey: draw "line" so it retains its Pen size
+        //mergeCanvas.setPixelColor(pos, paintColor);
         break;
     case PICKER:
         paintColorChanged(pixelColor);
@@ -101,27 +102,23 @@ void Model::mouseDown(QPoint pos) {
 
     //Andy Tran: update frameList and update view
     frameList[currentFrame] = canvas;
+    emit updatePreviewCanvas(&mergeCanvas);
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 }
 
 void Model::mouseMove(QPoint pos) {
 
+    canvasRect = canvas.rect();
     if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
-
-    QPainter painter(&mergeCanvas);
-    QPen pen;
-    pen.setWidth(penSize);
 
     switch (tool) {
     case PENCIL:
-        pen.setColor(paintColor);
-        painter.setCompositionMode(QPainter::CompositionMode_Source);
+        drawLine(pixelCurrent, pos, &mergeCanvas, QPainter::CompositionMode_Source);
         break;
     case PICKER:
         return;
     case ERASER:
-        painter.setCompositionMode(QPainter::CompositionMode_Clear);
-        //pen.setColor(Qt::white);
+        drawLine(pixelCurrent, pos, &canvas, QPainter::CompositionMode_Clear);
         break;
     case BUCKET:
         return;
@@ -129,25 +126,40 @@ void Model::mouseMove(QPoint pos) {
         break;
     }
 
-    painter.setPen(pen);
-
-    painter.drawLine(pixelCurrent.x(),pixelCurrent.y(),pos.x(),pos.y());
     pixelCurrent = pos;
 
     frameList[currentFrame] = canvas;
+    emit updatePreviewCanvas(&mergeCanvas);
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 
 }
 
-void Model::mouseRelease(QPoint pos) {
+void Model::mouseRelease(QPoint) {
     QPainter painter(&canvas);
     painter.drawImage(0, 0, mergeCanvas);
     painter.end();
 
+    mergeCanvas.fill(Qt::transparent);
+
     frameList[currentFrame] = canvas;
+    emit updatePreviewCanvas(&mergeCanvas);
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
 }
+
 // --- Tool Modify ---
+void Model::drawLine(QPoint p1, QPoint p2, QImage* image, QPainter::CompositionMode composition) {
+    QPainter painter(image);
+
+    QPen pen;
+    pen.setWidth(penSize);
+    pen.setColor(paintColor);
+    painter.setPen(pen);
+
+    painter.setCompositionMode(composition);
+
+    painter.drawLine(p1.x(),p1.y(),p2.x(),p2.y());
+}
+
 void Model::fillColor(QColor originColor, QPoint pos){
 
     //if the canvas color is the same as paintColor, don't need to fill

@@ -89,6 +89,9 @@ private:
     Tool tool = PENCIL;
     QColor paintColor; //It is initialized in the constructor, uniform convention with the UI.
 
+    // Jeff
+    void drawLine(QPoint, QPoint, QImage*, QPainter::CompositionMode);
+
     //Ruini Tong
     QPoint pixelCurrent;
     int penSize = 1;
@@ -112,6 +115,7 @@ signals:
      * @param QImage        the canvas
      */
     void updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action, int deletedIndex = -1);
+    void updatePreviewCanvas(QImage* canvas);
 
     //Renee, Tzhou
     void updatePaintColor(QColor newColor);
