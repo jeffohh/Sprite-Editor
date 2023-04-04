@@ -89,6 +89,15 @@ void Model::mouseDown(QPoint pos) {
     //if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
 
     QColor pixelColor = canvas.pixelColor(pos);
+    //paintColor = pixelColor + paintColor;
+
+    int red = pixelColor.red() + paintColor.red();
+    int green = pixelColor.green() + paintColor.green();
+    int blue = pixelColor.blue() + paintColor.blue();
+    int alpha = (pixelColor.alpha() + paintColor.alpha()) / 2;
+
+    // Create the new color with the calculated values
+    QColor paintColor = QColor::fromRgbF(red / 510.0, green / 510.0, blue / 510.0, alpha / 255.0);
 
     switch (tool) {
     case PENCIL:

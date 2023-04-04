@@ -575,14 +575,18 @@ void MainWindow::handleSize() {
 //tzhou
 void MainWindow::setIconToToolBtns(){
 
-    ui->btnPencil->setIcon(QIcon(QPixmap(":/image/image/pencil1.png")));
+    ui->btnPencil->setIcon(QIcon(QPixmap(":/image/image/pencil2.PNG")));
     ui->btnPencil->setIconSize(QSize(30,30));
-    ui->btnBucket->setIcon(QIcon(QPixmap(":/image/image/bucket1.png")));
-    ui->btnBucket->setIconSize(QSize(30,30));
-    ui->btnEraser->setIcon(QIcon(QPixmap(":/image/image/eraser1.png")));
+    ui->btnEraser->setIcon(QIcon(QPixmap(":/image/image/Eraser.PNG")));
     ui->btnEraser->setIconSize(QSize(30,30));
-    ui->btnPicker->setIcon(QIcon(QPixmap(":/image/image/picker1.png")));
+    ui->btnPicker->setIcon(QIcon(QPixmap(":/image/image/Picker.PNG")));
     ui->btnPicker->setIconSize(QSize(30,30));
+    ui->btnBucket->setIcon(QIcon(QPixmap(":/image/image/Bucket.PNG")));
+    ui->btnBucket->setIconSize(QSize(30,30));
+    //Ruini add
+    ui->changeColorBtn->setIcon(QIcon(QPixmap(":/image/image/Color.PNG")));
+    ui->changeColorBtn->setIconSize(QSize(100,100));
+
 }
 //tzhou
 void MainWindow::setColorScenesToViews()
