@@ -9,6 +9,7 @@ Model::Model(QObject *parent)
     : QObject{parent}
     , canvas(32, 32, QImage::Format_ARGB32)
 {
+    canvasSize = 32;
     canvas.fill(Qt::transparent);
     paintColor = Qt::black;
     initializeModel();
@@ -57,7 +58,10 @@ void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
 }
 
 void Model::onAddFrame(){
-    canvas = QImage(canvasWidth, canvasHeight, QImage::Format_ARGB32);
+    //AndyTran Merged
+//    canvas = QImage(canvasWidth, canvasHeight, QImage::Format_ARGB32);
+    canvas = QImage(canvasSize, canvasSize, QImage::Format_ARGB32);
+
     canvas.fill(Qt::transparent);
     frameList.push_back(canvas);
     currentFrame = frameList.size() - 1;
@@ -122,6 +126,8 @@ void Model::mouseMove(QPoint pos) {
         return;
     case ERASER:
         drawLine(pixelCurrent, pos, &canvas, QPainter::CompositionMode_Clear);
+//        painter.setCompositionMode(QPainter::CompositionMode_Clear);
+
         break;
     case BUCKET:
         return;
@@ -252,22 +258,50 @@ void Model::updateAlpha(int newAlphaSliderValue)
 
 
 // [=== CANVAS SECTION ===] @Duong @Andy Tran
+void Model::resizeFrameList(int newSize){
+
+    //This one worked
+    qDebug() << "resizeFrameList called " << newSize;
+    for (unsigned int i = 0; i < frameList.size(); i++) {
+        // Create a new QImage of size new_size
+        QImage newImage(newSize, newSize, QImage::Format_ARGB32);
+
+        newImage.fill(Qt::transparent);
+
+        // Calculate the center position of the new image
+        int center_x = (newSize - canvasSize) / 2;
+        int center_y = (newSize - canvasSize) / 2;
+
+        // Draw the original QImage onto the new QImage at the center position
+        QPainter painter(&newImage);
+        painter.drawImage(center_x, center_y, frameList[i]);
+        painter.end();
+        frameList[i] = newImage;
+    }
+
+    canvas = frameList[currentFrame];
+    canvasSize = newSize;
+    emit updateCanvas(&canvas, &frameList, currentFrame, RESIZE);
+}
+
 
 void Model::createNewCanvas(int width, int height){
 
+    //AndyTran edited:
+    canvasSize = width;
+
     //Create an canvas with given width and height.
-    canvas = QImage(width,height, QImage::Format_ARGB32);
+    canvas = QImage(canvasSize,canvasSize, QImage::Format_ARGB32);
     canvas.fill(Qt::transparent);
 
-
-    // Store the current canvas width and height
-    canvasWidth = width;
-    canvasHeight = height;
+//    // Store the current canvas width and height
+//    canvasWidth = width;
+//    canvasHeight = height;
 
     //Andy Tran Edited
     initializeModel();
     emit updateCanvas(&canvas, &frameList, currentFrame, CREATE_NEW);
-    emit centerAndAutoZoom(width, height);
+//    emit centerAndAutoZoom(canvasSize, canvasSize);
 }
 
 

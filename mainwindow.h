@@ -44,17 +44,21 @@ public slots:
     void onTimerTimeout();
     void onChangeFpsSliderValue(int value);
     void addFrameWidget(QHBoxLayout* framesHorizontalLayout);
-    void initializeView();
+    void initializePreview();
     void initializeFrameView();
     void deleteFrameWidget(int);
-    void loadWidgets();
+    void deleteAllWidgets();
+    void loadFrameWidgets();
+//    void transformGraphicsView(QGraphicsView*,QImage*);
+//    void resizeAllFrameWidgets();
 
     //Duong
-    void newCanvasCreated();
     void handleNewCanvas();
     void handleOpenCanvas();
     void handleSaveCanvas();
     void centerAndAutoZoom(int, int);
+    void handleSize(); //AndyTran added
+
 
     //tzhou
     void updatePaintColor(QColor newColor);
@@ -74,22 +78,21 @@ private:
     //Andy Tran
     bool isInit = true;
     Action action = UPDATE;
-
+    int canvasSize = 32;
 
     //Clone from Model's frameList
     vector<QImage> frameList;
 
-
     //Frame View
     int currentFrame = 0;
     int previousFrame = 0;
-    QHBoxLayout* framesHorizontalLayout = new QHBoxLayout(this);
+    QHBoxLayout* framesHorizontalLayout = new QHBoxLayout();
 
     //Preview
     QSize viewSize;
     QGraphicsScene* previewScene = new QGraphicsScene(this);
     QGraphicsPixmapItem toPixmapItem;
-    QTimer *timer = new QTimer(this);
+    QTimer *timer = new QTimer();
     int fps = 12;
     int frameDuration = 1000/12;
     unsigned int curPreviewIndex = 0;
@@ -110,6 +113,7 @@ private:
 
 signals:
     //Andy Tran
+    void resizeFrameList(int);
 
     //Renee
     // used by any color change

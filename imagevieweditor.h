@@ -28,7 +28,8 @@ protected:
     void wheelEvent(QWheelEvent*) override;
 
 private:
-    double scale = 15; //Andy Tran: default 1500%
+    //Scale default 1580%
+    double scale = 15.8;
 
     QGraphicsPixmapItem* imageItem;
     QGraphicsPixmapItem* imagePreviewItem;

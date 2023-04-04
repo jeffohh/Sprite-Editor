@@ -34,7 +34,8 @@ enum Action{
     UPDATE,
     DELETE_FRAME,
     OPEN_FILE,
-    CREATE_NEW
+    CREATE_NEW,
+    RESIZE
 };
 
 class Model : public QObject
@@ -62,6 +63,7 @@ public slots:
     void initializeModel();
     void onAddFrame();
     void deletePressed(int);
+    void resizeFrameList(int);
 
     //Tzhou: this should be combined with setToolColor, but need Renee's consent.
     /**
@@ -100,6 +102,7 @@ private:
     //Andy Tran
     vector<QImage> frameList;
     int currentFrame = 0;
+    int canvasSize;
 
     //tzhou
     QMap <QGraphicsView*, QColor> customColors;
