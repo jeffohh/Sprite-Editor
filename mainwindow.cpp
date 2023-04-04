@@ -127,11 +127,10 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
 
     // [=== MENU CONNECTIONS ===] @Duong
-    //Handle clicking on new
     connect(ui->actionNew_Project, &QAction::triggered, this, &MainWindow::handleNewCanvas);
     connect(ui->actionSave_Project, &QAction::triggered, this, &MainWindow::handleSaveCanvas);
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::handleOpenCanvas);
-//    connect(&model, &Model::newCanvasCreated, this, &MainWindow::newCanvasCreated);
+    connect(&model, &Model::centerAndAutoZoom, this, &MainWindow::centerAndAutoZoom);
 
 
 }
@@ -479,6 +478,19 @@ void MainWindow::handleOpenCanvas()
     if (!fileName.isEmpty()) {
         model.openFile(fileName);
     }
+}
+
+//Handle zoom when create a new file
+void MainWindow::centerAndAutoZoom(int width, int height) {
+    // Calculate the zoom level
+    qreal zoomLevel = qMin(ui->canvasView->viewport()->width() / qreal(width),
+                           ui->canvasView->viewport()->height() / qreal(height));
+
+    // Set the zoom level
+    ui->canvasView->setTransform(QTransform::fromScale(zoomLevel, zoomLevel));
+
+    // Center the canvas in the view
+    ui->canvasView->centerOn(previewScene->sceneRect().center());
 }
 
 //-------------------Extra Features ----------------------

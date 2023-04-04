@@ -101,6 +101,10 @@ private:
     //tzhou
     QMap <QGraphicsView*, QColor> customColors;
 
+    //Duong
+    int canvasWidth;
+    int canvasHeight;
+
 signals:
     /**
      * @brief Sends canvas to View
@@ -123,11 +127,11 @@ signals:
     //Ruini Tong
     void newPosition(QPoint pos);
 
-    //Duong
-//    void newCanvasCreated();
-
     //Andy Tran
     void deleteFrameWidget(int);
+
+    //Duong
+    void centerAndAutoZoom(int, int);
 };
 
 #endif // MODEL_H

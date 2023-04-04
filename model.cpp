@@ -14,6 +14,8 @@ Model::Model(QObject *parent)
     initializeModel();
 
     canvasRect = canvas.rect();// get canvas size
+    canvasWidth = canvas.width();
+    canvasHeight = canvas.height();
 }
 
 //Andy Tran - Frames part
@@ -55,11 +57,12 @@ void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
 }
 
 void Model::onAddFrame(){
-    canvas = QImage(32, 32, QImage::Format_ARGB32);
+    canvas = QImage(canvasWidth, canvasHeight, QImage::Format_ARGB32);
     canvas.fill(Qt::transparent);
     frameList.push_back(canvas);
     currentFrame = frameList.size() - 1;
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
+
 }
 
 void Model::initializeModel(){
@@ -244,10 +247,15 @@ void Model::createNewCanvas(int width, int height){
     canvas = QImage(width,height, QImage::Format_ARGB32);
     canvas.fill(Qt::transparent);
 
+
+    // Store the current canvas width and height
+    canvasWidth = width;
+    canvasHeight = height;
+
     //Andy Tran Edited
     initializeModel();
-//    emit newCanvasCreated();
     emit updateCanvas(&canvas, &frameList, currentFrame, CREATE_NEW);
+    emit centerAndAutoZoom(width, height);
 }
 
 

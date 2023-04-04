@@ -53,6 +53,7 @@ public slots:
     void handleNewCanvas();
     void handleOpenCanvas();
     void handleSaveCanvas();
+    void centerAndAutoZoom(int, int);
 
     //tzhou
     void updatePaintColor(QColor newColor);
