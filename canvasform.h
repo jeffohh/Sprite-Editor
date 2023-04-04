@@ -11,7 +11,6 @@ class CanvasForm : public QDialog
     Q_OBJECT
 public:
     explicit CanvasForm(QWidget *parent = nullptr);
-
 signals:
     void createNewCanvas(int width, int height);
 

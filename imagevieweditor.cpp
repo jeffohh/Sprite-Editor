@@ -7,7 +7,9 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
     QGraphicsView(parent)
 {
     setStyleSheet("background-color: grey;");
-    setTransform(QTransform().scale(scale, scale));
+
+    // Set the transform to scale the image to fit the view
+    setTransform(QTransform::fromScale(scale, scale));
 
     imageItem = new QGraphicsPixmapItem();
 
@@ -25,7 +27,6 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
     // create a scene, add the "rectBackground" to the scene
     QGraphicsScene* scene = new QGraphicsScene();
     scene->addItem(rectBackground);
-
     this->setScene(scene);
 
     QPixmap pencilImage(":/image/image/pencil1.png");
@@ -73,17 +74,28 @@ void ImageViewEditor::mouseReleaseEvent(QMouseEvent *event) {
 void ImageViewEditor::wheelEvent(QWheelEvent *event)
 {
 
-        // Get the current zoom level
+    //@AndyTran:
+    //TO-DO: figure out for the Zoom in and out centered after scale down
 
-        // Zoom in or out based on the wheel delta
-        if (event->angleDelta().y() > 0) {
-            scale *= 1.2;
-        } else {
-            scale /= 1.2;
-        }
+    // Get the current zoom level
+   qreal currentScale = transform().m11();
 
-        // Set the new zoom level
-        setTransform(QTransform().scale(scale, scale));
+    // Zoom in or out based on the wheel delta
+    if (event->angleDelta().y() > 0) {
+        currentScale *= 1.2;
+    } else {
+        currentScale /= 1.2;
+    }
+
+    // Set the new zoom level
+    setTransform(QTransform().scale(currentScale, currentScale));
+
+//    // Set the new zoom level
+//       setTransformationAnchor(QGraphicsView::AnchorViewCenter); // Set the transformation anchor to the center of the view
+//       QPointF sceneCenter = mapToScene(viewport()->rect().center()); // Get the center point of the visible area in scene coordinates
+//       centerOn(sceneCenter); // Move the center of the view to the center point of the visible area in scene coordinates
+//       setTransform(QTransform().scale(currentScale, currentScale)); // Scale the view around the center point of the visible area
+//       centerOn(sceneCenter); // Move the center of the view back to the center point of the visible area in scene coordinates
 }
 
 //change cursor image
