@@ -37,7 +37,7 @@ public:
 
 public slots:
     // jeff!!
-    void updateCanvas(QImage*, vector<QImage>*, int, Action, int);
+    void updateCanvas(QImage*, vector<QImage>*, int, Action, int, int);
     void updatePreviewCanvas(QImage*);
 
     //Andy Tran
@@ -49,8 +49,6 @@ public slots:
     void deleteFrameWidget(int);
     void deleteAllWidgets();
     void loadFrameWidgets();
-//    void transformGraphicsView(QGraphicsView*,QImage*);
-//    void resizeAllFrameWidgets();
 
     //Duong
     void handleNewCanvas();
@@ -69,8 +67,6 @@ public slots:
     //Ruini Tong
     void changeSizeSliderValue(int value);
     void disableTool(Tool);
-    //-------------------------------------------
-
 private:
     Ui::MainWindow *ui;
     Model& model;
@@ -113,7 +109,7 @@ private:
 
 signals:
     //Andy Tran
-    void resizeFrameList(int);
+//    void resizeFrameList(int);
 
     //Renee
     // used by any color change

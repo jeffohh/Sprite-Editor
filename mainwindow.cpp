@@ -11,8 +11,6 @@
 #include<QString>
 #include<QDebug>
 #include<QPainter>
-#include<QInputDialog>
-#include<QDoubleSpinBox>
 
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
@@ -137,10 +135,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     //AndyTran Added
     connect(ui->actionSprite_Size, &QAction::triggered, this, &MainWindow::handleSize);
-    connect(this, &MainWindow::resizeFrameList, &model, &Model::resizeFrameList);
-
-
-
 }
 
 MainWindow::~MainWindow()
@@ -201,7 +195,7 @@ void MainWindow::addFrameWidget(QHBoxLayout* framesHorizontalLayout)
 
 
     newFrame->fitInView(QRectF(0, 0, currentImage->width(), currentImage->height()),
-            Qt::KeepAspectRatio);
+                        Qt::KeepAspectRatio);
     newFrame->updatePixmap(currentImage);
 
     // Set focus on the newest FrameView
@@ -221,67 +215,64 @@ void MainWindow::deleteFrameWidget(int deletedIndex) {
 
 void MainWindow:: deleteAllWidgets(){
     // Clear the current frame widgets
-   while (!framesHorizontalLayout->isEmpty()) {
-       QLayoutItem* item = framesHorizontalLayout->takeAt(0);
-       delete item->widget();
-       delete item;
-   }
+    while (!framesHorizontalLayout->isEmpty()) {
+        QLayoutItem* item = framesHorizontalLayout->takeAt(0);
+        delete item->widget();
+        delete item;
+    }
 }
 
 void MainWindow::loadFrameWidgets() {
 
     //Andy Tran: Need to optimized
 
-        // Clear the current frame widgets
-       deleteAllWidgets();
+    // Clear the current frame widgets
+    deleteAllWidgets();
 
-       //Add Push Button
-       QPushButton* addFrameBtn = new QPushButton("+");
-       addFrameBtn->setFixedSize(64, 64);
+    //Add Push Button
+    QPushButton* addFrameBtn = new QPushButton("+");
+    addFrameBtn->setFixedSize(64, 64);
 
-       //Frames Layout
-       framesHorizontalLayout->setAlignment(Qt::AlignLeft);
-       framesHorizontalLayout->addWidget(addFrameBtn);
+    //Frames Layout
+    framesHorizontalLayout->setAlignment(Qt::AlignLeft);
+    framesHorizontalLayout->addWidget(addFrameBtn);
 
-       //Add Frame Button Connection
-       connect(addFrameBtn, &QPushButton::clicked, &model, &Model::onAddFrame);
-       connect(addFrameBtn, &QPushButton::clicked, this, [=]() {
-            addFrameWidget(framesHorizontalLayout);
-            framesHorizontalLayout->itemAt(frameList.size())->widget()->setStyleSheet("");
-       });
+    //Add Frame Button Connection
+    connect(addFrameBtn, &QPushButton::clicked, &model, &Model::onAddFrame);
+    connect(addFrameBtn, &QPushButton::clicked, this, [=]() {
+        addFrameWidget(framesHorizontalLayout);
+        framesHorizontalLayout->itemAt(frameList.size())->widget()->setStyleSheet("");
+    });
 
-       // Create frame widgets for each frame in the frameList
-       for (size_t i = 0; i < frameList.size(); ++i) {
-           previousFrame = currentFrame;
-           currentFrame = i;
-           addFrameWidget(framesHorizontalLayout);
-       }
+    // Create frame widgets for each frame in the frameList
+    for (size_t i = 0; i < frameList.size(); ++i) {
+        previousFrame = currentFrame;
+        currentFrame = i;
+        addFrameWidget(framesHorizontalLayout);
+    }
 
-       //Set the border of last frame to nonn
-       framesHorizontalLayout->itemAt(currentFrame)->widget()->setStyleSheet("border: none");
+    //Set the border of last frame to nonn
+    framesHorizontalLayout->itemAt(currentFrame)->widget()->setStyleSheet("border: none");
 
-       //Set the selecting frame to the first one
-       framesHorizontalLayout->itemAt(0)->widget()->setStyleSheet("border: 3px solid black;");
+    //Set the selecting frame to the first one
+    framesHorizontalLayout->itemAt(0)->widget()->setStyleSheet("border: 3px solid black;");
 
-       //Set the current frame to the first one
-       currentFrame = 0;
+    //Set the current frame to the first one
+    currentFrame = 0;
 
-       //To start initializing the preview
-       isInit = true;
- }
+    //Start the Preview
+    isInit = true;
+}
 
 
 // [=== CANVAS SECTION ===] @Jeffrey @Andy Tran
-void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action action, int deletedIndex) {
-    //update Canvas View - This one worked
-//    qDebug() << "canvas->width() " << canvas->width();
-//    qDebug() << "canvas->height() " << canvas->height();
-
+void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action action, int newSize, int deletedIndex) {
+    //Update canvas View
     ui->canvasView->fitInView(QRectF(0, 0, canvas->width(), canvas->height()), Qt::KeepAspectRatio);
-
     ui->canvasView->updatePixmap(canvas);
 
-    //Update previous frame, current frame, action, frameList
+    //Update previous frame, current frame, action, frameList, canvas size
+    this->canvasSize = newSize;
     this->action = action;
     previousFrame = currentFrame;
 
@@ -293,68 +284,72 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
     frameList.resize(list->size());
     frameList = *list;
 
+    //Update Frame View Widgets and Preview
     FrameView *frame;
     switch(action){
-        case DELETE_FRAME:
-            if(deletedIndex < 0)
-                break;
+    case DELETE_FRAME:
+        if(deletedIndex < 0)
+            break;
 
-            //Delete widget at index
-            deleteFrameWidget(deletedIndex);
+        //Delete widget at index
+        deleteFrameWidget(deletedIndex);
 
-            //Update color of border according to the currcent frame view
-            framesHorizontalLayout->itemAt(this->currentFrame)->widget()->setStyleSheet("border: 3px solid black;");
+        //Update color of border according to the currcent frame view
+        framesHorizontalLayout->itemAt(this->currentFrame)->widget()->setStyleSheet("border: 3px solid black;");
 
-            //Shift the index of FrameView elements to Left - Need to exclude the Add Frame Button (last element of the layout)
-            for(int i = deletedIndex; i < framesHorizontalLayout->count() - 1; i++){
-                FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(i)->widget());
-                if((frame->getIndex() - 1) >= 0)
-                    frame->updateIndex(frame->getIndex()-1);
-            }
+        //Shift the index of FrameView elements to Left - Need to exclude the Add Frame Button (last element of the layout)
+        for(int i = deletedIndex; i < framesHorizontalLayout->count() - 1; i++){
+            FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(i)->widget());
+            if((frame->getIndex() - 1) >= 0)
+                frame->updateIndex(frame->getIndex()-1);
+        }
+
+        // Set focus on the current FrameView
+        frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(this->currentFrame)->widget());
+        if(frame) frame->setFocus();
+        break;
+    case UPDATE:
+        //Update color of border according to the currcent frame view
+        framesHorizontalLayout->itemAt(previousFrame)->widget()->setStyleSheet("border: none");
+        framesHorizontalLayout->itemAt(this->currentFrame)->widget()->setStyleSheet("border: 3px solid black;");
+
+        //Update the FrameView when modified Canvas
+        frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(this->currentFrame)->widget());
+        if(frame){
+            frame->updatePixmap(&frameList[currentFrame]);
 
             // Set focus on the current FrameView
-            frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(this->currentFrame)->widget());
-            if(frame) frame->setFocus();
-            break;
-        case UPDATE:
-            //Update color of border according to the currcent frame view
-            framesHorizontalLayout->itemAt(previousFrame)->widget()->setStyleSheet("border: none");
-            framesHorizontalLayout->itemAt(this->currentFrame)->widget()->setStyleSheet("border: 3px solid black;");
+            frame->setFocus();
+        }
+        break;
+    case OPEN_FILE:
+        //To start initializing the preview
+        isInit = false;
+        loadFrameWidgets();
+        break;
+    case CREATE_NEW:
+        // Clear the current frame widgets
+        deleteAllWidgets();
 
-            //Update the FrameView when modified Canvas
-            frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(this->currentFrame)->widget());
+        // Reinitialize the frame view and preview components
+        initializeFrameView();
+        isInit = true;
+        break;
+    case RESIZE:
+        for(int i = 0; i < framesHorizontalLayout->count() - 1; i++){
+            FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(i)->widget());
             if(frame){
-                frame->updatePixmap(&frameList[currentFrame]);
-
-                // Set focus on the current FrameView
-                frame->setFocus();
+                frame->fitInView(QRectF(0, 0, frameList[i].width(), frameList[i].height()), Qt::KeepAspectRatio);
+                frame->updatePixmap(&frameList[i]);
             }
-            break;
-        case OPEN_FILE:
-            loadFrameWidgets();
-            break;
-        case CREATE_NEW:
-            // Clear the current frame widgets
-            deleteAllWidgets();
-
-            // Reinitialize the frame view and preview components
-            initializeFrameView();
-            isInit = true;
-        case RESIZE:
-            for(int i = 0; i < framesHorizontalLayout->count() - 1; i++){
-                FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(i)->widget());
-                if(frame){
-                    frame->fitInView(QRectF(0, 0, frameList[i].width(), frameList[i].height()), Qt::KeepAspectRatio);
-                    frame->updatePixmap(&frameList[i]);
-                }
-            }
-            isInit = true;
-            break;
-        default:
-            break;
+        }
+        isInit = true;
+        break;
+    default:
+        break;
     }
 
-    //Initialize the View at the first place
+    //Start the Preview
     if(isInit){
         initializePreview();
         isInit = false;
@@ -372,7 +367,7 @@ void MainWindow::initializePreview() {
     previewScene->setFocusItem(&toPixmapItem);
     ui->graphicsView->setScene(previewScene);
     ui->graphicsView->fitInView(QRectF(0, 0, frameList.front().width(), frameList.front().height()),
-            Qt::KeepAspectRatio);
+                                Qt::KeepAspectRatio);
     timer->start(frameDuration);
 }
 
@@ -458,8 +453,6 @@ void MainWindow::updatePaintColor(QColor newColor)
     QPainter paint(&pix);
     ui->label->setPixmap(pix);
     ui->label->setParent(ui->colorPanel);
-    qDebug()<<"Update Panint color";
-
 }
 
 void MainWindow::changeColorBtnIsPressed()
@@ -467,13 +460,13 @@ void MainWindow::changeColorBtnIsPressed()
     QColor color = QColorDialog::getColor(DEFAULT_PAINT_COLOR,this);
     if(color.isValid()) //If the "OK" button is pressed.
     {
-       emit paintColorChanged(color); //Ruini Tong
+        emit paintColorChanged(color); //Ruini Tong
     }
 }
 
 // [=== MENU SECTION ===] @Duong
 void MainWindow::handleNewCanvas() {
-    CanvasForm form(this);
+    CanvasForm form(this, canvasSize, CREATE_NEW);
     connect(&form, &CanvasForm::createNewCanvas, &model, &Model::createNewCanvas);
     form.exec();
 }
@@ -512,62 +505,13 @@ void MainWindow::centerAndAutoZoom(int width, int height) {
 
     // Center the canvas in the view
     ui->canvasView->centerOn(previewScene->sceneRect().center());
-    qDebug() << "hello";
 }
 
 //Andy Tran Added
 void MainWindow::handleSize() {
-    QDialog* dialog = new QDialog(this);
-    dialog->setWindowTitle("Set Image Size");
-    QLabel* label = new QLabel("Enter the width and height of the image (in pixels):", dialog);
-    QSpinBox* widthSpinBox = new QSpinBox(dialog);
-    QSpinBox* heightSpinBox = new QSpinBox(dialog);
-    QPushButton* okButton = new QPushButton("Submit", dialog);
-    QPushButton* cancelButton = new QPushButton("Cancel", dialog);
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    buttonLayout->addWidget(okButton);
-    buttonLayout->addWidget(cancelButton);
-
-    // Set the range, step size, and suffix for the spin boxes
-    widthSpinBox->setRange(1, 500);
-    widthSpinBox->setSingleStep(1);
-    widthSpinBox->setSuffix(" px");
-    heightSpinBox->setRange(1, 500);
-    heightSpinBox->setSingleStep(1);
-    heightSpinBox->setSuffix(" px");
-
-    // Connect the valueChanged() signals of the spin boxes to each other
-    connect(widthSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-            heightSpinBox, &QSpinBox::setValue);
-    connect(heightSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-            widthSpinBox, &QSpinBox::setValue);
-
-    // Set the width and height spin boxes to the same initial value
-    int initialValue = canvasSize;
-    widthSpinBox->setValue(initialValue);
-    heightSpinBox->setValue(initialValue);
-
-    // Create a layout for the spin boxes
-    QGridLayout* layout = new QGridLayout();
-    layout->addWidget(label, 0, 0, 1, 2);
-    layout->addWidget(new QLabel("Width:", dialog), 1, 0);
-    layout->addWidget(widthSpinBox, 1, 1);
-    layout->addWidget(new QLabel("Height:", dialog), 2, 0);
-    layout->addWidget(heightSpinBox, 2, 1);
-    layout->addLayout(buttonLayout, 3, 0, 1, 2);
-    dialog->setLayout(layout);
-
-    // Connect the buttons to slots
-    connect(okButton, &QPushButton::clicked, dialog, &QDialog::accept);
-    connect(cancelButton, &QPushButton::clicked, dialog, &QDialog::reject);
-
-    // Show the dialog and wait for the user to interact with it
-    int result = dialog->exec();
-    if (result == QDialog::Accepted) {
-        this->canvasSize = widthSpinBox->value();
-        emit resizeFrameList(this->canvasSize);
-    }
-
+    CanvasForm form(this, canvasSize, RESIZE);
+    connect(&form, &CanvasForm::resizeFrameList, &model, &Model::resizeFrameList);
+    form.exec();
 }
 
 //-------------------Extra Features ----------------------
