@@ -83,31 +83,15 @@ void ImageViewEditor::mouseReleaseEvent(QMouseEvent *event) {
 
 void ImageViewEditor::wheelEvent(QWheelEvent *event)
 {
-
-    //@AndyTran:
-    //TO-DO: figure out for the Zoom in and out centered after scale down
-
-    // Get the current zoom level
-   // qreal currentScale = transform().m11();
-
     // Zoom in or out based on the wheel delta
     if (event->angleDelta().y() > 0) {
         scale *= 1.2;
-        //currentScale *= 1.2;
     } else {
         scale /= 1.2;
-        //currentScale /= 1.2;
     }
 
     // Set the new zoom level
     setTransform(QTransform().scale(scale, scale));
-
-//    // Set the new zoom level
-//       setTransformationAnchor(QGraphicsView::AnchorViewCenter); // Set the transformation anchor to the center of the view
-//       QPointF sceneCenter = mapToScene(viewport()->rect().center()); // Get the center point of the visible area in scene coordinates
-//       centerOn(sceneCenter); // Move the center of the view to the center point of the visible area in scene coordinates
-//       setTransform(QTransform().scale(currentScale, currentScale)); // Scale the view around the center point of the visible area
-//       centerOn(sceneCenter); // Move the center of the view back to the center point of the visible area in scene coordinates
 }
 
 //change cursor image

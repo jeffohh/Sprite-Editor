@@ -1,40 +1,68 @@
 #include "canvasform.h"
-#include <QVBoxLayout>
-#include <QMessageBox>
+//#include <QVBoxLayout>
 
-CanvasForm::CanvasForm(QWidget *parent): QDialog(parent)
+
+CanvasForm::CanvasForm(QWidget *parent, int currentSize, Action action): QDialog(parent)
 {
-        widthInput = new QLineEdit(this);
-        heightInput = new QLineEdit(this);
-        widthLabel = new QLabel("Width", this);
-        heightLabel = new QLabel("Height", this);
-        submitButton = new QPushButton("Create", this);
+        //
+        this->action = action;
 
-        QGridLayout *layout = new QGridLayout();
-        layout->addWidget(widthLabel, 0, 0);
-           layout->addWidget(widthInput, 0, 1);
+        this->setWindowTitle("Create New Sprite");
+        if(action == RESIZE){
+            this->setWindowTitle("Set Sprite Size");
+        }
 
-           layout->addWidget(heightLabel, 1, 0);
-           layout->addWidget(heightInput, 1, 1);
+        QSpinBox* heightSpinBox = new QSpinBox(this);
+        QPushButton* okButton = new QPushButton("OK", this);
+        QPushButton* cancelButton = new QPushButton("Cancel", this);
+        QHBoxLayout* buttonLayout = new QHBoxLayout();
+        buttonLayout->addWidget(okButton);
+        buttonLayout->addWidget(cancelButton);
 
-           layout->addWidget(submitButton, 2, 1);
+        // Set the range, step size, and suffix for the spin boxes
+        widthSpinBox->setRange(1, 500);
+        widthSpinBox->setSingleStep(1);
+        widthSpinBox->setSuffix(" px");
+        heightSpinBox->setRange(1, 500);
+        heightSpinBox->setSingleStep(1);
+        heightSpinBox->setSuffix(" px");
 
-           setLayout(layout);
-           setWindowTitle("New Canvas");
+        // Connect the valueChanged() signals of the spin boxes to each other
+        connect(widthSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+                heightSpinBox, &QSpinBox::setValue);
+        connect(heightSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+                widthSpinBox, &QSpinBox::setValue);
 
-        connect(submitButton, &QPushButton::clicked, this, &CanvasForm::handleSubmitButton);
+        // Set the width and height spin boxes to the same initial value
+        int initialValue = currentSize;
+        widthSpinBox->setValue(initialValue);
+        heightSpinBox->setValue(initialValue);
+
+        // Create a layout for the spin boxes
+        QGridLayout* layout = new QGridLayout();
+        layout->addWidget(new QLabel("Width:", this), 1, 0);
+        layout->addWidget(widthSpinBox, 1, 1);
+        layout->addWidget(new QLabel("Height:", this), 2, 0);
+        layout->addWidget(heightSpinBox, 2, 1);
+        layout->addLayout(buttonLayout, 3, 0, 1, 2);
+        this->setLayout(layout);
+
+        // Connect the buttons to slots
+        connect(okButton, &QPushButton::clicked, this, &CanvasForm::handleSubmitButton);
+
 }
 
 void CanvasForm::handleSubmitButton(){
-    bool widthOK, heightOK;
-    int width = widthInput->text().toInt(&widthOK);
-    int height = heightInput->text().toInt(&heightOK);
-
-    if(widthOK && heightOK && width > 0 && height > 0){
-        emit createNewCanvas(width, height);
+    this->newSize = widthSpinBox->value();
+    if(newSize > 0){
+        if(action == RESIZE)
+            emit resizeFrameList(newSize);
+        else if(action == CREATE_NEW){
+            emit createNewCanvas(newSize);
+        }
         close();
-    } else{
-         QMessageBox::warning(this, "Invalid input", "Please enter valid values for width and height.");
+    }else{
+        QMessageBox::warning(this, "Invalid input", "Please enter valid values for width and height.");
     }
 }
 

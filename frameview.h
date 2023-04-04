@@ -20,7 +20,6 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 private:
-//    double scale = 15; //Andy Tran: default 1500%
     QGraphicsPixmapItem* imageItem;
     int index;
 

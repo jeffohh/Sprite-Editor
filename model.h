@@ -23,7 +23,7 @@
 
 using std::vector;
 
-// global declaration so view can access too?
+//Enum Global Declaration
 enum Tool {
     PENCIL,
     PICKER,
@@ -45,11 +45,11 @@ class Model : public QObject
 public:
     explicit Model(QObject *parent = nullptr);
 
-    // main canvas
+    //Main canvas
     QImage canvas;
     QImage mergeCanvas;
 
-    //shared variable
+    //Shared variable
     static int frameIndex;
 
 public slots:
@@ -78,7 +78,7 @@ public slots:
     void customColorIsSelected(QGraphicsView* view);
 
     //Duong
-    void createNewCanvas(int width, int height);
+    void createNewCanvas(int);
     bool saveFile(const QString &filename);
     bool openFile(const QString &filename);
 
@@ -121,7 +121,7 @@ signals:
      *
      * @param QImage        the canvas
      */
-    void updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action, int deletedIndex = -1);
+    void updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action action, int newSize, int deletedIndex = -1);
     void updatePreviewCanvas(QImage* canvas);
 
     //Renee, Tzhou

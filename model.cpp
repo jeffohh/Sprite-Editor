@@ -39,7 +39,7 @@ void Model::deletePressed(int deletedIndex){
         //Update static variable
         frameIndex--;
 
-        emit updateCanvas(&canvas, &frameList, currentFrame, DELETE_FRAME, deletedIndex);
+        emit updateCanvas(&canvas, &frameList, currentFrame, DELETE_FRAME, canvasSize, deletedIndex);
     }
 }
 
@@ -54,7 +54,7 @@ void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
 
     frameList[currentFrame] = canvas;
 
-    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 }
 
 void Model::onAddFrame(){
@@ -65,7 +65,7 @@ void Model::onAddFrame(){
     canvas.fill(Qt::transparent);
     frameList.push_back(canvas);
     currentFrame = frameList.size() - 1;
-    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 
 }
 
@@ -103,6 +103,9 @@ void Model::mouseDown(QPoint pos) {
     case PENCIL:
         drawLine(pixelCurrent, pos, &mergeCanvas, QPainter::CompositionMode_Source); // Jeffrey: draw "line" so it retains its Pen size
         break;
+    case ERASER:
+        drawLine(pixelCurrent, pos, &canvas, QPainter::CompositionMode_Clear);
+        break;
     case PICKER:
         paintColorChanged(pixelColor);
         return;
@@ -116,7 +119,7 @@ void Model::mouseDown(QPoint pos) {
     //Andy Tran: update frameList and update view
     frameList[currentFrame] = canvas;
     emit updatePreviewCanvas(&mergeCanvas);
-    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 }
 
 void Model::mouseMove(QPoint pos) {
@@ -139,7 +142,7 @@ void Model::mouseMove(QPoint pos) {
 
     frameList[currentFrame] = canvas;
     emit updatePreviewCanvas(&mergeCanvas);
-    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 
 }
 
@@ -152,7 +155,7 @@ void Model::mouseRelease(QPoint) {
 
     frameList[currentFrame] = canvas;
     emit updatePreviewCanvas(&mergeCanvas);
-    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 }
 
 // --- Tool Modify ---
@@ -216,7 +219,7 @@ void Model::fillColor(QColor originColor, QPoint pos){
         }
     }
     frameList[currentFrame] = canvas;
-    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE);
+    emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 
 }
 
@@ -280,14 +283,14 @@ void Model::resizeFrameList(int newSize){
 
     canvas = frameList[currentFrame];
     canvasSize = newSize;
-    emit updateCanvas(&canvas, &frameList, currentFrame, RESIZE);
+    emit updateCanvas(&canvas, &frameList, currentFrame, RESIZE, canvasSize);
 }
 
 
-void Model::createNewCanvas(int width, int height){
+void Model::createNewCanvas(int newSize){
 
     //AndyTran edited:
-    canvasSize = width;
+    canvasSize = newSize;
 
     //Create an canvas with given width and height.
     canvas = QImage(canvasSize,canvasSize, QImage::Format_ARGB32);
@@ -299,7 +302,8 @@ void Model::createNewCanvas(int width, int height){
 
     //Andy Tran Edited
     initializeModel();
-    emit updateCanvas(&canvas, &frameList, currentFrame, CREATE_NEW);
+    canvasSize = newSize;
+    emit updateCanvas(&canvas, &frameList, currentFrame, CREATE_NEW, canvasSize);
 //    emit centerAndAutoZoom(canvasSize, canvasSize);
 }
 
@@ -392,14 +396,11 @@ bool Model::openFile(const QString &filename)
             frameList.push_back(frame);
         }
 
-       qDebug() << "frameIndex: " << frameIndex;
-       qDebug() << "frameList.size(): " << frameList.size();
-
        // Set the current frame to the first frame
        currentFrame = 0;
        canvas = frameList[currentFrame];
 
-       emit updateCanvas(&canvas, &frameList, currentFrame, OPEN_FILE);
+       emit updateCanvas(&canvas, &frameList, currentFrame, OPEN_FILE, canvasSize);
        return true;
 }
 

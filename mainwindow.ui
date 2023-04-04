@@ -23,7 +23,11 @@
       <x>10</x>
       <y>10</y>
       <width>81</width>
+<<<<<<< HEAD
       <height>301</height>
+=======
+      <height>681</height>
+>>>>>>> cce4b5c365b6741b4cc2e001f2b0d5c03b0bacdc
      </rect>
     </property>
     <property name="font">
@@ -53,7 +57,11 @@ color:rgb(50, 51, 52);
        <x>10</x>
        <y>10</y>
        <width>61</width>
+<<<<<<< HEAD
        <height>281</height>
+=======
+       <height>641</height>
+>>>>>>> cce4b5c365b6741b4cc2e001f2b0d5c03b0bacdc
       </rect>
      </property>
      <layout class="QGridLayout" name="toolLayout">
@@ -209,9 +217,9 @@ color:rgb(50, 51, 52);
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
+       <y>30</y>
        <width>631</width>
-       <height>101</height>
+       <height>91</height>
       </rect>
      </property>
      <property name="layoutDirection">
@@ -229,7 +237,7 @@ color:rgb(50, 51, 52);
         <x>0</x>
         <y>0</y>
         <width>629</width>
-        <height>99</height>
+        <height>89</height>
        </rect>
       </property>
      </widget>
@@ -497,6 +505,9 @@ color:rgb(50, 51, 52);
         </property>
         <property name="maximum">
          <number>10</number>
+        </property>
+        <property name="pageStep">
+         <number>1</number>
         </property>
         <property name="value">
          <number>10</number>
@@ -846,7 +857,11 @@ color:rgb(50, 51, 52);
      <x>0</x>
      <y>0</y>
      <width>1043</width>
+<<<<<<< HEAD
      <height>24</height>
+=======
+     <height>17</height>
+>>>>>>> cce4b5c365b6741b4cc2e001f2b0d5c03b0bacdc
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -857,9 +872,7 @@ color:rgb(50, 51, 52);
     <addaction name="actionOpen"/>
     <addaction name="separator"/>
     <addaction name="actionSave_Project"/>
-    <addaction name="actionSave_As_Project"/>
     <addaction name="separator"/>
-    <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuSprite">
     <property name="title">
@@ -871,18 +884,9 @@ color:rgb(50, 51, 52);
     <property name="title">
      <string>Help</string>
     </property>
-   </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
-    <addaction name="actionUndo"/>
-    <addaction name="actionRedo"/>
-    <addaction name="separator"/>
-    <addaction name="actionClear"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
    <addaction name="menuSprite"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -934,7 +938,12 @@ color:rgb(50, 51, 52);
   </action>
   <action name="actionSprite_Size">
    <property name="text">
-    <string>Sprite Size</string>
+    <string>Size</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>
