@@ -277,7 +277,7 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
 //    qDebug() << "canvas->width() " << canvas->width();
 //    qDebug() << "canvas->height() " << canvas->height();
 
-    // ui->canvasView->fitInView(QRectF(0, 0, canvas->width(), canvas->height()), Qt::KeepAspectRatio);
+    ui->canvasView->fitInView(QRectF(0, 0, canvas->width(), canvas->height()), Qt::KeepAspectRatio);
 
     ui->canvasView->updatePixmap(canvas);
 
@@ -344,7 +344,7 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
             for(int i = 0; i < framesHorizontalLayout->count() - 1; i++){
                 FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(i)->widget());
                 if(frame){
-                    // frame->fitInView(QRectF(0, 0, frameList[i].width(), frameList[i].height()), Qt::KeepAspectRatio);
+                    frame->fitInView(QRectF(0, 0, frameList[i].width(), frameList[i].height()), Qt::KeepAspectRatio);
                     frame->updatePixmap(&frameList[i]);
                 }
             }
