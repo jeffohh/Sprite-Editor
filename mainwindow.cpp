@@ -449,13 +449,13 @@ void MainWindow::changeSizeSliderValue(int value){
 // [=== COLOR SECTION ===] @TZHou @Ruini
 void MainWindow::updatePaintColor(QColor newColor)
 {
-    int h = ui->label->height();
-    int w = ui->label->width();
+    int h = ui->currentColorLabel->height();
+    int w = ui->currentColorLabel->width();
     QPixmap pix(w, h);
     pix.fill( newColor);
     QPainter paint(&pix);
-    ui->label->setPixmap(pix);
-    ui->label->setParent(ui->colorPanel);
+    ui->currentColorLabel->setPixmap(pix);
+    ui->currentColorLabel->setParent(ui->colorPanel);
 }
 
 void MainWindow::changeColorBtnIsPressed()
