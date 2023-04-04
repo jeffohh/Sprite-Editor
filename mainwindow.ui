@@ -805,7 +805,7 @@
      <x>0</x>
      <y>0</y>
      <width>1043</width>
-     <height>26</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -828,6 +828,7 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSprite"/>
@@ -882,6 +883,11 @@
   <action name="actionSprite_Size">
    <property name="text">
     <string>Size</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

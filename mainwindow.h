@@ -56,12 +56,14 @@ public slots:
     void handleSaveCanvas();
     void centerAndAutoZoom(int, int);
     void handleSize(); //AndyTran added
+    void displayAbout();//Tzhou added
 
 
     //tzhou
     void updatePaintColor(QColor newColor);
     void changeColorBtnIsPressed();
     void imageEnter(QPixmap pixmap, QGraphicsView *view);//Extra Feature
+
 
 
     //Ruini Tong

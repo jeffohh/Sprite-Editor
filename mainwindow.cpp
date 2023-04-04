@@ -135,6 +135,9 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     //AndyTran Added
     connect(ui->actionSprite_Size, &QAction::triggered, this, &MainWindow::handleSize);
+
+    //tzhou
+    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::displayAbout);
 }
 
 MainWindow::~MainWindow()
@@ -514,6 +517,22 @@ void MainWindow::handleSize() {
     form.exec();
 }
 
+void MainWindow::displayAbout()
+{
+    QMessageBox::information(
+        this,
+        tr("Sprite Editor"),
+        tr("Use DELETE key to remove a selected frame.\n\n"
+           "Course: CS3505 2023 Spring\n"
+           "Assignment: Sprite Editor\n"
+           "Authors:\n"
+           "\tAndy Duong\n"
+           "\tAndy Tran\n"
+           "\tJeffery Le\n"
+           "\tRuini Tong\n"
+           "\tTingting Zhou"));
+
+}
 //-------------------Extra Features ----------------------
 
 //tzhou
