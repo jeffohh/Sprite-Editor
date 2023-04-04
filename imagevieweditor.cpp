@@ -8,9 +8,6 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
 {
     setStyleSheet("background-color: grey;");
 
-    // Set the transform to scale the image to fit the view
-    setTransform(QTransform::fromScale(scale, scale));
-
     imageItem = new QGraphicsPixmapItem();
 
     imagePreviewItem = new QGraphicsPixmapItem();
@@ -44,6 +41,10 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
 void ImageViewEditor::updatePixmap(QImage* image) {
     imageItem->setPixmap(QPixmap::fromImage(*image));
     rectBackground->setRect(imageItem->boundingRect());
+
+    setSceneRect(rectBackground->boundingRect());
+    centerOn(rectBackground->boundingRect().center());
+    setTransform(QTransform::fromScale(scale, scale));
 }
 
 void ImageViewEditor::updatePreviewPixmap(QImage* image) {
@@ -88,17 +89,19 @@ void ImageViewEditor::wheelEvent(QWheelEvent *event)
     //TO-DO: figure out for the Zoom in and out centered after scale down
 
     // Get the current zoom level
-   qreal currentScale = transform().m11();
+   // qreal currentScale = transform().m11();
 
     // Zoom in or out based on the wheel delta
     if (event->angleDelta().y() > 0) {
-        currentScale *= 1.2;
+        scale *= 1.2;
+        //currentScale *= 1.2;
     } else {
-        currentScale /= 1.2;
+        scale /= 1.2;
+        //currentScale /= 1.2;
     }
 
     // Set the new zoom level
-    setTransform(QTransform().scale(currentScale, currentScale));
+    setTransform(QTransform().scale(scale, scale));
 
 //    // Set the new zoom level
 //       setTransformationAnchor(QGraphicsView::AnchorViewCenter); // Set the transformation anchor to the center of the view
