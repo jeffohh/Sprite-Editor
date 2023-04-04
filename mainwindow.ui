@@ -23,7 +23,7 @@
       <x>10</x>
       <y>10</y>
       <width>81</width>
-      <height>641</height>
+      <height>681</height>
      </rect>
     </property>
     <property name="font">
@@ -44,7 +44,7 @@
        <x>10</x>
        <y>30</y>
        <width>61</width>
-       <height>601</height>
+       <height>641</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="toolLayout">
@@ -195,9 +195,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
+       <y>30</y>
        <width>631</width>
-       <height>101</height>
+       <height>91</height>
       </rect>
      </property>
      <property name="layoutDirection">
@@ -215,7 +215,7 @@
         <x>0</x>
         <y>0</y>
         <width>629</width>
-        <height>99</height>
+        <height>89</height>
        </rect>
       </property>
      </widget>
@@ -442,6 +442,9 @@
         </property>
         <property name="maximum">
          <number>10</number>
+        </property>
+        <property name="pageStep">
+         <number>1</number>
         </property>
         <property name="value">
          <number>10</number>
