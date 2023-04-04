@@ -93,18 +93,15 @@ void Model::mouseDown(QPoint pos) {
     switch (tool) {
     case PENCIL:
         drawLine(pixelCurrent, pos, &mergeCanvas, QPainter::CompositionMode_Source); // Jeffrey: draw "line" so it retains its Pen size
-        //mergeCanvas.setPixelColor(pos, paintColor);
         break;
     case PICKER:
         paintColorChanged(pixelColor);
-        return;
-    case ERASER:
         return;
     case BUCKET:
         fillColor(pixelColor, pos);
         return;
     default:
-        break;
+        return; // Jeffrey: return by default, cleaner code :-)
     }
 
     //Andy Tran: update frameList and update view
@@ -115,24 +112,18 @@ void Model::mouseDown(QPoint pos) {
 
 void Model::mouseMove(QPoint pos) {
 
-    canvasRect = canvas.rect();
+    canvasRect = canvas.rect(); // Jeffrey: is canvasRect a needed variable? we could call canvas.rect() instead
     if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
 
     switch (tool) {
     case PENCIL:
         drawLine(pixelCurrent, pos, &mergeCanvas, QPainter::CompositionMode_Source);
         break;
-    case PICKER:
-        return;
     case ERASER:
         drawLine(pixelCurrent, pos, &canvas, QPainter::CompositionMode_Clear);
-//        painter.setCompositionMode(QPainter::CompositionMode_Clear);
-
         break;
-    case BUCKET:
-        return;
     default:
-        break;
+        return; // Jeffrey: just return by default, other tools don't matter!
     }
 
     pixelCurrent = pos;
@@ -157,13 +148,12 @@ void Model::mouseRelease(QPoint) {
 
 // --- Tool Modify ---
 void Model::drawLine(QPoint p1, QPoint p2, QImage* image, QPainter::CompositionMode composition) {
-    QPainter painter(image);
-
-    QPen pen;
+    QPen pen; // Jeffrey: this can be a private member, potentially replacing penSize and paintColor
     pen.setWidth(penSize);
     pen.setColor(paintColor);
-    painter.setPen(pen);
 
+    QPainter painter(image);
+    painter.setPen(pen);
     painter.setCompositionMode(composition);
 
     painter.drawLine(p1.x(),p1.y(),p2.x(),p2.y());
