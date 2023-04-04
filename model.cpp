@@ -94,6 +94,9 @@ void Model::mouseDown(QPoint pos) {
     case PENCIL:
         drawLine(pixelCurrent, pos, &mergeCanvas, QPainter::CompositionMode_Source); // Jeffrey: draw "line" so it retains its Pen size
         break;
+    case ERASER:
+        drawLine(pixelCurrent, pos, &canvas, QPainter::CompositionMode_Clear);
+        break;
     case PICKER:
         paintColorChanged(pixelColor);
         return;
