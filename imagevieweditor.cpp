@@ -11,6 +11,9 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
 
     imageItem = new QGraphicsPixmapItem();
 
+    imagePreviewItem = new QGraphicsPixmapItem();
+    imagePreviewItem->setParentItem(imageItem);
+
     // create cross pattern, apply it to RectItem's background
     QBrush cross(Qt::CrossPattern);
     QPen noPen(Qt::NoPen);
@@ -40,6 +43,10 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
 void ImageViewEditor::updatePixmap(QImage* image) {
     imageItem->setPixmap(QPixmap::fromImage(*image));
     rectBackground->setRect(imageItem->boundingRect());
+}
+
+void ImageViewEditor::updatePreviewPixmap(QImage* image) {
+    imagePreviewItem->setPixmap(QPixmap::fromImage(*image));
 }
 
 

@@ -13,6 +13,7 @@ class ImageViewEditor : public QGraphicsView
 public:
     explicit ImageViewEditor(QWidget *parent = nullptr);
     void updatePixmap(QImage*);
+    void updatePreviewPixmap(QImage*);
 
     //Ruini Tong cursor
     void pencilCursor();
@@ -30,6 +31,7 @@ private:
     double scale = 15; //Andy Tran: default 1500%
 
     QGraphicsPixmapItem* imageItem;
+    QGraphicsPixmapItem* imagePreviewItem;
     QGraphicsRectItem* rectBackground;
 
 signals:

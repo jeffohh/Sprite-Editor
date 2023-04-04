@@ -39,6 +39,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     // [=== CANVAS CONNECTIONS ===] @Jeffrey
     connect(&model, &Model::updateCanvas, this, &MainWindow::updateCanvas);
+    connect(&model, &Model::updatePreviewCanvas, this, &MainWindow::updatePreviewCanvas);
 
     // --- Canvas Input ---
     connect(ui->canvasView, &ImageViewEditor::mouseDown, &model, &Model::mouseDown);
@@ -332,6 +333,10 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
         initializeView();
         isInit = false;
     }
+}
+
+void MainWindow::updatePreviewCanvas(QImage* canvas) {
+    ui->canvasView->updatePreviewPixmap(canvas);
 }
 
 void MainWindow::initializeView() {
