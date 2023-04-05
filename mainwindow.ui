@@ -411,6 +411,9 @@ border-radius: 10px;</string>
     <property name="alignment">
      <set>Qt::AlignBottom|Qt::AlignHCenter</set>
     </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
     <widget class="QWidget" name="horizontalLayoutWidget_3">
      <property name="geometry">
       <rect>

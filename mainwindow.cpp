@@ -232,7 +232,12 @@ void MainWindow::loadFrameWidgets() {
 
     //Add Push Button
     QPushButton* addFrameBtn = new QPushButton("+");
-    addFrameBtn->setFixedSize(64, 64);
+    addFrameBtn->setFixedSize(42, 42);
+    addFrameBtn->setStyleSheet("border: 1px solid grey;");
+
+    QFont font = addFrameBtn->font();
+    font.setPointSize(16);
+    addFrameBtn->setFont(font);
 
     //Frames Layout
     framesHorizontalLayout->setAlignment(Qt::AlignLeft);
