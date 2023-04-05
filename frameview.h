@@ -7,7 +7,6 @@
 #include <QMouseEvent>
 #include <QDebug>
 
-//Andy Tran - Frames use - Global frameIndex
 class FrameView : public QGraphicsView
 {
     Q_OBJECT

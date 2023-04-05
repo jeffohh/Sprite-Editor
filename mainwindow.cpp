@@ -127,14 +127,14 @@ MainWindow::~MainWindow()
  */
 void MainWindow::initializePreview() {
     //Initialize - Preview
-    toPixmapItem.setPixmap(QPixmap::fromImage(frameList.front()));
-    previewScene->addItem(&toPixmapItem);
-    previewScene->setFocusItem(&toPixmapItem);
+    imageItem.setPixmap(QPixmap::fromImage(frameList.front()));
+    previewScene->addItem(&imageItem);
+    previewScene->setFocusItem(&imageItem);
     ui->graphicsView->setScene(previewScene);
     ui->graphicsView->fitInView(QRectF(0, 0, frameList.front().width(), frameList.front().height()),
                                 Qt::KeepAspectRatio);
-    ui->graphicsView->setSceneRect(toPixmapItem.boundingRect());
-    ui->graphicsView->centerOn(toPixmapItem.boundingRect().center());
+    ui->graphicsView->setSceneRect(imageItem.boundingRect());
+    ui->graphicsView->centerOn(imageItem.boundingRect().center());
     timer->start(frameDuration);
 }
 
@@ -396,10 +396,10 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
 void MainWindow::onTimerTimeout() {
     //Move to the next frame when QTimer timeout
     curPreviewIndex = (curPreviewIndex + 1) % frameList.size();
-    toPixmapItem.setPixmap(QPixmap::fromImage(frameList[curPreviewIndex]));
-    previewScene->setFocusItem(&toPixmapItem);
-    ui->graphicsView->setSceneRect(toPixmapItem.boundingRect());
-    ui->graphicsView->centerOn(toPixmapItem.boundingRect().center());
+    imageItem.setPixmap(QPixmap::fromImage(frameList[curPreviewIndex]));
+    previewScene->setFocusItem(&imageItem);
+    ui->graphicsView->setSceneRect(imageItem.boundingRect());
+    ui->graphicsView->centerOn(imageItem.boundingRect().center());
 }
 
 /**

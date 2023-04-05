@@ -191,8 +191,6 @@ void Model::fillColor(QColor originColor, QPoint pos){
     //if the canvas color is the same as paintColor, don't need to fill
     QColor canvasColor = canvas.pixelColor(pos);
     double threshold = 0.1;
-    qDebug()<<canvasColor;
-    qDebug()<<paintColor;
 
     double aDiff = abs(canvasColor.alpha() - paintColor.alpha());
     double rDiff = abs(canvasColor.red() - paintColor.red());
@@ -201,7 +199,6 @@ void Model::fillColor(QColor originColor, QPoint pos){
 
     // check if the difference is within the threshold
     if ((aDiff <= threshold)&&(rDiff <= threshold) && (gDiff <= threshold) && (bDiff <= threshold)) {
-        qDebug() <<"return";
         return;
     }
 
@@ -241,7 +238,6 @@ void Model::fillColor(QColor originColor, QPoint pos){
 // --- Tool Settings ---
 void Model::changeTool(Tool currentTool){
     tool = currentTool;
-    qDebug() << "changeTool called" << tool;
 }
 
 void Model::setPenSize(int size){
@@ -268,10 +264,6 @@ void Model::updateColorRelated(int newAlphaSliderValue)
 
     emit updatePaintColor(paintColor);
     emit updateAlphaSliderLabel(alphaSliderReading);
-    qDebug() << "paint: "<<paintColor.red()<<" "<<
-                paintColor.green()<<" "
-               <<paintColor.blue()<<" "
-              <<paintColor.alpha();
 }
 
 
@@ -282,9 +274,6 @@ void Model::updateColorRelated(int newAlphaSliderValue)
  * @param newSize:
  */
 void Model::resizeFrameList(int newSize){
-
-    //This one worked
-    qDebug() << "resizeFrameList called " << newSize;
     for (unsigned int i = 0; i < frameList.size(); i++) {
         // Create a new QImage of size new_size
         QImage newImage(newSize, newSize, QImage::Format_ARGB32);

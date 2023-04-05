@@ -91,7 +91,7 @@ private:
     //Preview
     QSize viewSize;
     QGraphicsScene* previewScene = new QGraphicsScene(this);
-    QGraphicsPixmapItem toPixmapItem;
+    QGraphicsPixmapItem imageItem;
     QTimer *timer = new QTimer();
     int fps = 12;
     int frameDuration = 1000/12;
