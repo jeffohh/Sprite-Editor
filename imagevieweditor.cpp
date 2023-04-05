@@ -87,6 +87,8 @@ void ImageViewEditor::wheelEvent(QWheelEvent *event)
         scale /= 1.2;
     }
 
+    scale = std::max(0.2, std::min(scale, 160.0));
+
     // Set the new zoom level
     setTransform(QTransform().scale(scale, scale));
 }
