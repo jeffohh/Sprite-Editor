@@ -4,6 +4,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsView>
 #include <QObject>
+#include <QMouseEvent>
 #include <QDebug>
 
 //Andy Tran - Frames use - Global frameIndex

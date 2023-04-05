@@ -5,13 +5,6 @@
 #include "canvasform.h"
 #include "frameview.h"
 
-#include <QDir>
-#include <QCoreApplication>
-#include <iostream>
-#include<QString>
-#include<QDebug>
-#include<QPainter>
-
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)

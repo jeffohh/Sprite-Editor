@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include <QObject>
 #include <QDebug>
+#include <QMouseEvent>
 
 class ImageViewEditor : public QGraphicsView
 {

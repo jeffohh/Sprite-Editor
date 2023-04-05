@@ -1,7 +1,4 @@
 #include "imagevieweditor.h"
-#include <QMouseEvent>
-
-#include <QDebug>
 
 ImageViewEditor::ImageViewEditor(QWidget *parent) :
     QGraphicsView(parent)

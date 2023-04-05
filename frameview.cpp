@@ -1,7 +1,5 @@
 #include "frameview.h"
 #include "model.h"
-#include <QMouseEvent>
-
 
 FrameView::FrameView(QWidget *parent) :
     QGraphicsView(parent)

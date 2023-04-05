@@ -12,7 +12,15 @@
 #include <QPixmap>
 #include <QVector>
 #include <QTimer>
-#include "QHBoxLayout"
+
+//from .cpp
+#include <QDir>
+#include <QCoreApplication>
+#include <iostream>
+#include<QString>
+#include<QDebug>
+#include<QPainter>
+#include <QHBoxLayout>
 
 using std::vector;
 //----------------
