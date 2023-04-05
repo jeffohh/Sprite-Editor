@@ -231,7 +231,6 @@ background-color: rgb(255, 255, 255);</string>
     <property name="font">
      <font>
       <family>Trebuchet MS</family>
-      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -324,6 +323,9 @@ background-color: rgb(255, 255, 255);</string>
           <width>120</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>OpenHandCursor</cursorShape>
         </property>
         <property name="styleSheet">
          <string notr="true">:handle{
@@ -427,6 +429,9 @@ border-radius: 10px;</string>
       </property>
       <item>
        <widget class="QSlider" name="toolSlider">
+        <property name="cursor">
+         <cursorShape>OpenHandCursor</cursorShape>
+        </property>
         <property name="styleSheet">
          <string notr="true">:handle{
     background-color: rgb(50, 51, 52);
@@ -657,6 +662,9 @@ background-color: rgb(255, 255, 255);</string>
           <height>20</height>
          </size>
         </property>
+        <property name="cursor">
+         <cursorShape>OpenHandCursor</cursorShape>
+        </property>
         <property name="styleSheet">
          <string notr="true">:handle{
     background-color: rgb(50, 51, 52);
@@ -826,7 +834,7 @@ background-color: rgb(255, 255, 255);</string>
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
