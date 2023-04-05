@@ -65,7 +65,6 @@ public slots:
     void deletePressed(int);
     void resizeFrameList(int);
 
-    //Tzhou: this should be combined with setToolColor, but need Renee's consent.
     /**
      * @brief Sets the paint color to a given color.
      *        This new color comes from a sinal in View.
@@ -73,7 +72,7 @@ public slots:
      * @param newColor The new color to set to.
      */
     void paintColorChanged(const QColor newColor);//Tzhou, Ruini Tong
-    void updateAlpha(int newAlphaSliderValue);
+    void updateColorRelated(int newAlphaSliderValue);
     void updateCustomColor(QGraphicsView* view);
     void customColorIsSelected(QGraphicsView* view);
 
@@ -129,7 +128,7 @@ signals:
 
     //Tzhou
     void updateAlphaSliderLabel(QString alphaSliderReading);
-    void resetAlphaSlider(int max);
+    void resetAlphaSlider(int newValue);
 
     //Ruini Tong
     void newPosition(QPoint pos);
