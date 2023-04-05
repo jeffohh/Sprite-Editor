@@ -12,6 +12,7 @@ SOURCES += \
     canvasform.cpp \
     draganddropevents.cpp \
     frameview.cpp \
+    helpmenu.cpp \
     imagevieweditor.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -21,11 +22,13 @@ HEADERS += \
     canvasform.h \
     draganddropevents.h \
     frameview.h \
+    helpmenu.h \
     imagevieweditor.h \
     mainwindow.h \
     model.h \
 
 FORMS += \
+    helpmenu.ui \
     mainwindow.ui
 
 # Default rules for deployment.
