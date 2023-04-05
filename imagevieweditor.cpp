@@ -25,7 +25,7 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
     scene->addItem(rectBackground);
     this->setScene(scene);
 
-    QPixmap pencilImage(":/image/image/pencil2.PNG");
+    QPixmap pencilImage(":/images/icons/Pencil.PNG");
     pencilImage = pencilImage.scaled(32, 32, Qt::KeepAspectRatio);
     QCursor pencilCursor(pencilImage, 1,25);
     setCursor(pencilCursor);
@@ -96,28 +96,28 @@ void ImageViewEditor::wheelEvent(QWheelEvent *event)
 //change cursor image
 void ImageViewEditor::pencilCursor(){
 
-    QPixmap pencilImage(":/image/image/pencil2.PNG");
+    QPixmap pencilImage(":/images/icons/Pencil.PNG");
     pencilImage = pencilImage.scaled(32, 32, Qt::KeepAspectRatio);
     QCursor pencilCursor(pencilImage, 1,25);
     setCursor(pencilCursor);
 }
 
 void ImageViewEditor::eraserCursor(){
-    QPixmap eraserImage(":/image/image/Eraser.PNG");
+    QPixmap eraserImage(":/images/icons/Eraser.PNG");
     eraserImage = eraserImage.scaled(32, 32, Qt::KeepAspectRatio);
     QCursor eraserCursor(eraserImage, 1,25);
     setCursor(eraserCursor);
 }
 
 void ImageViewEditor::pickerCursor(){
-    QPixmap pickerImage(":/image/image/Picker.PNG");
+    QPixmap pickerImage(":/images/icons/Picker.PNG");
     pickerImage = pickerImage.scaled(32, 32, Qt::KeepAspectRatio);
     QCursor pickerCursor(pickerImage, 1,25);
     setCursor(pickerCursor);
 }
 
 void ImageViewEditor::bucketCursor(){
-    QPixmap bucketImage(":/image/image/Bucket.PNG");
+    QPixmap bucketImage(":/images/icons/Bucket.PNG");
     bucketImage = bucketImage.scaled(32, 32, Qt::KeepAspectRatio);
     QCursor bucketCursor(bucketImage, 1,1);
     setCursor(bucketCursor);

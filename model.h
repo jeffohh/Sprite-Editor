@@ -10,7 +10,7 @@
 #include <QJsonArray>
 #include <QFile>
 
-//Andy Tran
+//AndyTran
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
 

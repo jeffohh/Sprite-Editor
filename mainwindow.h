@@ -5,13 +5,17 @@
 #include "model.h"
 #include <QFileDialog>
 
-//Added by Andy Tran
+//AndyTran
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QImage>
 #include <QPixmap>
 #include <QVector>
 #include <QTimer>
+
+//TZhou
+#include<QColorDialog>
+#include<QColor>
 
 //from .cpp
 #include <QDir>
@@ -23,13 +27,6 @@
 #include <QHBoxLayout>
 
 using std::vector;
-//----------------
-
-//TZhou
-#include<QColorDialog>
-#include<QColor>
-//-------------------
-
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -44,14 +41,14 @@ public:
     ~MainWindow();
 
 public slots:
-    // jeff!!
+    //Jeff
     void updateCanvas(QImage*, vector<QImage>*, int, Action, int, int);
     void updatePreviewCanvas(QImage*);
 
     //Andy Tran
     void onTimerTimeout();
     void onChangeFpsSliderValue(int value);
-    void addFrameWidget(QHBoxLayout* framesHorizontalLayout);
+    void addFrameWidget();
     void initializePreview();
     void initializeFrameView();
     void deleteFrameWidget(int);
@@ -63,16 +60,13 @@ public slots:
     void handleOpenCanvas();
     void handleSaveCanvas();
     void centerAndAutoZoom(int, int);
-    void handleSize(); //AndyTran added
-    void displayAbout();//Tzhou added
-
+    void handleSize();
+    void displayAbout();
 
     //tzhou
     void updatePaintColor(QColor newColor);
     void changeColorBtnIsPressed();
     void imageEnter(QPixmap pixmap, QGraphicsView *view);//Extra Feature
-
-
 
     //Ruini Tong
     void changeSizeSliderValue(int value);
@@ -102,7 +96,6 @@ private:
     int fps = 12;
     int frameDuration = 1000/12;
     unsigned int curPreviewIndex = 0;
-    //------------------------
 
     //TZhou
     QColor DEFAULT_PAINT_COLOR = Qt::black; // Default pen or brush color
@@ -114,13 +107,7 @@ private:
     void setIconToToolBtns();
     void setColorScenesToViews();
 
-    //----------------------
-
-
 signals:
-    //Andy Tran
-//    void resizeFrameList(int);
-
     //Renee
     // used by any color change
     void paintColorChanged(QColor);

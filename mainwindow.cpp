@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include "model.h"
 #include "canvasform.h"
 #include "frameview.h"
@@ -14,20 +13,15 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
 
     // [=== INITIALIZE SECTION ===]
-    {
-        updatePaintColor(DEFAULT_PAINT_COLOR);// Tzhou: initialize the current color label to black
+    updatePaintColor(DEFAULT_PAINT_COLOR);// Tzhou: initialize the current color label to black
+    setColorScenesToViews();// Tzhou: Initialize the views in color picker area.
+    setIconToToolBtns(); // Jeffrey: is there a way we can move this to only mainwindow.ui?
 
-        setColorScenesToViews();// Tzhou: Initialize the views in color picker area.
+    //Canvas
+    ui->canvasView->updatePixmap(&model.canvas);
 
-        setIconToToolBtns(); // Jeffrey: is there a way we can move this to only mainwindow.ui?
-
-        //Canvas
-        ui->canvasView->updatePixmap(&model.canvas);
-
-        //Frame View
-        initializeFrameView();
-    }
-
+    //Frame View
+    initializeFrameView();
 
 
     // [=== CANVAS CONNECTIONS ===] @Jeffrey
@@ -40,10 +34,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->canvasView, &ImageViewEditor::mouseRelease, &model, &Model::mouseRelease);
 
     // [=== PREVIEW CONNECTIONS ===] @Andy Tran
-    connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout); // Andy Tran - connection for preview
+    connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
     connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::onChangeFpsSliderValue);
-
-    // [=== FRAME VIEW CONNECTIONS ===] @Andy Tran
 
     // [=== TOOL CONNECTIONS ===] @Ruini
     // --- Tool Select ---
@@ -60,28 +52,24 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         emit changeTool(BUCKET);
     });
 
+    // --- Tool Box ---
     connect(this, &MainWindow::changeTool, &model, &Model::changeTool);
     connect(this, &MainWindow::pencilCursor, ui->canvasView, &ImageViewEditor::pencilCursor);
     connect(this, &MainWindow::eraserCursor, ui->canvasView, &ImageViewEditor::eraserCursor);
     connect(this, &MainWindow::pickerCursor, ui->canvasView, &ImageViewEditor::pickerCursor);
     connect(this, &MainWindow::bucketCursor, ui->canvasView, &ImageViewEditor::bucketCursor);
-    connect(this, &MainWindow::changeTool, this, &MainWindow::disableTool); // Ruini
+    connect(this, &MainWindow::changeTool, this, &MainWindow::disableTool);
 
     // --- Tool Settings ---
     connect(ui->toolSlider, &QSlider::valueChanged, &model, &Model::setPenSize);
     connect(ui->toolSlider, &QSlider::valueChanged,this,&MainWindow::changeSizeSliderValue);
-
-    // --- Tool: Color Picker ---
-    //connect(ui->canvasView, &ImageViewEditor::getColor, &model, &Model::getColor);
-    // Jeffrey: ideally, Model will have a "Picker" tool enum then just use mouseDown?
-
 
 
     // [=== COLOR CONNECTIONS ===] @TZHou @Ruini
     // --- Color Dialog ---
     connect(ui->changeColorBtn, &QPushButton::pressed, this, &MainWindow::changeColorBtnIsPressed);
 
-    //Tzhou: EXtra feature
+    //Tzhou: Extra feature
     connect(ui->customColorView1, &DragAndDropGraphicsView::itemDrop,
             this, &MainWindow::imageEnter);
     connect(ui->customColorView2, &DragAndDropGraphicsView::itemDrop,
@@ -106,7 +94,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             &model, &Model::customColorIsSelected);
 
 
-
     // --- Color Model-View Updates ---
     //1. user pick a color => model's paintColor change.
     connect(this, &MainWindow::paintColorChanged, &model, &Model::paintColorChanged);
@@ -118,18 +105,14 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(&model, &Model::updateAlphaSliderLabel, ui->alphaValueLabel, &QLabel::setText);
     connect(&model, &Model::resetAlphaSlider, ui->alphaSlider, &QSlider::setValue );
 
-
-
     // [=== MENU CONNECTIONS ===] @Duong
     connect(ui->actionNew_Project, &QAction::triggered, this, &MainWindow::handleNewCanvas);
     connect(ui->actionSave_Project, &QAction::triggered, this, &MainWindow::handleSaveCanvas);
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::handleOpenCanvas);
     connect(&model, &Model::centerAndAutoZoom, this, &MainWindow::centerAndAutoZoom);
-
-    //AndyTran Added
+    // @AndyTran
     connect(ui->actionSprite_Size, &QAction::triggered, this, &MainWindow::handleSize);
-
-    //tzhou
+    // @Tzhou
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::displayAbout);
 }
 
@@ -138,9 +121,25 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-
 // [=== INITIALIZE SECTION ===] @Andy Tran
+/**
+ * @brief MainWindow::initializePreview Initialize pixmap, scene, view. Ready to start the animation
+ */
+void MainWindow::initializePreview() {
+    //Initialize - Preview
+    toPixmapItem.setPixmap(QPixmap::fromImage(frameList.front()));
+    previewScene->addItem(&toPixmapItem);
+    previewScene->setFocusItem(&toPixmapItem);
+    ui->graphicsView->setScene(previewScene);
+    ui->graphicsView->fitInView(QRectF(0, 0, frameList.front().width(), frameList.front().height()),
+                                Qt::KeepAspectRatio);
+    timer->start(frameDuration);
+}
+
+/**
+ * @brief MainWindow::initializeFrameView Initialize the Frame View which included
+ * Add Button, Connection between the Add Button and Model, Frame View Layout.
+ */
 void MainWindow::initializeFrameView(){
     previousFrame = 0;
     currentFrame = 0;
@@ -161,14 +160,18 @@ void MainWindow::initializeFrameView(){
     //Add Frame Button Connection
     connect(addFrameBtn, &QPushButton::clicked, &model, &Model::onAddFrame);
     connect(addFrameBtn, &QPushButton::clicked, this, [=]() {
-        addFrameWidget(framesHorizontalLayout);
+        addFrameWidget();
         framesHorizontalLayout->itemAt(frameList.size())->widget()->setStyleSheet("border: 1px solid grey;");
     });
 
-    addFrameWidget(framesHorizontalLayout);
+    addFrameWidget();
 }
 
-void MainWindow::addFrameWidget(QHBoxLayout* framesHorizontalLayout)
+// [=== FRAME VIEW SECTION ===] @Andy Tran
+/**
+ * @brief MainWindow::addFrameWidget Add a new frame widget
+ */
+void MainWindow::addFrameWidget()
 {
     //Andy Tran - need to fix the scroll bar issue
     QImage* currentImage = &model.canvas;
@@ -207,6 +210,10 @@ void MainWindow::addFrameWidget(QHBoxLayout* framesHorizontalLayout)
     connect(newFrame, &FrameView::deletePressed, &model, &Model::deletePressed);
 }
 
+/**
+ * @brief MainWindow::deleteFrameWidget Delete a widget at an particular index
+ * @param deletedIndex the index that needs to be deleted
+ */
 void MainWindow::deleteFrameWidget(int deletedIndex) {
     //Delete a Widget at deletedIndex
     QLayoutItem *item = framesHorizontalLayout->takeAt(deletedIndex);
@@ -214,6 +221,9 @@ void MainWindow::deleteFrameWidget(int deletedIndex) {
     delete item;
 }
 
+/**
+ * @brief MainWindow::deleteAllWidgets Delete all current Widgets in Frame View
+ */
 void MainWindow:: deleteAllWidgets(){
     // Clear the current frame widgets
     while (!framesHorizontalLayout->isEmpty()) {
@@ -223,6 +233,9 @@ void MainWindow:: deleteAllWidgets(){
     }
 }
 
+/**
+ * @brief MainWindow::loadFrameWidgets Generated all the widgets from .ssp file including "+" button
+ */
 void MainWindow::loadFrameWidgets() {
 
     //Andy Tran: Need to optimized
@@ -246,7 +259,7 @@ void MainWindow::loadFrameWidgets() {
     //Add Frame Button Connection
     connect(addFrameBtn, &QPushButton::clicked, &model, &Model::onAddFrame);
     connect(addFrameBtn, &QPushButton::clicked, this, [=]() {
-        addFrameWidget(framesHorizontalLayout);
+        addFrameWidget();
         framesHorizontalLayout->itemAt(frameList.size())->widget()->setStyleSheet("border: 1px solid grey;");
     });
 
@@ -254,7 +267,7 @@ void MainWindow::loadFrameWidgets() {
     for (size_t i = 0; i < frameList.size(); ++i) {
         previousFrame = currentFrame;
         currentFrame = i;
-        addFrameWidget(framesHorizontalLayout);
+        addFrameWidget();
     }
 
     //Set the border of last frame to nonn
@@ -272,6 +285,15 @@ void MainWindow::loadFrameWidgets() {
 
 
 // [=== CANVAS SECTION ===] @Jeffrey @Andy Tran
+/**
+ * @brief MainWindow::updateCanvas Update all the information that needed were sent from Model
+ * @param canvas Current Canvas
+ * @param list Current Frame List
+ * @param currentFrame Current Frame focusing
+ * @param action Current Action need to execute by the View
+ * @param newSize Current Size of the Sprite
+ * @param deletedIndex Current index that need to be deleted (default is -1 which means nothing should be deleted)
+ */
 void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action action, int newSize, int deletedIndex) {
     //Update canvas View
     ui->canvasView->fitInView(QRectF(0, 0, canvas->width(), canvas->height()), Qt::KeepAspectRatio);
@@ -338,10 +360,14 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
         deleteAllWidgets();
 
         // Reinitialize the frame view and preview components
-        initializeFrameView();
         isInit = true;
+        initializeFrameView();
         break;
     case RESIZE:
+        // Reinitialize the preview components
+        isInit = true;
+
+        //Resize all the images in the frame view
         for(int i = 0; i < framesHorizontalLayout->count() - 1; i++){
             FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(i)->widget());
             if(frame){
@@ -349,35 +375,22 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
                 frame->updatePixmap(&frameList[i]);
             }
         }
-        isInit = true;
         break;
     default:
         break;
     }
 
-    //Start the Preview
+    //Initialize the Preview
     if(isInit){
         initializePreview();
         isInit = false;
     }
 }
 
-void MainWindow::updatePreviewCanvas(QImage* canvas) {
-    ui->canvasView->updatePreviewPixmap(canvas);
-}
-
-void MainWindow::initializePreview() {
-    //Initialize - Preview
-    toPixmapItem.setPixmap(QPixmap::fromImage(frameList.front()));
-    previewScene->addItem(&toPixmapItem);
-    previewScene->setFocusItem(&toPixmapItem);
-    ui->graphicsView->setScene(previewScene);
-    ui->graphicsView->fitInView(QRectF(0, 0, frameList.front().width(), frameList.front().height()),
-                                Qt::KeepAspectRatio);
-    timer->start(frameDuration);
-}
-
 // [=== PREVIEW SECTION ===] @Andy Tran
+/**
+ * @brief MainWindow::onTimerTimeout Automatically called whenever the Timer is timeout to continue the animation
+ */
 void MainWindow::onTimerTimeout() {
     //Move to the next frame when QTimer timeout
     curPreviewIndex = (curPreviewIndex + 1) % frameList.size();
@@ -385,6 +398,11 @@ void MainWindow::onTimerTimeout() {
     previewScene->setFocusItem(&toPixmapItem);
 }
 
+/**
+ * @brief MainWindow::onChangeFpsSliderValue Whenever FPS changed, update the FPS label
+ * and restart the QTimer to start the animation with new FPS
+ * @param value
+ */
 void MainWindow::onChangeFpsSliderValue(int value)
 {
     //Change FPS label
@@ -411,7 +429,14 @@ void MainWindow::onChangeFpsSliderValue(int value)
 
 }
 
-
+/**
+ * @author Jeffrey Le
+ * @brief MainWindow::updatePreviewCanvas
+ * @param canvas
+ */
+void MainWindow::updatePreviewCanvas(QImage* canvas) {
+    ui->canvasView->updatePreviewPixmap(canvas);
+}
 
 // [=== TOOL SECTION ===] @Ruini
 void MainWindow::disableTool(Tool tool){
@@ -540,7 +565,7 @@ void MainWindow::handleSize() {
 }
 
 /**
- * @author: Andy Tran
+ * @author:
  * @brief MainWindow::displayAbout: This method handle About.
  */
 void MainWindow::displayAbout()
@@ -548,7 +573,8 @@ void MainWindow::displayAbout()
     QMessageBox::information(
         this,
         tr("Sprite Editor"),
-        tr("Use DELETE key to remove a selected frame.\n\n"
+        tr("Use DELETE key to remove a selected frame.\n"
+           "DRAG the color to custom color boxes to save the color.\n\n"
            "Course: CS3505 2023 Spring\n"
            "Assignment: Sprite Editor\n"
            "Authors:\n"
@@ -564,16 +590,16 @@ void MainWindow::displayAbout()
 //tzhou
 void MainWindow::setIconToToolBtns(){
 
-    ui->btnPencil->setIcon(QIcon(QPixmap(":/image/image/pencil2.PNG")));
+    ui->btnPencil->setIcon(QIcon(QPixmap(":/images/icons/Pencil.PNG")));
     ui->btnPencil->setIconSize(QSize(30,30));
-    ui->btnEraser->setIcon(QIcon(QPixmap(":/image/image/Eraser.PNG")));
+    ui->btnEraser->setIcon(QIcon(QPixmap(":/images/icons/Eraser.PNG")));
     ui->btnEraser->setIconSize(QSize(30,30));
-    ui->btnPicker->setIcon(QIcon(QPixmap(":/image/image/Picker.PNG")));
+    ui->btnPicker->setIcon(QIcon(QPixmap(":/images/icons/Picker.PNG")));
     ui->btnPicker->setIconSize(QSize(30,30));
-    ui->btnBucket->setIcon(QIcon(QPixmap(":/image/image/Bucket.PNG")));
+    ui->btnBucket->setIcon(QIcon(QPixmap(":/images/icons/Bucket.PNG")));
     ui->btnBucket->setIconSize(QSize(30,30));
     //Ruini add
-    ui->changeColorBtn->setIcon(QIcon(QPixmap(":/image/image/Color.PNG")));
+    ui->changeColorBtn->setIcon(QIcon(QPixmap(":/images/icons/Color.PNG")));
     ui->changeColorBtn->setIconSize(QSize(100,100));
 
 }

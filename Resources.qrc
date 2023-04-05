@@ -1,13 +1,9 @@
 <RCC>
-    <qresource prefix="/image">
-        <file>image/picker1.png</file>
-        <file>image/bucket1.png</file>
-        <file>image/pencil1.png</file>
-        <file>image/eraser1.png</file>
-        <file>image/pencil2.PNG</file>
-        <file>image/Eraser.PNG</file>
-        <file>image/Picker.PNG</file>
-        <file>image/Bucket.PNG</file>
-        <file>image/Color.PNG</file>
+    <qresource prefix="/images">
+        <file>icons/Bucket.PNG</file>
+        <file>icons/Color.PNG</file>
+        <file>icons/Eraser.PNG</file>
+        <file>icons/Pencil.PNG</file>
+        <file>icons/Picker.PNG</file>
     </qresource>
 </RCC>

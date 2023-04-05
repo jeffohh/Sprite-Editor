@@ -19,21 +19,37 @@ Model::Model(QObject *parent)
     canvasHeight = canvas.height();
 }
 
-//Andy Tran - Frames part
+// [=== INITIAL SECTION ===] @Andy Tran
+/**
+ * @brief Model::initializeModel Initilaize the model for the program to ready
+ */
+void Model::initializeModel(){
+    frameIndex = 0;
+    currentFrame = 0;
+    frameList.clear();
+    frameList.push_back(canvas);
+}
+
+// [=== FRAMES SECTION ===] @Andy Tran
+/**
+ * @brief Model::deletePressed Take an action whenever the Delete Button pressed
+ * Action: Shift left or right the current frame
+ * @param deletedIndex
+ */
 void Model::deletePressed(int deletedIndex){
     //Delete if have more than one frame
     if(frameList.size() > 1){
-
+        //Delete the frame by deletedIndex
         frameList.erase(frameList.begin() + deletedIndex);
 
         //Shift to the left
         if((deletedIndex - 1) >= 0){
             currentFrame = deletedIndex - 1;
-            qDebug() << "Shift Left: " << currentFrame;
         }else{ //Shift to the right
             currentFrame = deletedIndex;
-            qDebug() << "Shift right: " << currentFrame;
         }
+
+        //Update canvas to current frame
         canvas = frameList[currentFrame];
 
         //Update static variable
@@ -43,40 +59,40 @@ void Model::deletePressed(int deletedIndex){
     }
 }
 
-// [=== FRAMES SECTION ===] @Andy Tran
+/**
+ * @brief Model::mouseClicked Whenever the frame widget was clicked.
+ * The FrameView class calls the Model to handle the event and send update to the View
+ * @param frame The FrameView pixmap
+ * @param frameIndex Current Index of the FrameView
+ */
 void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
+    //Update current frame
     this->currentFrame = frameIndex;
 
-    qDebug() << "Model::mouseClicked "<<frameIndex;
-    //Andy Tran - need to keep track of currentFrame -> update the canvas
+    //Update canvas to new pixmap
     QPixmap pixmap = frame->pixmap();
-    canvas = pixmap.toImage();
+    canvas =  pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
 
+    //Update the Frame List with new canvas
     frameList[currentFrame] = canvas;
 
+    //Send signals to the View to handle the update
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 }
 
+/**
+ * @brief Model::onAddFrame Trigger whenever the Add Button is clicked.
+ * Adding one more frame to the list and send update to the View
+ */
 void Model::onAddFrame(){
-
+    //Create new blank canvas and send signals to the view to update
     canvas = QImage(canvasSize, canvasSize, QImage::Format_ARGB32);
-
     canvas.fill(Qt::transparent);
     frameList.push_back(canvas);
     currentFrame = frameList.size() - 1;
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 
 }
-
-void Model::initializeModel(){
-    frameIndex = 0;
-    currentFrame = 0;
-    frameList.clear();
-    frameList.push_back(canvas);
-//    emit updateCanvas(&canvas, &frameList, currentFrame, INIT);
-}
-
-
 
 // [=== TOOL SECTION ===] @Ruini
 // --- Tool Input ---
@@ -259,7 +275,6 @@ void Model::updateAlpha(int newAlphaSliderValue)
 
 
 // [=== CANVAS SECTION ===] @Duong @Andy Tran
-
 /**
  * @author Andy Tran
  * @brief Model::resizeFrameList: This method resized the frame to fit when a new canvas is created.
@@ -389,7 +404,7 @@ bool Model::openFile(const QString &filename)
 
         for (int frameIndex = 0; frameIndex < numberOfFrames; ++frameIndex) {
             QJsonArray frameArray = framesArray[frameIndex].toArray();
-            QImage frame(width, height, QImage::Format_RGBA8888);
+            QImage frame(width, height, QImage::Format_ARGB32);
 
             for (int row = 0; row < height; ++row) {
                 QJsonArray rowArray = frameArray[row].toArray();
