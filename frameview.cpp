@@ -33,6 +33,8 @@ FrameView::FrameView(QWidget *parent) :
  */
 void FrameView::updatePixmap(QImage* image) {
     imageItem->setPixmap(QPixmap::fromImage(*image));
+    setSceneRect(imageItem->boundingRect());
+    centerOn(imageItem->boundingRect().center());
 }
 
 /**

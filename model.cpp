@@ -393,12 +393,8 @@ bool Model::openFile(const QString &filename)
 
         int height = project["height"].toInt();
         int width = project["width"].toInt();
-
-        int numberOfFrames = project["numberOfFrames"].toInt();       
+        int numberOfFrames = project["numberOfFrames"].toInt();
         QJsonArray framesArray = project["frames"].toArray();
-
-        //Andy Tran editted
-        Model::frameIndex = 0;
 
         frameList.clear();
         frameList.reserve(static_cast<size_t>(numberOfFrames));
@@ -425,9 +421,13 @@ bool Model::openFile(const QString &filename)
             frameList.push_back(frame);
         }
 
-       // Set the current frame to the first frame
-       currentFrame = 0;
-       canvas = frameList[currentFrame];
+        //Andy Tran editted
+        if(height > width)
+            canvasSize = height;
+        else canvasSize = width;
+        Model::frameIndex = 0;
+        currentFrame = 0;
+        canvas = frameList[currentFrame];
 
        emit updateCanvas(&canvas, &frameList, currentFrame, OPEN_FILE, canvasSize);
        return true;

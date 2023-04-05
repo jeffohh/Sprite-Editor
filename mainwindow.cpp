@@ -133,6 +133,8 @@ void MainWindow::initializePreview() {
     ui->graphicsView->setScene(previewScene);
     ui->graphicsView->fitInView(QRectF(0, 0, frameList.front().width(), frameList.front().height()),
                                 Qt::KeepAspectRatio);
+    ui->graphicsView->setSceneRect(toPixmapItem.boundingRect());
+    ui->graphicsView->centerOn(toPixmapItem.boundingRect().center());
     timer->start(frameDuration);
 }
 
@@ -396,6 +398,8 @@ void MainWindow::onTimerTimeout() {
     curPreviewIndex = (curPreviewIndex + 1) % frameList.size();
     toPixmapItem.setPixmap(QPixmap::fromImage(frameList[curPreviewIndex]));
     previewScene->setFocusItem(&toPixmapItem);
+    ui->graphicsView->setSceneRect(toPixmapItem.boundingRect());
+    ui->graphicsView->centerOn(toPixmapItem.boundingRect().center());
 }
 
 /**
@@ -574,7 +578,7 @@ void MainWindow::displayAbout()
         this,
         tr("Sprite Editor"),
         tr("Use DELETE key to remove a selected frame.\n"
-           "DRAG the color to custom color boxes to save the color.\n\n"
+           "DRAG the color to custom color boxes to save it.\n\n"
            "Course: CS3505 2023 Spring\n"
            "Assignment: Sprite Editor\n"
            "Authors:\n"
