@@ -101,7 +101,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(&model, &Model::updatePaintColor, this, &MainWindow::updatePaintColor);
 
     // --- Color Alpha Channels ---
-    connect(ui->alphaSlider, &QSlider::valueChanged, &model, &Model::updateAlpha);
+    connect(ui->alphaSlider, &QSlider::valueChanged, &model, &Model::updateColorRelated);
     connect(&model, &Model::updateAlphaSliderLabel, ui->alphaValueLabel, &QLabel::setText);
     connect(&model, &Model::resetAlphaSlider, ui->alphaSlider, &QSlider::setValue );
 
@@ -589,7 +589,6 @@ void MainWindow::displayAbout()
 
 //tzhou
 void MainWindow::setIconToToolBtns(){
-
     ui->btnPencil->setIcon(QIcon(QPixmap(":/images/icons/Pencil.PNG")));
     ui->btnPencil->setIconSize(QSize(30,30));
     ui->btnEraser->setIcon(QIcon(QPixmap(":/images/icons/Eraser.PNG")));

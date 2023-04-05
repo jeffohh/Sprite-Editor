@@ -106,13 +106,13 @@ void Model::mouseDown(QPoint pos) {
     QColor pixelColor = canvas.pixelColor(pos);
     //paintColor = pixelColor + paintColor;
 
-    int red = pixelColor.red() + paintColor.red();
-    int green = pixelColor.green() + paintColor.green();
-    int blue = pixelColor.blue() + paintColor.blue();
-    int alpha = (pixelColor.alpha() + paintColor.alpha()) / 2;
+    //int red = pixelColor.red() + paintColor.red();
+    //int green = pixelColor.green() + paintColor.green();
+    //int blue = pixelColor.blue() + paintColor.blue();
+    //int alpha = (pixelColor.alpha() + paintColor.alpha()) / 2;
 
     // Create the new color with the calculated values
-    QColor paintColor = QColor::fromRgbF(red / 510.0, green / 510.0, blue / 510.0, alpha / 255.0);
+    //QColor paintColor = QColor::fromRgbF(red / 510.0, green / 510.0, blue / 510.0, alpha / 255.0);
 
     switch (tool) {
     case PENCIL:
@@ -254,12 +254,13 @@ void Model::setPenSize(int size){
 void Model::paintColorChanged(QColor newColor)
 {
     paintColor=newColor;
-    emit updatePaintColor(paintColor);
-    emit resetAlphaSlider(10);
+    int alphaSliderValue = paintColor.alpha()/255.0*10;
+    updateColorRelated(alphaSliderValue);
+    emit resetAlphaSlider(alphaSliderValue);
 }
 
 //Tzhou
-void Model::updateAlpha(int newAlphaSliderValue)
+void Model::updateColorRelated(int newAlphaSliderValue)
 {
     int newAlpha = 255*newAlphaSliderValue/10.0;
     paintColor.setAlpha(newAlpha);
@@ -448,9 +449,10 @@ void Model::customColorIsSelected(QGraphicsView* view)
 {
     if(customColors.contains(view)){
         paintColor=customColors[view];
-        emit updatePaintColor(paintColor);
-        qDebug()<<"selected";
-        //emit resetAlphaSlider(10);
+        int alphaSliderValue = paintColor.alpha()/255.0*10;
+        updateColorRelated(alphaSliderValue);
+        emit resetAlphaSlider(alphaSliderValue);
+
     }
 
 }
