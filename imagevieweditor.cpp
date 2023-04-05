@@ -51,26 +51,28 @@ void ImageViewEditor::updatePreviewPixmap(QImage* image) {
 
 // [=== INPUT SECTION ===] @Jeffrey
 void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
-        if (event->button() == Qt::LeftButton) {
-            QPoint pos = mapToScene(event->pos()).toPoint();
-            emit mouseDown(pos);
-            emit getColor(pos);
-        }
-        emit mousePressed(true);
+    if (event->button() == Qt::LeftButton) {
+        QPoint pos = mapToScene(event->pos()).toPoint();
+        emit mouseDown(pos);
+        emit getColor(pos);
+    }
+    emit mousePressed(true);
 }
 
 void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
-
-    //Andy Tran Edited
-    QPoint pos = mapToScene(event->pos()).toPoint();
-    //emit mouseDown(pos);
-    emit mouseMove(pos);
-
+    if (event->buttons() & Qt::LeftButton) {
+        //Andy Tran Edited
+        QPoint pos = mapToScene(event->pos()).toPoint();
+        //emit mouseDown(pos);
+        emit mouseMove(pos);
+    }
 }
 
 void ImageViewEditor::mouseReleaseEvent(QMouseEvent *event) {
-    QPoint pos = mapToScene(event->pos()).toPoint();
-    emit mouseRelease(pos);
+    if (event->button() == Qt::LeftButton) {
+        QPoint pos = mapToScene(event->pos()).toPoint();
+        emit mouseRelease(pos);
+    }
 
     event->ignore();
 
