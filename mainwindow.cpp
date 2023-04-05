@@ -471,12 +471,19 @@ void MainWindow::changeColorBtnIsPressed()
 }
 
 // [=== MENU SECTION ===] @Duong
+
+/**
+ * @brief MainWindow::handleNewCanvas: This method handle when user click File -> New. Creat a new canvas.
+ */
 void MainWindow::handleNewCanvas() {
     CanvasForm form(this, canvasSize, CREATE_NEW);
     connect(&form, &CanvasForm::createNewCanvas, &model, &Model::createNewCanvas);
     form.exec();
 }
 
+/**
+ * @brief MainWindow::handleSaveCanvas: This method handle when user click File -> Save. Save the canvas and frame to a *.ssp file.
+ */
 void MainWindow::handleSaveCanvas()
 {
     QString filter = "Sprite Sheet Project (*.ssp)";
@@ -490,6 +497,9 @@ void MainWindow::handleSaveCanvas()
     }
 }
 
+/**
+ * @brief MainWindow::handleOpenCanvas: This method handle when user click File -> Open. Open the canvas and frame with any file with a *.ssp file
+ */
 void MainWindow::handleOpenCanvas()
 {
     QString filter = "Sprite Sheet Project (*.ssp)";
@@ -500,7 +510,12 @@ void MainWindow::handleOpenCanvas()
     }
 }
 
-//Handle zoom when create a new file
+
+/**
+ * @brief MainWindow::centerAndAutoZoom: This method handle scaling to keep the canvas always be in the middle.
+ * @param width: given Width to scale
+ * @param height: given Height to scale
+ */
 void MainWindow::centerAndAutoZoom(int width, int height) {
     // Calculate the zoom level
     qreal zoomLevel = qMin(ui->canvasView->viewport()->width() / qreal(width),
@@ -513,13 +528,21 @@ void MainWindow::centerAndAutoZoom(int width, int height) {
     ui->canvasView->centerOn(previewScene->sceneRect().center());
 }
 
-//Andy Tran Added
+
+/**
+ * @author: Andy Tran
+ * @brief MainWindow::handleSize: This method handle Sprite -> Resize option.
+ */
 void MainWindow::handleSize() {
     CanvasForm form(this, canvasSize, RESIZE);
     connect(&form, &CanvasForm::resizeFrameList, &model, &Model::resizeFrameList);
     form.exec();
 }
 
+/**
+ * @author: Andy Tran
+ * @brief MainWindow::displayAbout: This method handle About.
+ */
 void MainWindow::displayAbout()
 {
     QMessageBox::information(

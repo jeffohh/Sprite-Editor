@@ -58,8 +58,7 @@ void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
 }
 
 void Model::onAddFrame(){
-    //AndyTran Merged
-//    canvas = QImage(canvasWidth, canvasHeight, QImage::Format_ARGB32);
+
     canvas = QImage(canvasSize, canvasSize, QImage::Format_ARGB32);
 
     canvas.fill(Qt::transparent);
@@ -260,6 +259,12 @@ void Model::updateAlpha(int newAlphaSliderValue)
 
 
 // [=== CANVAS SECTION ===] @Duong @Andy Tran
+
+/**
+ * @author Andy Tran
+ * @brief Model::resizeFrameList: This method resized the frame to fit when a new canvas is created.
+ * @param newSize:
+ */
 void Model::resizeFrameList(int newSize){
 
     //This one worked
@@ -286,7 +291,10 @@ void Model::resizeFrameList(int newSize){
     emit updateCanvas(&canvas, &frameList, currentFrame, RESIZE, canvasSize);
 }
 
-
+/**
+ * @brief Model::createNewCanvas: This method is used to create a new canvas with a given size.
+ * @param newSize
+ */
 void Model::createNewCanvas(int newSize){
 
     //AndyTran edited:
@@ -296,18 +304,18 @@ void Model::createNewCanvas(int newSize){
     canvas = QImage(canvasSize,canvasSize, QImage::Format_ARGB32);
     canvas.fill(Qt::transparent);
 
-//    // Store the current canvas width and height
-//    canvasWidth = width;
-//    canvasHeight = height;
-
     //Andy Tran Edited
     initializeModel();
     canvasSize = newSize;
     emit updateCanvas(&canvas, &frameList, currentFrame, CREATE_NEW, canvasSize);
-//    emit centerAndAutoZoom(canvasSize, canvasSize);
+
 }
 
-
+/**
+ * @brief Model::saveFile: This method is used to create a JSON file with height, width, number of frames and all the frame, using QJason classes.
+ * @param filename
+ * @return true if this save sucessfully, false otherwise.
+ */
 bool Model::saveFile(const QString &filename)
 {
     QJsonObject project;
@@ -350,7 +358,12 @@ bool Model::saveFile(const QString &filename)
         return true;
     }
 
-
+/**
+ * @brief Model::openFIle: This method is used read through a JSON file with height, width, number of frames and all the frame, using QJason classes and create
+ * new canvas with those information.
+ * @param filename
+ * @return true if this open sucessfully, false otherwise.
+ */
 bool Model::openFile(const QString &filename)
 {
     QFile file(filename);

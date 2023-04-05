@@ -1,7 +1,12 @@
 #include "canvasform.h"
-//#include <QVBoxLayout>
 
 
+/**
+ * @brief CanvasForm::CanvasForm: This method handle create a new canvas with all required widgets.
+ * @param parent
+ * @param currentSize
+ * @param action
+ */
 CanvasForm::CanvasForm(QWidget *parent, int currentSize, Action action): QDialog(parent)
 {
         //
@@ -52,6 +57,9 @@ CanvasForm::CanvasForm(QWidget *parent, int currentSize, Action action): QDialog
 
 }
 
+/**
+ * @brief CanvasForm::handleSubmitButton: This method handle when the user click "Submit" on the form.
+ */
 void CanvasForm::handleSubmitButton(){
     this->newSize = widthSpinBox->value();
     if(newSize > 0){
