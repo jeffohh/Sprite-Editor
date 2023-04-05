@@ -153,7 +153,12 @@ void MainWindow::initializeFrameView(){
     currentFrame = 0;
 
     QPushButton* addFrameBtn = new QPushButton("+");
-    addFrameBtn->setFixedSize(64, 64);
+    addFrameBtn->setFixedSize(42, 42);
+    addFrameBtn->setStyleSheet("border: 1px solid grey;");
+
+    QFont font = addFrameBtn->font();
+    font.setPointSize(16);
+    addFrameBtn->setFont(font);
 
     //Frames Layout
     framesHorizontalLayout->setAlignment(Qt::AlignLeft);
@@ -164,7 +169,7 @@ void MainWindow::initializeFrameView(){
     connect(addFrameBtn, &QPushButton::clicked, &model, &Model::onAddFrame);
     connect(addFrameBtn, &QPushButton::clicked, this, [=]() {
         addFrameWidget(framesHorizontalLayout);
-        framesHorizontalLayout->itemAt(frameList.size())->widget()->setStyleSheet("");
+        framesHorizontalLayout->itemAt(frameList.size())->widget()->setStyleSheet("border: 1px solid grey;");
     });
 
     addFrameWidget(framesHorizontalLayout);
@@ -187,7 +192,7 @@ void MainWindow::addFrameWidget(QHBoxLayout* framesHorizontalLayout)
         framesHorizontalLayout->insertWidget(currentFrame, newFrame);
 
         //Set the border style for the previous and current widgets
-        framesHorizontalLayout->itemAt(previousFrame)->widget()->setStyleSheet("border: none");
+        framesHorizontalLayout->itemAt(previousFrame)->widget()->setStyleSheet("border: 1px solid grey;");
         framesHorizontalLayout->itemAt(currentFrame)->widget()->setStyleSheet("border: 3px solid black;");
     }
     //Initialize Frame View - insert at index 0
@@ -244,7 +249,7 @@ void MainWindow::loadFrameWidgets() {
     connect(addFrameBtn, &QPushButton::clicked, &model, &Model::onAddFrame);
     connect(addFrameBtn, &QPushButton::clicked, this, [=]() {
         addFrameWidget(framesHorizontalLayout);
-        framesHorizontalLayout->itemAt(frameList.size())->widget()->setStyleSheet("");
+        framesHorizontalLayout->itemAt(frameList.size())->widget()->setStyleSheet("border: 1px solid grey;");
     });
 
     // Create frame widgets for each frame in the frameList
@@ -255,7 +260,7 @@ void MainWindow::loadFrameWidgets() {
     }
 
     //Set the border of last frame to nonn
-    framesHorizontalLayout->itemAt(currentFrame)->widget()->setStyleSheet("border: none");
+    framesHorizontalLayout->itemAt(currentFrame)->widget()->setStyleSheet("border: 1px solid grey;");
 
     //Set the selecting frame to the first one
     framesHorizontalLayout->itemAt(0)->widget()->setStyleSheet("border: 3px solid black;");
@@ -313,7 +318,7 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
         break;
     case UPDATE:
         //Update color of border according to the currcent frame view
-        framesHorizontalLayout->itemAt(previousFrame)->widget()->setStyleSheet("border: none");
+        framesHorizontalLayout->itemAt(previousFrame)->widget()->setStyleSheet("border: 1px solid grey;");
         framesHorizontalLayout->itemAt(this->currentFrame)->widget()->setStyleSheet("border: 3px solid black;");
 
         //Update the FrameView when modified Canvas

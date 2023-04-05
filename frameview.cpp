@@ -16,6 +16,8 @@ FrameView::FrameView(QWidget *parent) :
 
     imageItem = new QGraphicsPixmapItem();
 
+    this->setStyleSheet("border: 1px solid grey;");
+
     QGraphicsScene* scene = new QGraphicsScene();
     scene->addItem(imageItem);
 
