@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "helpmenu.h"
 #include "ui_mainwindow.h"
 #include "model.h"
 #include "canvasform.h"
@@ -7,6 +8,7 @@
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , helpMenu(this)
     , model(model)
 {
     ui->setupUi(this);
@@ -114,6 +116,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->actionSprite_Size, &QAction::triggered, this, &MainWindow::handleSize);
     // @Tzhou
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::displayAbout);
+    //@Ruini Tong
+    connect(ui->actionToolBox, &QAction::triggered, this, &MainWindow::displayToolBox);
 }
 
 MainWindow::~MainWindow()
@@ -588,6 +592,15 @@ void MainWindow::displayAbout()
            "\tRuini Tong\n"
            "\tTingting Zhou"));
 
+}
+
+/**
+ * @author:Ruini Tong
+ * @brief MainWindow::displayToolBox: This method handle About.
+ */
+void MainWindow::displayToolBox()
+{
+    helpMenu.show();
 }
 //-------------------Extra Features ----------------------
 
