@@ -46,6 +46,7 @@ CanvasForm::CanvasForm(QWidget *parent, int currentSize, Action action): QDialog
 
         // Connect the buttons to slots
         connect(okButton, &QPushButton::clicked, this, &CanvasForm::handleSubmitButton);
+
         // Connect the buttons to slots
         connect(cancelButton, &QPushButton::clicked, this, [=]{
             close();

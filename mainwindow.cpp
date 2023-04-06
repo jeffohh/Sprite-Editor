@@ -24,6 +24,9 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     frameList.push_back(model.canvas);
 
     //Preview
+    previewScene->addItem(&imageItem);
+    previewScene->setFocusItem(&imageItem);
+    ui->graphicsView->setScene(previewScene);
     initializePreview();
     isInit = false;
 
@@ -117,7 +120,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->actionNew_Project, &QAction::triggered, this, &MainWindow::handleNewCanvas);
     connect(ui->actionSave_Project, &QAction::triggered, this, &MainWindow::handleSaveCanvas);
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::handleOpenCanvas);
-    connect(&model, &Model::centerAndAutoZoom, this, &MainWindow::centerAndAutoZoom);
     // @AndyTran
     connect(ui->actionSprite_Size, &QAction::triggered, this, &MainWindow::handleSize);
     // @Tzhou
@@ -135,9 +137,6 @@ MainWindow::~MainWindow()
 void MainWindow::initializePreview() {
     //Initialize - Preview
     imageItem.setPixmap(QPixmap::fromImage(frameList.front()));
-    previewScene->addItem(&imageItem);
-    previewScene->setFocusItem(&imageItem);
-    ui->graphicsView->setScene(previewScene);
     ui->graphicsView->fitInView(QRectF(0, 0, frameList.front().width(), frameList.front().height()),
                                 Qt::KeepAspectRatio);
     ui->graphicsView->setSceneRect(imageItem.boundingRect());
@@ -359,6 +358,7 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
         deleteAllWidgets();
 
         // Reinitialize the frame view and preview components
+        initializePreview();
         initializeFrameView();
         break;
     case RESIZE:
@@ -512,25 +512,6 @@ void MainWindow::handleOpenCanvas()
         model.openFile(fileName);
     }
 }
-
-
-/**
- * @brief MainWindow::centerAndAutoZoom: This method handle scaling to keep the canvas always be in the middle.
- * @param width: given Width to scale
- * @param height: given Height to scale
- */
-void MainWindow::centerAndAutoZoom(int width, int height) {
-    // Calculate the zoom level
-    qreal zoomLevel = qMin(ui->canvasView->viewport()->width() / qreal(width),
-                           ui->canvasView->viewport()->height() / qreal(height));
-
-    // Set the zoom level
-    ui->canvasView->setTransform(QTransform::fromScale(zoomLevel, zoomLevel));
-
-    // Center the canvas in the view
-    ui->canvasView->centerOn(previewScene->sceneRect().center());
-}
-
 
 /**
  * @author: Andy Tran

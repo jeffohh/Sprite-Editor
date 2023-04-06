@@ -81,47 +81,15 @@ public slots:
 
     /**
      * @author Andy Tran
-     * @brief MainWindow::addFrameWidget Add a new frame widget
-     */
-    void addFrameWidget();
-
-    /**
-     * @author Andy Tran
-     * @brief MainWindow::initializePreview Initialize pixmap, scene, view. Ready to start the animation
-     */
-    void initializePreview();
-
-    /**
-     * @author Andy Tran
-     * @brief MainWindow::initializeFrameView Initialize the Frame View which included
-     * Add Button, Connection between the Add Button and Model, Frame View Layout.
-     */
-    void initializeFrameView();
-
-    /**
-     * @author Andy Tran
      * @brief MainWindow::deleteFrameWidget Delete a widget at an particular index
      * @param deletedIndex the index that needs to be deleted
      */
     void deleteFrameWidget(int);
 
-    /**
-     * @author Andy Tran
-     * @brief MainWindow::deleteAllWidgets Delete all current Widgets in Frame View
-     */
-    void deleteAllWidgets();
-
-    /**
-     * @author Andy Tran
-     * @brief MainWindow::loadFrameWidgets Generated all the widgets from .ssp file including "+" button
-     */
-    void loadFrameWidgets();
-
     //Duong
     void handleNewCanvas();
     void handleOpenCanvas();
     void handleSaveCanvas();
-    void centerAndAutoZoom(int, int);
     void handleSize();
     void displayAbout();
 
@@ -150,7 +118,7 @@ public slots:
      */
     void displayHelpMenu();
 
-private:
+private:      
     Ui::MainWindow *ui;
     Model& model;
     helpmenu helpMenu;
@@ -186,6 +154,37 @@ private:
     QGraphicsScene* customeColorScene5 = new QGraphicsScene();
     void setIconToToolBtns();
     void setColorScenesToViews();
+
+    /**
+     * @author Andy Tran
+     * @brief MainWindow::initializePreview Initialize pixmap, scene, view. Ready to start the animation
+     */
+    void initializePreview();
+
+    /**
+     * @author Andy Tran
+     * @brief MainWindow::initializeFrameView Initialize the Frame View which included
+     * Add Button, Connection between the Add Button and Model, Frame View Layout.
+     */
+    void initializeFrameView();
+
+    /**
+     * @author Andy Tran
+     * @brief MainWindow::addFrameWidget Add a new frame widget
+     */
+    void addFrameWidget();
+
+    /**
+     * @author Andy Tran
+     * @brief MainWindow::loadFrameWidgets Generated all the widgets from .ssp file including "+" button
+     */
+    void loadFrameWidgets();
+
+    /**
+     * @author Andy Tran
+     * @brief MainWindow::deleteAllWidgets Delete all current Widgets in Frame View
+     */
+    void deleteAllWidgets();
 
 signals:
     //AndyTran

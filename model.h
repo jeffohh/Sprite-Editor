@@ -91,11 +91,6 @@ public slots:
      */
     void mouseRelease(QPoint pos);
 
-    //Andy Tran
-    /**
-     * @brief Model::initializeModel Initilaize the model for the program to ready
-     */
-    void initializeModel();
 
     /**
      * @author Andy Tran
@@ -190,6 +185,12 @@ private:
      */
     void drawLine(QPoint p1, QPoint p2, QImage* image, QPainter::CompositionMode composition);
 
+    /**
+     * @author Andy Tran
+     * @brief Model::initializeModel Initilaize the model for the program to ready
+     */
+    void initializeModel();
+
     //Ruini Tong
     QPoint pixelCurrent;//use to keep track previous pixel position when mouseMove/mouseDown was called
     int penSize = 1;
@@ -205,8 +206,6 @@ private:
     //Duong
     int canvasWidth;
     int canvasHeight;
-
-private slots:
 
 signals:
     /**
