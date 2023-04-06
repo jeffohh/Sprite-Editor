@@ -1,5 +1,6 @@
 #include "draganddropevents.h"
 
+/*Code reviewed by Andy Tran, Andy Duong*/
 dragAndDropEvents::dragAndDropEvents(){
 
 }

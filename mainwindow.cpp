@@ -134,6 +134,7 @@ MainWindow::~MainWindow()
 }
 
 // [=== INITIALIZE SECTION ===] @Andy Tran
+/*Code reviewed by Tingting Zhou*/
 void MainWindow::initializePreview() {
     //Initialize - Preview
     imageItem.setPixmap(QPixmap::fromImage(frameList.front()));
@@ -144,6 +145,7 @@ void MainWindow::initializePreview() {
     timer->start(frameDuration);
 }
 
+/*Code reviewed by Tingting Zhou*/
 void MainWindow::initializeFrameView(){
     previousFrame = 0;
     currentFrame = 0;
@@ -172,6 +174,7 @@ void MainWindow::initializeFrameView(){
 }
 
 // [=== FRAME VIEW SECTION ===] @Andy Tran
+/*Code reviewed by Andy Duong*/
 void MainWindow::addFrameWidget()
 {
     //Andy Tran - need to fix the scroll bar issue
@@ -211,6 +214,7 @@ void MainWindow::addFrameWidget()
     connect(newFrame, &FrameView::deletePressed, &model, &Model::deletePressed);
 }
 
+/*Code reviewed by Jeffery Le*/
 void MainWindow::deleteFrameWidget(int deletedIndex) {
     //Delete a Widget at deletedIndex
     QLayoutItem *item = framesHorizontalLayout->takeAt(deletedIndex);
@@ -218,6 +222,7 @@ void MainWindow::deleteFrameWidget(int deletedIndex) {
     delete item;
 }
 
+/*Code reviewed by Ruini Tong*/
 void MainWindow:: deleteAllWidgets(){
     // Clear the current frame widgets
     while (!framesHorizontalLayout->isEmpty()) {
@@ -227,6 +232,7 @@ void MainWindow:: deleteAllWidgets(){
     }
 }
 
+/*Code reviewed by Jeffery Le*/
 void MainWindow::loadFrameWidgets() {
 
     //Andy Tran: Need to optimized
@@ -273,6 +279,7 @@ void MainWindow::loadFrameWidgets() {
 
 
 // [=== CANVAS SECTION ===] @Jeffrey @Andy Tran
+/*Code reviewed by Andy Duong*/
 void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action action, int newSize, int deletedIndex) {
     //Update canvas View
     ui->canvasView->fitInView(QRectF(0, 0, canvas->width(), canvas->height()), Qt::KeepAspectRatio);
@@ -380,6 +387,7 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
 }
 
 // [=== PREVIEW SECTION ===] @Andy Tran
+/*Code reviewed by Ruini Tong*/
 void MainWindow::onTimerTimeout() {
     //Move to the next frame when QTimer timeout
     curPreviewIndex = (curPreviewIndex + 1) % frameList.size();
@@ -389,6 +397,7 @@ void MainWindow::onTimerTimeout() {
     ui->graphicsView->centerOn(imageItem.boundingRect().center());
 }
 
+/*Code reviewed by Ruini Tong*/
 void MainWindow::onChangeFpsSliderValue(int value)
 {
     //Change FPS label
@@ -410,11 +419,13 @@ void MainWindow::onChangeFpsSliderValue(int value)
  * @brief MainWindow::updatePreviewCanvas
  * @param canvas
  */
+/*Code reviewed by Ruini Tong*/
 void MainWindow::updatePreviewCanvas(QImage* canvas) {
     ui->canvasView->updatePreviewPixmap(canvas);
 }
 
 // [=== TOOL SECTION ===] @Ruini
+/*Code reviewed by Andy Duong*/
 void MainWindow::disableTool(Tool tool){
     //enable all tools
     ui->pencilBtn->setEnabled(true);
@@ -445,6 +456,7 @@ void MainWindow::disableTool(Tool tool){
     }
 }
 
+/*Code reviewed by Jeffery Le*/
 void MainWindow::changeSizeSliderValue(int value){
     QString textValue = QString::number(value);
     ui->sizeValueLabel->setText(textValue);
@@ -453,6 +465,7 @@ void MainWindow::changeSizeSliderValue(int value){
 
 
 // [=== COLOR SECTION ===] @TZHou @Ruini
+/*Code reviewed by Jeffery Le*/
 void MainWindow::updatePaintColor(QColor newColor)
 {
     int h = ui->currentColorLabel->height();
@@ -464,6 +477,7 @@ void MainWindow::updatePaintColor(QColor newColor)
     ui->currentColorLabel->setParent(ui->colorPanel);
 }
 
+/*Code reviewed by Andy Tran*/
 void MainWindow::changeColorBtnIsPressed()
 {
     QColor color = QColorDialog::getColor(DEFAULT_PAINT_COLOR,this);
@@ -473,7 +487,7 @@ void MainWindow::changeColorBtnIsPressed()
     }
 }
 
-//Extra feature: icons
+/*Code reviewed by Jeffery Le*/
 void MainWindow::setIconToToolBtns(){
     QSize toolSize = QSize(30,30);
     ui->pencilBtn->setIcon(QIcon(QPixmap(":/images/icons/Pencil.PNG")));
@@ -490,7 +504,7 @@ void MainWindow::setIconToToolBtns(){
 
 }
 
-//Extra feature: drag and drop
+/*Code reviewed by Andy Tran*/
 void MainWindow::setColorScenesToViews()
 {
     ui->customColorView1->setScene(customeColorScene1);
@@ -500,6 +514,7 @@ void MainWindow::setColorScenesToViews()
     ui->customColorView5->setScene(customeColorScene5);
 }
 
+/*Code reviewed by Andy Duong*/
 void MainWindow::imageEnter(QPixmap pixmap, QGraphicsView *view)
 {
     QGraphicsScene* scene = view->scene();
@@ -555,6 +570,7 @@ void MainWindow::handleSize() {
     form.exec();
 }
 
+/*Code reviewed by Jeffery Le*/
 void MainWindow::displayAbout()
 {
     QMessageBox::information(
@@ -572,6 +588,7 @@ void MainWindow::displayAbout()
 
 }
 
+/*Code reviewed by Jeffery Le*/
 void MainWindow::displayHelpMenu()
 {
     helpMenu.show();

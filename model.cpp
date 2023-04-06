@@ -4,6 +4,7 @@
 //Initialize static variable
 int Model::frameIndex = 0;
 
+/*Code reviewed by Andy Duong*/
 Model::Model(QObject *parent)
     : QObject{parent}
     , canvas(32, 32, QImage::Format_ARGB32)
@@ -18,11 +19,13 @@ Model::Model(QObject *parent)
 }
 
 // [=== PREVIEW SECTION ===] @Andy Tran
+/*Code reviewed by Ruini Tong*/
 void Model::changeFPS(){
     emit updateCanvas(&canvas, &frameList, currentFrame, FPS_CHANGED, canvasSize);
 }
 
 // [=== INITIAL SECTION ===] @Andy Tran
+/*Code reviewed by Ruini Tong*/
 void Model::initializeModel(){
     frameIndex = 0;
     currentFrame = 0;
@@ -31,6 +34,7 @@ void Model::initializeModel(){
 }
 
 // [=== FRAMES SECTION ===] @Andy Tran
+/*Code reviewed by Jeffery Le*/
 void Model::deletePressed(int deletedIndex){
     //Delete if have more than one frame
     if(frameList.size() > 1){
@@ -54,6 +58,7 @@ void Model::deletePressed(int deletedIndex){
     }
 }
 
+/*Code reviewed by Andy Duong*/
 void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
     //Update current frame
     this->currentFrame = frameIndex;
@@ -69,6 +74,7 @@ void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 }
 
+/*Code reviewed by Ruini Tong*/
 void Model::onAddFrame(){
     //Create new blank canvas and send signals to the view to update
     canvas = QImage(canvasSize, canvasSize, QImage::Format_ARGB32);
@@ -81,6 +87,7 @@ void Model::onAddFrame(){
 
 // [=== TOOL SECTION ===] @Ruini
 // --- Tool Input ---
+/*Code reviewed by Jeffery Le*/
 void Model::mouseDown(QPoint pos) {
     if (!canvas.rect().contains(pos)) return; //if the pixel is out of bound, return
 
@@ -114,6 +121,7 @@ void Model::mouseDown(QPoint pos) {
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 }
 
+/*Code reviewed by Andy Tran*/
 void Model::mouseMove(QPoint pos) {
 
     if (!canvas.rect().contains(pos)) return; //if the pixel is out of bound, return
@@ -137,6 +145,7 @@ void Model::mouseMove(QPoint pos) {
 
 }
 
+/*Code reviewed by Andy Tran*/
 void Model::mouseRelease(QPoint) {
     QPainter painter(&canvas);
     painter.drawImage(0, 0, mergeCanvas);
@@ -150,6 +159,7 @@ void Model::mouseRelease(QPoint) {
 }
 
 // --- Tool Modify ---
+/*Code reviewed by Andy Duong*/
 void Model::drawLine(QPoint p1, QPoint p2, QImage* image, QPainter::CompositionMode composition) {
     QPen pen; // Jeffrey: this can be a private member, potentially replacing penSize and paintColor
     pen.setWidth(penSize);
@@ -162,6 +172,7 @@ void Model::drawLine(QPoint p1, QPoint p2, QImage* image, QPainter::CompositionM
     painter.drawLine(p1.x(),p1.y(),p2.x(),p2.y());
 }
 
+/*Code reviewed by Jeffery Le*/
 void Model::fillColor(QColor originColor, QPoint pos){
 
     //if the canvas color is the same as paintColor, don't need to fill
@@ -212,16 +223,19 @@ void Model::fillColor(QColor originColor, QPoint pos){
 }
 
 // --- Tool Settings ---
+/*Code reviewed by Andy Tran*/
 void Model::changeTool(Tool currentTool){
     tool = currentTool;
 }
 
+/*Code reviewed by Andy Tran*/
 void Model::setPenSize(int size){
     penSize = size/5;
 }
 
 
 // [=== COLOR SECTION ===] @Tzhou @Ruini
+/*Code reviewed by Jeffery Le*/
 void Model::paintColorChanged(QColor newColor)
 {
     paintColor=newColor;
@@ -230,7 +244,7 @@ void Model::paintColorChanged(QColor newColor)
     emit resetAlphaSlider(alphaSliderValue);
 }
 
-//Tzhou
+/*Code reviewed by Andy Duong*/
 void Model::updateColorRelated(int newAlphaSliderValue)
 {
     int newAlpha = 255*newAlphaSliderValue/10.0;
@@ -267,10 +281,7 @@ void Model::resizeFrameList(int newSize){
     emit updateCanvas(&canvas, &frameList, currentFrame, RESIZE, canvasSize);
 }
 
-/**
- * @brief Model::createNewCanvas: This method is used to create a new canvas with a given size.
- * @param newSize
- */
+/*Code reviewed by Ruini Tong*/
 void Model::createNewCanvas(int newSize){
 
     //AndyTran edited:
@@ -287,11 +298,7 @@ void Model::createNewCanvas(int newSize){
 
 }
 
-/**
- * @brief Model::saveFile: This method is used to create a JSON file with height, width, number of frames and all the frame, using QJason classes.
- * @param filename
- * @return true if this save sucessfully, false otherwise.
- */
+/*Code reviewed by Ruini Tong*/
 bool Model::saveFile(const QString &filename)
 {
     QJsonObject project;
@@ -334,12 +341,7 @@ bool Model::saveFile(const QString &filename)
         return true;
     }
 
-/**
- * @brief Model::openFIle: This method is used read through a JSON file with height, width, number of frames and all the frame, using QJason classes and create
- * new canvas with those information.
- * @param filename
- * @return true if this open sucessfully, false otherwise.
- */
+/*Code reviewed by Jeffery Le*/
 bool Model::openFile(const QString &filename)
 {
     QFile file(filename);
@@ -393,8 +395,8 @@ bool Model::openFile(const QString &filename)
        return true;
 }
 
-//---------------------Extra Feature------------
-//Tzhou
+// [=== Extra feature drag and drop ===] @Tingting Zhou
+/*Code reviewed by Andy Tran*/
 void Model::updateCustomColor(QGraphicsView *view)
 {
     if(customColors.contains(view)){
@@ -404,7 +406,7 @@ void Model::updateCustomColor(QGraphicsView *view)
         customColors.insert(view,paintColor);
 }
 
-//Tzhou
+/*Code reviewed by Andy Duong*/
 void Model::customColorIsSelected(QGraphicsView* view)
 {
     if(customColors.contains(view)){

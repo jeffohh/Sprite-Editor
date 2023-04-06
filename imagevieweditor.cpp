@@ -1,5 +1,5 @@
 #include "imagevieweditor.h"
-
+/*Code reviewed by Ruini Tong, Andy Duong, Tingting Zhou*/
 ImageViewEditor::ImageViewEditor(QWidget *parent) :
     QGraphicsView(parent)
 {
