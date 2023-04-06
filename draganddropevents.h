@@ -1,6 +1,6 @@
 /**
  * @author Tingting Zhou
- *
+ *  Reviewed by Andy Duong. Tingting has follow all the Style Guides provided by us.
  **/
 
 #ifndef DRAGANDDROPEVENTS_H

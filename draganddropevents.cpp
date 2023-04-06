@@ -47,6 +47,7 @@ DragAndDropLabel::DragAndDropLabel(QWidget *widget)
     Q_UNUSED(widget)
 }
 
+
 void DragAndDropLabel::createDrag(const QPoint &pos, QWidget *widget)
 {
     if(widget ==nullptr) return;

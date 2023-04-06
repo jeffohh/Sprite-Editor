@@ -1,7 +1,7 @@
 #include "frameview.h"
 #include "model.h"
 
-/*Code reviewed by Jeffery Le, Ruini Tong*/
+/* All the below code had been reviewed by Andy Duong */
 FrameView::FrameView(QWidget *parent) :
     QGraphicsView(parent)
 {

@@ -11,6 +11,7 @@
  * @author AndyTran
  * @brief FrameView::FrameView A class represent the view of the frames
  * @param parent
+ * Reviewed by Andy Duong. Andy Tran has follow all the Style Guides provided by us.
  */
 class FrameView : public QGraphicsView
 {
