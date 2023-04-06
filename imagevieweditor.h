@@ -13,8 +13,8 @@ class ImageViewEditor : public QGraphicsView
 
 public:
     explicit ImageViewEditor(QWidget *parent = nullptr);
-    void updatePixmap(QImage*);
-    void updatePreviewPixmap(QImage*);
+    void updatePixmap(QImage* image);
+    void updatePreviewPixmap(QImage* image);
 
     //Ruini Tong cursor
     void pencilCursor();
@@ -26,7 +26,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
-    void wheelEvent(QWheelEvent*) override;
+    void wheelEvent(QWheelEvent *event) override;
 
 private:
     //Scale default 1580%
@@ -37,13 +37,9 @@ private:
     QGraphicsRectItem* rectBackground;
 
 signals:
-    void mouseDown(QPoint);
-    void mouseMove(QPoint);
-    void mouseRelease(QPoint);
-
-    //Ruini Tong
-    void mousePressed(bool pressed);
-    void getColor(QPoint);
+    void mouseDown(QPoint pos);
+    void mouseMove(QPoint pos);
+    void mouseRelease(QPoint pos);
 };
 
 #endif // IMAGEVIEWEDITOR_H

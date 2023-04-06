@@ -54,7 +54,6 @@ void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         QPoint pos = mapToScene(event->position().toPoint()).toPoint();
         emit mouseDown(pos);
-        emit getColor(pos);
     }
 }
 
