@@ -35,7 +35,8 @@ enum Action{
     DELETE_FRAME,
     OPEN_FILE,
     CREATE_NEW,
-    RESIZE
+    RESIZE,
+    FPS_CHANGED
 };
 
 class Model : public QObject
@@ -58,12 +59,53 @@ public slots:
     void mouseRelease(QPoint);
 
     //Andy Tran
-    void changeTool(Tool currentTool);
-    void mouseClicked(QGraphicsPixmapItem*, int);
+    /**
+     * @brief Model::initializeModel Initilaize the model for the program to ready
+     */
     void initializeModel();
+
+    /**
+     * @author Andy Tran
+     * @brief changeTool change the tool using
+     */
+    void changeTool(Tool);
+
+    /**
+     * @author Andy Tran
+     * @brief Model::mouseClicked Whenever the frame widget was clicked.
+     * The FrameView class calls the Model to handle the event and send update to the View
+     * @param frame The FrameView pixmap
+     * @param frameIndex Current Index of the FrameView
+     */
+    void mouseClicked(QGraphicsPixmapItem*, int);
+
+    /**
+     * @author Andy Tran
+     * @brief Model::onAddFrame Trigger whenever the Add Button is clicked.
+     * Adding one more frame to the list and send update to the View
+     */
     void onAddFrame();
+
+    /**
+     * @author Andy Tran
+     * @brief Model::deletePressed Take an action whenever the Delete Button pressed
+     * Action: Shift left or right the current frame
+     * @param deletedIndex
+     */
     void deletePressed(int);
+
+    /**
+     * @author Andy Tran
+     * @brief Model::resizeFrameList: This method resized the frame to fit when a new canvas is created.
+     * @param newSize:
+     */
     void resizeFrameList(int);
+
+    /**
+     * @author Andy Tran
+     * @brief changeFPS trigger an update to the View when the FPS changed
+     */
+    void changeFPS();
 
     /**
      * @brief Sets the paint color to a given color.
@@ -110,10 +152,12 @@ private:
     int canvasWidth;
     int canvasHeight;
 
+private slots:
+
 signals:
     /**
+     * @author AndyTran Jeff
      * @brief Sends canvas to View
-     *
      * Sends the canvas to the View, usually after an update has occured to
      * the canvas. The View should update so the user can see the changes
      * the Model has made.
@@ -121,6 +165,7 @@ signals:
      * @param QImage        the canvas
      */
     void updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action action, int newSize, int deletedIndex = -1);
+
     void updatePreviewCanvas(QImage* canvas);
 
     //Renee, Tzhou

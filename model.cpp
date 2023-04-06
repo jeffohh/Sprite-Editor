@@ -1,6 +1,5 @@
 #include "model.h"
 #include "QtGui/qpainter.h"
-#include "qdebug.h"
 
 //Initialize static variable
 int Model::frameIndex = 0;
@@ -19,10 +18,12 @@ Model::Model(QObject *parent)
     canvasHeight = canvas.height();
 }
 
+// [=== PREVIEW SECTION ===] @Andy Tran
+void Model::changeFPS(){
+    emit updateCanvas(&canvas, &frameList, currentFrame, FPS_CHANGED, canvasSize);
+}
+
 // [=== INITIAL SECTION ===] @Andy Tran
-/**
- * @brief Model::initializeModel Initilaize the model for the program to ready
- */
 void Model::initializeModel(){
     frameIndex = 0;
     currentFrame = 0;
@@ -31,11 +32,6 @@ void Model::initializeModel(){
 }
 
 // [=== FRAMES SECTION ===] @Andy Tran
-/**
- * @brief Model::deletePressed Take an action whenever the Delete Button pressed
- * Action: Shift left or right the current frame
- * @param deletedIndex
- */
 void Model::deletePressed(int deletedIndex){
     //Delete if have more than one frame
     if(frameList.size() > 1){
@@ -59,12 +55,6 @@ void Model::deletePressed(int deletedIndex){
     }
 }
 
-/**
- * @brief Model::mouseClicked Whenever the frame widget was clicked.
- * The FrameView class calls the Model to handle the event and send update to the View
- * @param frame The FrameView pixmap
- * @param frameIndex Current Index of the FrameView
- */
 void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
     //Update current frame
     this->currentFrame = frameIndex;
@@ -80,10 +70,6 @@ void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 }
 
-/**
- * @brief Model::onAddFrame Trigger whenever the Add Button is clicked.
- * Adding one more frame to the list and send update to the View
- */
 void Model::onAddFrame(){
     //Create new blank canvas and send signals to the view to update
     canvas = QImage(canvasSize, canvasSize, QImage::Format_ARGB32);
@@ -268,11 +254,6 @@ void Model::updateColorRelated(int newAlphaSliderValue)
 
 
 // [=== CANVAS SECTION ===] @Duong @Andy Tran
-/**
- * @author Andy Tran
- * @brief Model::resizeFrameList: This method resized the frame to fit when a new canvas is created.
- * @param newSize:
- */
 void Model::resizeFrameList(int newSize){
     for (unsigned int i = 0; i < frameList.size(); i++) {
         // Create a new QImage of size new_size

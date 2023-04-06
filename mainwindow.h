@@ -42,17 +42,70 @@ public:
 
 public slots:
     //Jeff
+    /**
+     * @author AndyTran Jeff
+     * @brief MainWindow::updateCanvas Update all the information that needed were sent from Model
+     * @param canvas Current Canvas
+     * @param list Current Frame List
+     * @param currentFrame Current Frame focusing
+     * @param action Current Action need to execute by the View
+     * @param newSize Current Size of the Sprite
+     * @param deletedIndex Current index that need to be deleted (default is -1 which means nothing should be deleted)
+     */
     void updateCanvas(QImage*, vector<QImage>*, int, Action, int, int);
     void updatePreviewCanvas(QImage*);
 
     //Andy Tran
+    /**
+     * @author AndyTran
+     * @brief MainWindow::onTimerTimeout Automatically called whenever the Timer is timeout to continue the animation
+     */
     void onTimerTimeout();
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::onChangeFpsSliderValue Whenever FPS changed, update the FPS label
+     * and restart the QTimer to start the animation with new FPS
+     * @param value
+     */
     void onChangeFpsSliderValue(int value);
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::addFrameWidget Add a new frame widget
+     */
     void addFrameWidget();
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::initializePreview Initialize pixmap, scene, view. Ready to start the animation
+     */
     void initializePreview();
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::initializeFrameView Initialize the Frame View which included
+     * Add Button, Connection between the Add Button and Model, Frame View Layout.
+     */
     void initializeFrameView();
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::deleteFrameWidget Delete a widget at an particular index
+     * @param deletedIndex the index that needs to be deleted
+     */
     void deleteFrameWidget(int);
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::deleteAllWidgets Delete all current Widgets in Frame View
+     */
     void deleteAllWidgets();
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::loadFrameWidgets Generated all the widgets from .ssp file including "+" button
+     */
     void loadFrameWidgets();
 
     //Duong
@@ -108,6 +161,9 @@ private:
     void setColorScenesToViews();
 
 signals:
+    //AndyTran
+    void changeFPS();
+
     //Renee
     // used by any color change
     void paintColorChanged(QColor);
