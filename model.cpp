@@ -267,10 +267,6 @@ void Model::resizeFrameList(int newSize){
     emit updateCanvas(&canvas, &frameList, currentFrame, RESIZE, canvasSize);
 }
 
-/**
- * @brief Model::createNewCanvas: This method is used to create a new canvas with a given size.
- * @param newSize
- */
 void Model::createNewCanvas(int newSize){
 
     //AndyTran edited:
@@ -287,11 +283,6 @@ void Model::createNewCanvas(int newSize){
 
 }
 
-/**
- * @brief Model::saveFile: This method is used to create a JSON file with height, width, number of frames and all the frame, using QJason classes.
- * @param filename
- * @return true if this save sucessfully, false otherwise.
- */
 bool Model::saveFile(const QString &filename)
 {
     QJsonObject project;
@@ -334,12 +325,6 @@ bool Model::saveFile(const QString &filename)
         return true;
     }
 
-/**
- * @brief Model::openFIle: This method is used read through a JSON file with height, width, number of frames and all the frame, using QJason classes and create
- * new canvas with those information.
- * @param filename
- * @return true if this open sucessfully, false otherwise.
- */
 bool Model::openFile(const QString &filename)
 {
     QFile file(filename);

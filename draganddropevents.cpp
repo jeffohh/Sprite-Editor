@@ -1,5 +1,7 @@
 #include "draganddropevents.h"
 
+/* All the below code had been reviewed by Andy Duong */
+
 dragAndDropEvents::dragAndDropEvents(){
 
 }
@@ -45,6 +47,7 @@ DragAndDropLabel::DragAndDropLabel(QWidget *widget)
 {
     Q_UNUSED(widget)
 }
+
 
 void DragAndDropLabel::createDrag(const QPoint &pos, QWidget *widget)
 {
