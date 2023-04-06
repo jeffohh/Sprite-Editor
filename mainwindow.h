@@ -91,6 +91,11 @@ public slots:
     void handleOpenCanvas();
     void handleSaveCanvas();
     void handleSize();
+
+    /**
+     * @authors Tingting Zhou, Ruini Tong
+     * @brief displayAbout Displays About content of this project
+     */
     void displayAbout();
 
     /**
