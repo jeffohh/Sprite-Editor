@@ -6,11 +6,17 @@
 #include <QPushButton>
 #include <QLabel>
 #include "model.h"
-#include<QSpinBox>
+#include <QSpinBox>
 #include <QMessageBox>
-#include<QInputDialog>
+#include <QInputDialog>
 #include <QHBoxLayout>
 
+/**
+ * @brief CanvasForm::CanvasForm: This method handle create a new canvas with all required widgets.
+ * @param parent
+ * @param currentSize
+ * @param action
+ */
 class CanvasForm : public QDialog
 {
     Q_OBJECT
@@ -21,15 +27,13 @@ signals:
     void resizeFrameList(int);
 
 private slots:
+    /**
+     * @author Andy Tran
+     * @brief CanvasForm::handleSubmitButton: This method handle when the user click "Submit" on the form.
+     */
     void handleSubmitButton();
 
 private:
-//    QLineEdit *widthInput;
-//    QLineEdit *heightInput;
-//    QPushButton *submitButton;
-//    QLabel *widthLabel;
-//    QLabel *heightLabel;
-
     QSpinBox* widthSpinBox = new QSpinBox(this);
     Action action;
     int newSize;

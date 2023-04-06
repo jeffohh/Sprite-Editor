@@ -35,7 +35,8 @@ enum Action{
     DELETE_FRAME,
     OPEN_FILE,
     CREATE_NEW,
-    RESIZE
+    RESIZE,
+    FPS_CHANGED
 };
 
 class Model : public QObject
@@ -53,17 +54,67 @@ public:
     static int frameIndex;
 
 public slots:
+    /**
+     * @author Jeffery, Ruini Tong
+     * @brief when the mouse is down, start drawing/erasing, pick current color or fill color
+     */
     void mouseDown(QPoint);
+
+    /**
+     * @author Jeffery, Ruini Tong
+     * @brief mouse move will only be triggered while the mouse is down, draw lines on canvas
+     */
     void mouseMove(QPoint);
     void mouseRelease(QPoint);
 
     //Andy Tran
-    void changeTool(Tool currentTool);
-    void mouseClicked(QGraphicsPixmapItem*, int);
+    /**
+     * @brief Model::initializeModel Initilaize the model for the program to ready
+     */
     void initializeModel();
+
+    /**
+     * @author Andy Tran
+     * @brief changeTool change the tool using
+     */
+    void changeTool(Tool);
+
+    /**
+     * @author Andy Tran
+     * @brief Model::mouseClicked Whenever the frame widget was clicked.
+     * The FrameView class calls the Model to handle the event and send update to the View
+     * @param frame The FrameView pixmap
+     * @param frameIndex Current Index of the FrameView
+     */
+    void mouseClicked(QGraphicsPixmapItem*, int);
+
+    /**
+     * @author Andy Tran
+     * @brief Model::onAddFrame Trigger whenever the Add Button is clicked.
+     * Adding one more frame to the list and send update to the View
+     */
     void onAddFrame();
+
+    /**
+     * @author Andy Tran
+     * @brief Model::deletePressed Take an action whenever the Delete Button pressed
+     * Action: Shift left or right the current frame
+     * @param deletedIndex
+     */
     void deletePressed(int);
+
+    /**
+     * @author Andy Tran
+     * @brief Model::resizeFrameList: This method resized the frame to fit when a new canvas is created.
+     * @param newSize:
+     */
     void resizeFrameList(int);
+
+    /**
+     * @author Andy Tran
+     * @brief changeFPS trigger an update to the View when the FPS changed
+     */
+    void changeFPS();
 
     /**
      * @brief Sets the paint color to a given color.
@@ -81,10 +132,20 @@ public slots:
     bool saveFile(const QString &filename);
     bool openFile(const QString &filename);
 
-
-    //Ruini Tong
+    /**
+     * @author Ruini Tong
+     * @brief change pen size to the value user selected
+     * @param size
+     */
     void setPenSize(int size);
-    void fillColor(QColor currentColor, QPoint pos);
+
+    /**
+     * @author Ruini Tong
+     * @brief fill color of certain area
+     * @param originColor in the position that was clicked
+     * @param position that user clicked
+     */
+    void fillColor(QColor originColor, QPoint pos);
 
 private:
     Tool tool = PENCIL;
@@ -94,9 +155,8 @@ private:
     void drawLine(QPoint, QPoint, QImage*, QPainter::CompositionMode);
 
     //Ruini Tong
-    QPoint pixelCurrent;
+    QPoint pixelCurrent;//use to keep track previous pixel position when mouseMove/mouseDown was called
     int penSize = 1;
-    QRect canvasRect;
 
     //Andy Tran
     vector<QImage> frameList;
@@ -110,10 +170,12 @@ private:
     int canvasWidth;
     int canvasHeight;
 
+private slots:
+
 signals:
     /**
+     * @author AndyTran Jeff
      * @brief Sends canvas to View
-     *
      * Sends the canvas to the View, usually after an update has occured to
      * the canvas. The View should update so the user can see the changes
      * the Model has made.
@@ -121,6 +183,7 @@ signals:
      * @param QImage        the canvas
      */
     void updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action action, int newSize, int deletedIndex = -1);
+
     void updatePreviewCanvas(QImage* canvas);
 
     //Renee, Tzhou
@@ -129,9 +192,6 @@ signals:
     //Tzhou
     void updateAlphaSliderLabel(QString alphaSliderReading);
     void resetAlphaSlider(int newValue);
-
-    //Ruini Tong
-    void newPosition(QPoint pos);
 
     //Andy Tran
     void deleteFrameWidget(int);

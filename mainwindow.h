@@ -26,6 +26,8 @@
 #include<QPainter>
 #include <QHBoxLayout>
 
+#include "helpmenu.h"
+
 using std::vector;
 
 QT_BEGIN_NAMESPACE
@@ -42,17 +44,70 @@ public:
 
 public slots:
     //Jeff
+    /**
+     * @author AndyTran Jeff
+     * @brief MainWindow::updateCanvas Update all the information that needed were sent from Model
+     * @param canvas Current Canvas
+     * @param list Current Frame List
+     * @param currentFrame Current Frame focusing
+     * @param action Current Action need to execute by the View
+     * @param newSize Current Size of the Sprite
+     * @param deletedIndex Current index that need to be deleted (default is -1 which means nothing should be deleted)
+     */
     void updateCanvas(QImage*, vector<QImage>*, int, Action, int, int);
     void updatePreviewCanvas(QImage*);
 
     //Andy Tran
+    /**
+     * @author AndyTran
+     * @brief MainWindow::onTimerTimeout Automatically called whenever the Timer is timeout to continue the animation
+     */
     void onTimerTimeout();
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::onChangeFpsSliderValue Whenever FPS changed, update the FPS label
+     * and restart the QTimer to start the animation with new FPS
+     * @param value
+     */
     void onChangeFpsSliderValue(int value);
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::addFrameWidget Add a new frame widget
+     */
     void addFrameWidget();
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::initializePreview Initialize pixmap, scene, view. Ready to start the animation
+     */
     void initializePreview();
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::initializeFrameView Initialize the Frame View which included
+     * Add Button, Connection between the Add Button and Model, Frame View Layout.
+     */
     void initializeFrameView();
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::deleteFrameWidget Delete a widget at an particular index
+     * @param deletedIndex the index that needs to be deleted
+     */
     void deleteFrameWidget(int);
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::deleteAllWidgets Delete all current Widgets in Frame View
+     */
     void deleteAllWidgets();
+
+    /**
+     * @author AndyTran
+     * @brief MainWindow::loadFrameWidgets Generated all the widgets from .ssp file including "+" button
+     */
     void loadFrameWidgets();
 
     //Duong
@@ -68,12 +123,30 @@ public slots:
     void changeColorBtnIsPressed();
     void imageEnter(QPixmap pixmap, QGraphicsView *view);//Extra Feature
 
-    //Ruini Tong
+    /**
+     * @author Ruini Tong
+     * @brief label display current size value
+     * @param value
+     */
     void changeSizeSliderValue(int value);
+
+    /**
+     * @author Ruini Tong
+     * @brief disable slected tool, enable all the other tools
+     * @param tool
+     */
     void disableTool(Tool);
+
+    /**
+     * @author:Ruini Tong
+     * @brief This method display the help menu.
+     */
+    void displayHelpMenu();
+
 private:
     Ui::MainWindow *ui;
     Model& model;
+    helpmenu helpMenu;
 
     //Andy Tran
     bool isInit = true;
@@ -108,7 +181,9 @@ private:
     void setColorScenesToViews();
 
 signals:
-    //Renee
+    //AndyTran
+    void changeFPS();
+
     // used by any color change
     void paintColorChanged(QColor);
     void newCanvasRequested(int width, int height);

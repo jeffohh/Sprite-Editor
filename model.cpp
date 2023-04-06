@@ -13,15 +13,16 @@ Model::Model(QObject *parent)
     paintColor = Qt::black;
     initializeModel();
 
-    canvasRect = canvas.rect();// get canvas size
     canvasWidth = canvas.width();
     canvasHeight = canvas.height();
 }
 
+// [=== PREVIEW SECTION ===] @Andy Tran
+void Model::changeFPS(){
+    emit updateCanvas(&canvas, &frameList, currentFrame, FPS_CHANGED, canvasSize);
+}
+
 // [=== INITIAL SECTION ===] @Andy Tran
-/**
- * @brief Model::initializeModel Initilaize the model for the program to ready
- */
 void Model::initializeModel(){
     frameIndex = 0;
     currentFrame = 0;
@@ -30,11 +31,6 @@ void Model::initializeModel(){
 }
 
 // [=== FRAMES SECTION ===] @Andy Tran
-/**
- * @brief Model::deletePressed Take an action whenever the Delete Button pressed
- * Action: Shift left or right the current frame
- * @param deletedIndex
- */
 void Model::deletePressed(int deletedIndex){
     //Delete if have more than one frame
     if(frameList.size() > 1){
@@ -58,12 +54,6 @@ void Model::deletePressed(int deletedIndex){
     }
 }
 
-/**
- * @brief Model::mouseClicked Whenever the frame widget was clicked.
- * The FrameView class calls the Model to handle the event and send update to the View
- * @param frame The FrameView pixmap
- * @param frameIndex Current Index of the FrameView
- */
 void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
     //Update current frame
     this->currentFrame = frameIndex;
@@ -79,10 +69,6 @@ void Model::mouseClicked(QGraphicsPixmapItem* frame, int frameIndex){
     emit updateCanvas(&canvas, &frameList, currentFrame, UPDATE, canvasSize);
 }
 
-/**
- * @brief Model::onAddFrame Trigger whenever the Add Button is clicked.
- * Adding one more frame to the list and send update to the View
- */
 void Model::onAddFrame(){
     //Create new blank canvas and send signals to the view to update
     canvas = QImage(canvasSize, canvasSize, QImage::Format_ARGB32);
@@ -96,22 +82,14 @@ void Model::onAddFrame(){
 // [=== TOOL SECTION ===] @Ruini
 // --- Tool Input ---
 void Model::mouseDown(QPoint pos) {
-    pixelCurrent = pos;
+    if (!canvas.rect().contains(pos)) return; //if the pixel is out of bound, return
+
+    pixelCurrent = pos;//keep track of the position
 
     mergeCanvas = QImage(canvas.width(), canvas.height(), canvas.format());
     mergeCanvas.fill(Qt::transparent);
-    //if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
 
-    QColor pixelColor = canvas.pixelColor(pos);
-    //paintColor = pixelColor + paintColor;
-
-    //int red = pixelColor.red() + paintColor.red();
-    //int green = pixelColor.green() + paintColor.green();
-    //int blue = pixelColor.blue() + paintColor.blue();
-    //int alpha = (pixelColor.alpha() + paintColor.alpha()) / 2;
-
-    // Create the new color with the calculated values
-    //QColor paintColor = QColor::fromRgbF(red / 510.0, green / 510.0, blue / 510.0, alpha / 255.0);
+    QColor pixelColor = canvas.pixelColor(pos);//get current pixel color
 
     switch (tool) {
     case PENCIL:
@@ -138,8 +116,7 @@ void Model::mouseDown(QPoint pos) {
 
 void Model::mouseMove(QPoint pos) {
 
-    canvasRect = canvas.rect(); // Jeffrey: is canvasRect a needed variable? we could call canvas.rect() instead
-    if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
+    if (!canvas.rect().contains(pos)) return; //if the pixel is out of bound, return
 
     switch (tool) {
     case PENCIL:
@@ -188,26 +165,26 @@ void Model::drawLine(QPoint p1, QPoint p2, QImage* image, QPainter::CompositionM
 void Model::fillColor(QColor originColor, QPoint pos){
 
     //if the canvas color is the same as paintColor, don't need to fill
-    QColor canvasColor = canvas.pixelColor(pos);
     double threshold = 0.1;
 
-    double aDiff = abs(canvasColor.alpha() - paintColor.alpha());
-    double rDiff = abs(canvasColor.red() - paintColor.red());
-    double gDiff = abs(canvasColor.green() - paintColor.green());
-    double bDiff = abs(canvasColor.blue() - paintColor.blue());
+    double aDiff = abs(originColor.alpha() - paintColor.alpha());
+    double rDiff = abs(originColor.red() - paintColor.red());
+    double gDiff = abs(originColor.green() - paintColor.green());
+    double bDiff = abs(originColor.blue() - paintColor.blue());
 
     // check if the difference is within the threshold
     if ((aDiff <= threshold)&&(rDiff <= threshold) && (gDiff <= threshold) && (bDiff <= threshold)) {
         return;
     }
 
-    QList<QPoint> stack;
-    stack <<pos;
+    QList<QPoint> stack;//keep all the pixel position that are the same color to neigboring pixels
+    stack <<pos; //push the starting pixel
+    QRect canvasRect = canvas.rect();//get canvas area
     while(!stack.empty()){
         QPoint current = stack.takeLast();
         if (canvasRect.contains(current)) { // check if pixel is out of bound
             QColor pixelColor = canvas.pixelColor(current); //get pixel color
-            if (pixelColor == originColor){
+            if (pixelColor == originColor){//if the neigboring pixel have the same color as the starting pixel
                 canvas.setPixelColor(current, paintColor);
 
                 //expand top
@@ -244,7 +221,6 @@ void Model::setPenSize(int size){
 }
 
 
-
 // [=== COLOR SECTION ===] @Tzhou @Ruini
 void Model::paintColorChanged(QColor newColor)
 {
@@ -267,11 +243,6 @@ void Model::updateColorRelated(int newAlphaSliderValue)
 
 
 // [=== CANVAS SECTION ===] @Duong @Andy Tran
-/**
- * @author Andy Tran
- * @brief Model::resizeFrameList: This method resized the frame to fit when a new canvas is created.
- * @param newSize:
- */
 void Model::resizeFrameList(int newSize){
     for (unsigned int i = 0; i < frameList.size(); i++) {
         // Create a new QImage of size new_size

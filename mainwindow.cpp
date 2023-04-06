@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "helpmenu.h"
 #include "ui_mainwindow.h"
 #include "model.h"
 #include "canvasform.h"
@@ -8,6 +9,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , model(model)
+    , helpMenu(this)
 {
     ui->setupUi(this);
 
@@ -19,6 +21,11 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     //Canvas
     ui->canvasView->updatePixmap(&model.canvas);
+    frameList.push_back(model.canvas);
+
+    //Preview
+    initializePreview();
+    isInit = false;
 
     //Frame View
     initializeFrameView();
@@ -36,19 +43,20 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     // [=== PREVIEW CONNECTIONS ===] @Andy Tran
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
     connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::onChangeFpsSliderValue);
+    connect(this, &MainWindow::changeFPS, &model, &Model::changeFPS);
 
     // [=== TOOL CONNECTIONS ===] @Ruini
     // --- Tool Select ---
-    connect(ui->btnPencil,&QPushButton::clicked,this,[=](){
+    connect(ui->pencilBtn,&QPushButton::clicked,this,[=](){
         emit changeTool(PENCIL);
     });
-    connect(ui->btnPicker,&QPushButton::clicked,this,[=](){
+    connect(ui->pickerBtn,&QPushButton::clicked,this,[=](){
         emit changeTool(PICKER);
     });
-    connect(ui->btnEraser,&QPushButton::clicked,this,[=](){
+    connect(ui->eraserBtn,&QPushButton::clicked,this,[=](){
         emit changeTool(ERASER);
     });
-    connect(ui->btnBucket,&QPushButton::clicked,this,[=](){
+    connect(ui->bucketBtn,&QPushButton::clicked,this,[=](){
         emit changeTool(BUCKET);
     });
 
@@ -114,6 +122,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(ui->actionSprite_Size, &QAction::triggered, this, &MainWindow::handleSize);
     // @Tzhou
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::displayAbout);
+    //@Ruini Tong
+    connect(ui->actionToolBox, &QAction::triggered, this, &MainWindow::displayHelpMenu);
 }
 
 MainWindow::~MainWindow()
@@ -122,9 +132,6 @@ MainWindow::~MainWindow()
 }
 
 // [=== INITIALIZE SECTION ===] @Andy Tran
-/**
- * @brief MainWindow::initializePreview Initialize pixmap, scene, view. Ready to start the animation
- */
 void MainWindow::initializePreview() {
     //Initialize - Preview
     imageItem.setPixmap(QPixmap::fromImage(frameList.front()));
@@ -138,10 +145,6 @@ void MainWindow::initializePreview() {
     timer->start(frameDuration);
 }
 
-/**
- * @brief MainWindow::initializeFrameView Initialize the Frame View which included
- * Add Button, Connection between the Add Button and Model, Frame View Layout.
- */
 void MainWindow::initializeFrameView(){
     previousFrame = 0;
     currentFrame = 0;
@@ -170,9 +173,6 @@ void MainWindow::initializeFrameView(){
 }
 
 // [=== FRAME VIEW SECTION ===] @Andy Tran
-/**
- * @brief MainWindow::addFrameWidget Add a new frame widget
- */
 void MainWindow::addFrameWidget()
 {
     //Andy Tran - need to fix the scroll bar issue
@@ -212,10 +212,6 @@ void MainWindow::addFrameWidget()
     connect(newFrame, &FrameView::deletePressed, &model, &Model::deletePressed);
 }
 
-/**
- * @brief MainWindow::deleteFrameWidget Delete a widget at an particular index
- * @param deletedIndex the index that needs to be deleted
- */
 void MainWindow::deleteFrameWidget(int deletedIndex) {
     //Delete a Widget at deletedIndex
     QLayoutItem *item = framesHorizontalLayout->takeAt(deletedIndex);
@@ -223,9 +219,6 @@ void MainWindow::deleteFrameWidget(int deletedIndex) {
     delete item;
 }
 
-/**
- * @brief MainWindow::deleteAllWidgets Delete all current Widgets in Frame View
- */
 void MainWindow:: deleteAllWidgets(){
     // Clear the current frame widgets
     while (!framesHorizontalLayout->isEmpty()) {
@@ -235,9 +228,6 @@ void MainWindow:: deleteAllWidgets(){
     }
 }
 
-/**
- * @brief MainWindow::loadFrameWidgets Generated all the widgets from .ssp file including "+" button
- */
 void MainWindow::loadFrameWidgets() {
 
     //Andy Tran: Need to optimized
@@ -280,22 +270,10 @@ void MainWindow::loadFrameWidgets() {
 
     //Set the current frame to the first one
     currentFrame = 0;
-
-    //Start the Preview
-    isInit = true;
 }
 
 
 // [=== CANVAS SECTION ===] @Jeffrey @Andy Tran
-/**
- * @brief MainWindow::updateCanvas Update all the information that needed were sent from Model
- * @param canvas Current Canvas
- * @param list Current Frame List
- * @param currentFrame Current Frame focusing
- * @param action Current Action need to execute by the View
- * @param newSize Current Size of the Sprite
- * @param deletedIndex Current index that need to be deleted (default is -1 which means nothing should be deleted)
- */
 void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action action, int newSize, int deletedIndex) {
     //Update canvas View
     ui->canvasView->fitInView(QRectF(0, 0, canvas->width(), canvas->height()), Qt::KeepAspectRatio);
@@ -313,6 +291,23 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
     frameList.clear();
     frameList.resize(list->size());
     frameList = *list;
+
+    if(this->fps == 0){
+        if(timer->isActive()){
+            timer->stop();
+         }
+        imageItem.setPixmap(QPixmap::fromImage(frameList[currentFrame]));
+        previewScene->setFocusItem(&imageItem);
+        ui->graphicsView->setSceneRect(imageItem.boundingRect());
+        ui->graphicsView->centerOn(imageItem.boundingRect().center());
+    }
+    else{
+        if(timer->isActive()){
+            timer->stop();
+         }
+        timer->start(frameDuration);
+    }
+
 
     //Update Frame View Widgets and Preview
     FrameView *frame;
@@ -354,21 +349,19 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
         break;
     case OPEN_FILE:
         //To start initializing the preview
-        isInit = false;
         loadFrameWidgets();
+
+        // Reinitialize the preview components
+        initializePreview();
         break;
     case CREATE_NEW:
         // Clear the current frame widgets
         deleteAllWidgets();
 
         // Reinitialize the frame view and preview components
-        isInit = true;
         initializeFrameView();
         break;
     case RESIZE:
-        // Reinitialize the preview components
-        isInit = true;
-
         //Resize all the images in the frame view
         for(int i = 0; i < framesHorizontalLayout->count() - 1; i++){
             FrameView *frame = qobject_cast<FrameView*>(framesHorizontalLayout->itemAt(i)->widget());
@@ -377,22 +370,16 @@ void MainWindow::updateCanvas(QImage* canvas, vector<QImage>* list, int currentF
                 frame->updatePixmap(&frameList[i]);
             }
         }
+        // Reinitialize the preview components
+        initializePreview();
         break;
     default:
         break;
     }
 
-    //Initialize the Preview
-    if(isInit){
-        initializePreview();
-        isInit = false;
-    }
 }
 
 // [=== PREVIEW SECTION ===] @Andy Tran
-/**
- * @brief MainWindow::onTimerTimeout Automatically called whenever the Timer is timeout to continue the animation
- */
 void MainWindow::onTimerTimeout() {
     //Move to the next frame when QTimer timeout
     curPreviewIndex = (curPreviewIndex + 1) % frameList.size();
@@ -402,11 +389,6 @@ void MainWindow::onTimerTimeout() {
     ui->graphicsView->centerOn(imageItem.boundingRect().center());
 }
 
-/**
- * @brief MainWindow::onChangeFpsSliderValue Whenever FPS changed, update the FPS label
- * and restart the QTimer to start the animation with new FPS
- * @param value
- */
 void MainWindow::onChangeFpsSliderValue(int value)
 {
     //Change FPS label
@@ -414,23 +396,13 @@ void MainWindow::onChangeFpsSliderValue(int value)
     ui->fpsValueLabel->setText(textValue);
     fps = value;
 
-    if(frameList.size()>1){ //YO!Andy I added this-tzhou
-
-        //Reset Timer with new FPS and Frame Duration
-        if(fps == 0){
-            frameDuration = 0;
-            timer->stop();
-        }
-        else{
-            frameDuration = 1000 / fps;
-            if(timer->isActive()) {
-                timer->stop();
-            }
-            timer->start(frameDuration);
-        }
+    if(fps == 0){
+        frameDuration = INT_MAX;
     }
-
-
+    else{
+        frameDuration = 1000 / fps;
+    }
+    emit changeFPS();
 }
 
 /**
@@ -444,26 +416,28 @@ void MainWindow::updatePreviewCanvas(QImage* canvas) {
 
 // [=== TOOL SECTION ===] @Ruini
 void MainWindow::disableTool(Tool tool){
-    ui->btnPencil->setEnabled(true);
-    ui->btnPicker->setEnabled(true);
-    ui->btnEraser->setEnabled(true);
-    ui->btnBucket->setEnabled(true);
+    //enable all tools
+    ui->pencilBtn->setEnabled(true);
+    ui->pickerBtn->setEnabled(true);
+    ui->eraserBtn->setEnabled(true);
+    ui->bucketBtn->setEnabled(true);
 
+    //disable selected tool
     switch (tool) {
     case PENCIL:
-        ui->btnPencil->setEnabled(false);
+        ui->pencilBtn->setEnabled(false);
         emit pencilCursor();
         break;
     case PICKER:
-        ui->btnPicker->setEnabled(false);
+        ui->pickerBtn->setEnabled(false);
         emit pickerCursor();
         break;
     case ERASER:
-        ui->btnEraser->setEnabled(false);
+        ui->eraserBtn->setEnabled(false);
         emit eraserCursor();
         break;
     case BUCKET:
-        ui->btnBucket->setEnabled(false);
+        ui->bucketBtn->setEnabled(false);
         emit bucketCursor();
         break;
     default:
@@ -577,8 +551,7 @@ void MainWindow::displayAbout()
     QMessageBox::information(
         this,
         tr("Sprite Editor"),
-        tr("Use DELETE key to remove a selected frame.\n"
-           "DRAG the color to custom color boxes to save it.\n\n"
+        tr(
            "Course: CS3505 2023 Spring\n"
            "Assignment: Sprite Editor\n"
            "Authors:\n"
@@ -589,18 +562,23 @@ void MainWindow::displayAbout()
            "\tTingting Zhou"));
 
 }
+
+void MainWindow::displayHelpMenu()
+{
+    helpMenu.show();
+}
 //-------------------Extra Features ----------------------
 
 //tzhou
 void MainWindow::setIconToToolBtns(){
-    ui->btnPencil->setIcon(QIcon(QPixmap(":/images/icons/Pencil.PNG")));
-    ui->btnPencil->setIconSize(QSize(30,30));
-    ui->btnEraser->setIcon(QIcon(QPixmap(":/images/icons/Eraser.PNG")));
-    ui->btnEraser->setIconSize(QSize(30,30));
-    ui->btnPicker->setIcon(QIcon(QPixmap(":/images/icons/Picker.PNG")));
-    ui->btnPicker->setIconSize(QSize(30,30));
-    ui->btnBucket->setIcon(QIcon(QPixmap(":/images/icons/Bucket.PNG")));
-    ui->btnBucket->setIconSize(QSize(30,30));
+    ui->pencilBtn->setIcon(QIcon(QPixmap(":/images/icons/Pencil.PNG")));
+    ui->pencilBtn->setIconSize(QSize(30,30));
+    ui->eraserBtn->setIcon(QIcon(QPixmap(":/images/icons/Eraser.PNG")));
+    ui->eraserBtn->setIconSize(QSize(30,30));
+    ui->pickerBtn->setIcon(QIcon(QPixmap(":/images/icons/Picker.PNG")));
+    ui->pickerBtn->setIconSize(QSize(30,30));
+    ui->bucketBtn->setIcon(QIcon(QPixmap(":/images/icons/Bucket.PNG")));
+    ui->bucketBtn->setIconSize(QSize(30,30));
     //Ruini add
     ui->changeColorBtn->setIcon(QIcon(QPixmap(":/images/icons/Color.PNG")));
     ui->changeColorBtn->setIconSize(QSize(100,100));

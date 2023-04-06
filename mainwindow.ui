@@ -65,7 +65,7 @@ background-color: rgb(255, 255, 255);</string>
        <number>6</number>
       </property>
       <item row="1" column="0">
-       <widget class="QToolButton" name="btnEraser">
+       <widget class="QToolButton" name="eraserBtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -90,7 +90,7 @@ background-color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QToolButton" name="btnPencil">
+       <widget class="QToolButton" name="pencilBtn">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -118,7 +118,7 @@ background-color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="4" column="0">
-       <widget class="QToolButton" name="btnPicker">
+       <widget class="QToolButton" name="pickerBtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -143,7 +143,7 @@ background-color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="5" column="0">
-       <widget class="QToolButton" name="btnBucket">
+       <widget class="QToolButton" name="bucketBtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -837,7 +837,7 @@ background-color: rgb(255, 255, 255);</string>
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -861,6 +861,7 @@ background-color: rgb(255, 255, 255);</string>
      <string>Help</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionToolBox"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSprite"/>
@@ -920,6 +921,36 @@ background-color: rgb(255, 255, 255);</string>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionTools">
+   <property name="text">
+    <string>Tool Box</string>
+   </property>
+  </action>
+  <action name="actionToolBox">
+   <property name="text">
+    <string>Help</string>
+   </property>
+  </action>
+  <action name="actionFrames">
+   <property name="text">
+    <string>Frames</string>
+   </property>
+  </action>
+  <action name="actionCanvas">
+   <property name="text">
+    <string>Canvas</string>
+   </property>
+  </action>
+  <action name="actionPreview">
+   <property name="text">
+    <string>Preview</string>
+   </property>
+  </action>
+  <action name="actionColors">
+   <property name="text">
+    <string>Colors</string>
    </property>
   </action>
  </widget>
