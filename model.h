@@ -30,6 +30,7 @@ enum Tool {
     ERASER,
     BUCKET
 };
+
 enum Action{
     UPDATE,
     DELETE_FRAME,
@@ -48,24 +49,47 @@ public:
 
     //Main canvas
     QImage canvas;
-    QImage mergeCanvas;
+    QImage mergeCanvas; // this canvas will merge with the main canvas, mainly for alpha blending
 
     //Shared variable
     static int frameIndex;
 
 public slots:
     /**
-     * @author Jeffery, Ruini Tong
-     * @brief when the mouse is down, start drawing/erasing, pick current color or fill color
+     * @author Jeffrey Le, Ruini Tong
+     * @brief Fires the mouse position when the LMB is down.
+     *
+     * When the Left Mouse Button is down, the View sends a signal to the Model of
+     * the mouse's position on the scene. This method delegates tasks to other methods that
+     * draw, erase, color pick, and fill areas of the canvas.
+     *
+     * @param QPoint    the mouse position on scene
      */
-    void mouseDown(QPoint);
+    void mouseDown(QPoint pos);
 
     /**
-     * @author Jeffery, Ruini Tong
-     * @brief mouse move will only be triggered while the mouse is down, draw lines on canvas
+     * @author Jeffrey Le, Ruini Tong
+     * @brief Fires the mouse position when the LMB is down and moving.
+     *
+     * When the Left Mouse Button is moving, the View sends a signal to the Model of
+     * the mouse's position on the scene. This method delegates tasks to other methods that
+     * draw and erase lines on the canvas.
+     *
+     * @param QPoint    the mouse position on scene
      */
-    void mouseMove(QPoint);
-    void mouseRelease(QPoint);
+    void mouseMove(QPoint pos);
+
+    /**
+     * @author Jeffrey Le, Ruini Tong
+     * @brief Fires the mouse position when the LMB is released.
+     *
+     * When the Left Mouse Button is released, the View sends a signal to the Model of
+     * the mouse's position on the scene. This method considers the end of a brush stroke,
+     * merging alphas with the main canvas.
+     *
+     * @param QPoint    the mouse position on scene
+     */
+    void mouseRelease(QPoint pos);
 
     //Andy Tran
     /**
@@ -151,8 +175,20 @@ private:
     Tool tool = PENCIL;
     QColor paintColor; //It is initialized in the constructor, uniform convention with the UI.
 
-    // Jeff
-    void drawLine(QPoint, QPoint, QImage*, QPainter::CompositionMode);
+    /**
+     * @author Jeffrey Le
+     * @brief Creates a line between two points on the passed image.
+     *
+     * Creates a line between two points on the passed QImage. The line takes into account
+     * the paintColor and penSize. The passed CompositionMode determines how that line
+     * is effecting the canvas, either adding or erasing.
+     *
+     * @param QPoint            the first position
+     * @param QPoint            the second position
+     * @param QImage*           the image being edited
+     * @param CompositionMode   the composition mode
+     */
+    void drawLine(QPoint p1, QPoint p2, QImage* image, QPainter::CompositionMode composition);
 
     //Ruini Tong
     QPoint pixelCurrent;//use to keep track previous pixel position when mouseMove/mouseDown was called
@@ -174,16 +210,27 @@ private slots:
 
 signals:
     /**
-     * @author AndyTran Jeff
+     * @author Andy Tran, Jeffrey Le
      * @brief Sends canvas to View
+     *
      * Sends the canvas to the View, usually after an update has occured to
      * the canvas. The View should update so the user can see the changes
      * the Model has made.
      *
-     * @param QImage        the canvas
+     * @param QImage*       the canvas
      */
     void updateCanvas(QImage* canvas, vector<QImage>* list, int currentFrame, Action action, int newSize, int deletedIndex = -1);
 
+    /**
+     * @author Jeffrey Le
+     * @brief Sends mergeCanvas to View
+     *
+     * Sends the mergeCanvas to the View, usually after an update has occured to
+     * the mergeCanvas. Shows a preview of lines before they are applies to the
+     * main canvas.
+     *
+     * @param QImage*       the canvas
+     */
     void updatePreviewCanvas(QImage* canvas);
 
     //Renee, Tzhou
