@@ -43,9 +43,8 @@ public:
     ~MainWindow();
 
 public slots:
-    //Jeff
     /**
-     * @author AndyTran Jeff
+     * @author Andy Tran, Jeffrey Le
      * @brief MainWindow::updateCanvas Update all the information that needed were sent from Model
      * @param canvas Current Canvas
      * @param list Current Frame List
@@ -55,17 +54,25 @@ public slots:
      * @param deletedIndex Current index that need to be deleted (default is -1 which means nothing should be deleted)
      */
     void updateCanvas(QImage*, vector<QImage>*, int, Action, int, int);
-    void updatePreviewCanvas(QImage*);
 
-    //Andy Tran
     /**
-     * @author AndyTran
+     * @author Jeffrey Le
+     * @brief Displays the Model's mergeCanvas
+     *
+     * Displays the Model's view of the mergeCanvas, replicating it to the View.
+     *
+     * @param QImage*   the canvas
+     */
+    void updatePreviewCanvas(QImage* canvas);
+
+    /**
+     * @author Andy Tran
      * @brief MainWindow::onTimerTimeout Automatically called whenever the Timer is timeout to continue the animation
      */
     void onTimerTimeout();
 
     /**
-     * @author AndyTran
+     * @author Andy Tran
      * @brief MainWindow::onChangeFpsSliderValue Whenever FPS changed, update the FPS label
      * and restart the QTimer to start the animation with new FPS
      * @param value
@@ -73,39 +80,39 @@ public slots:
     void onChangeFpsSliderValue(int value);
 
     /**
-     * @author AndyTran
+     * @author Andy Tran
      * @brief MainWindow::addFrameWidget Add a new frame widget
      */
     void addFrameWidget();
 
     /**
-     * @author AndyTran
+     * @author Andy Tran
      * @brief MainWindow::initializePreview Initialize pixmap, scene, view. Ready to start the animation
      */
     void initializePreview();
 
     /**
-     * @author AndyTran
+     * @author Andy Tran
      * @brief MainWindow::initializeFrameView Initialize the Frame View which included
      * Add Button, Connection between the Add Button and Model, Frame View Layout.
      */
     void initializeFrameView();
 
     /**
-     * @author AndyTran
+     * @author Andy Tran
      * @brief MainWindow::deleteFrameWidget Delete a widget at an particular index
      * @param deletedIndex the index that needs to be deleted
      */
     void deleteFrameWidget(int);
 
     /**
-     * @author AndyTran
+     * @author Andy Tran
      * @brief MainWindow::deleteAllWidgets Delete all current Widgets in Frame View
      */
     void deleteAllWidgets();
 
     /**
-     * @author AndyTran
+     * @author Andy Tran
      * @brief MainWindow::loadFrameWidgets Generated all the widgets from .ssp file including "+" button
      */
     void loadFrameWidgets();
