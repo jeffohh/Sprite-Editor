@@ -176,7 +176,7 @@ private:
     QColor paintColor; //It is initialized in the constructor, uniform convention with the UI.
 
     /**
-     * @author Jeffrey Le
+     * @author Jeffrey Le, Ruini Tong
      * @brief Creates a line between two points on the passed image.
      *
      * Creates a line between two points on the passed QImage. The line takes into account
