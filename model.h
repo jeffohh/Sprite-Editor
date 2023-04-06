@@ -57,7 +57,7 @@ public:
 public slots:
     /**
      * @author Jeffrey Le, Ruini Tong
-     * @brief Fires the mouse position when the LMB is down.
+     * @brief Called when the ImageViewEditor is clicked.
      *
      * When the Left Mouse Button is down, the View sends a signal to the Model of
      * the mouse's position on the scene. This method delegates tasks to other methods that
@@ -69,7 +69,7 @@ public slots:
 
     /**
      * @author Jeffrey Le, Ruini Tong
-     * @brief Fires the mouse position when the LMB is down and moving.
+     * @brief Called when the ImageViewEditor is clicked and mouse is moving.
      *
      * When the Left Mouse Button is moving, the View sends a signal to the Model of
      * the mouse's position on the scene. This method delegates tasks to other methods that
@@ -81,7 +81,7 @@ public slots:
 
     /**
      * @author Jeffrey Le, Ruini Tong
-     * @brief Fires the mouse position when the LMB is released.
+     * @brief Called when the mouse is released.
      *
      * When the Left Mouse Button is released, the View sends a signal to the Model of
      * the mouse's position on the scene. This method considers the end of a brush stroke,
