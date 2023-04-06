@@ -12,6 +12,7 @@
 #include <QHBoxLayout>
 
 /**
+ * @author: Andy Duong
  * @brief CanvasForm::CanvasForm: This method handle create a new canvas with all required widgets.
  * @param parent
  * @param currentSize

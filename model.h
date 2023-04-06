@@ -146,9 +146,26 @@ public slots:
     void updateCustomColor(QGraphicsView* view);
     void customColorIsSelected(QGraphicsView* view);
 
-    //Duong
+    /**
+     * @author Andy Duong
+     * @brief createNewCanvas: this method handle when user want to create a new canvas using File -> New.
+     */
     void createNewCanvas(int);
+
+    /**
+     * @author Andy Duong
+     * @brief saveFile: this method handle when user want to save a file using File -> Save
+     * @param filename
+     * @return bool, true if we sucessfully save, false other wise.
+     */
     bool saveFile(const QString &filename);
+
+    /**
+     * @author Andy Duong
+     * @brief openFile: this method handle when user want to save a file using File -> Open
+     * @param filename
+     * @return bool, true if we sucessfully open, false other wise.
+     */
     bool openFile(const QString &filename);
 
     /**
@@ -256,8 +273,6 @@ signals:
     //Andy Tran
     void deleteFrameWidget(int);
 
-    //Duong
-    void centerAndAutoZoom(int, int);
 };
 
 #endif // MODEL_H
