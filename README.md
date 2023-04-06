@@ -10,7 +10,7 @@ Authors:
 	Ruini Tong
 	Tingting Zhou
 
-Code Style Document: https://docs.google.com/document/d/1AsKNwBmriITLPzetbFvWXjgzrk8nMRtucqWKfHCcC6Y/edit?usp=sharing
+Code Style Document: https://drive.google.com/file/d/1qGhnZ54fhKg7ogfI6SVomZ0g_vRab5WK/view?usp=sharing
 
 Code Introduction Video: 
   Mp4 file: https://drive.google.com/file/d/1In9eneIdVF3Mcwrvx-_g0V0QAh1HgqZB/view?usp=sharing
