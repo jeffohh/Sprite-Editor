@@ -1,5 +1,6 @@
 #include "canvasform.h"
 
+/* Code reviewd by Tingting Zhou*/
 CanvasForm::CanvasForm(QWidget *parent, int currentSize, Action action): QDialog(parent)
 {
         this->action = action;
@@ -53,6 +54,7 @@ CanvasForm::CanvasForm(QWidget *parent, int currentSize, Action action): QDialog
         });
 }
 
+/* Code reviewd by Tingting Zhou*/
 void CanvasForm::handleSubmitButton(){
     this->newSize = widthSpinBox->value();
     if(newSize > 0){

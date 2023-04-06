@@ -243,6 +243,7 @@ void Model::updateColorRelated(int newAlphaSliderValue)
 
 
 // [=== CANVAS SECTION ===] @Duong @Andy Tran
+/*Code Reviewed by Tingting Zhou*/
 void Model::resizeFrameList(int newSize){
     for (unsigned int i = 0; i < frameList.size(); i++) {
         // Create a new QImage of size new_size
