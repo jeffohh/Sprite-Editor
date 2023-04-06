@@ -200,7 +200,7 @@ private:
     int currentFrame = 0;
     int canvasSize;
 
-    //tzhou
+    //Tingting Zhou
     QMap <QGraphicsView*, QColor> customColors;
 
     //Duong
@@ -232,11 +232,25 @@ signals:
      */
     void updatePreviewCanvas(QImage* canvas);
 
-    //Renee, Tzhou
+    /**
+     * @authors Tingting Zhou, Ruini Tong
+     * @brief updatePaintColor Updates the current paint color
+     * @param newColor The color to set to
+     */
     void updatePaintColor(QColor newColor);
 
-    //Tzhou
+    /**
+     * @author Tingting Zhou
+     * @brief updateAlphaSliderLabel Updates the alpha slider readings.
+     * @param alphaSliderReading Alpha Slider readings.
+     */
     void updateAlphaSliderLabel(QString alphaSliderReading);
+
+    /**
+     * @author Tingting Zhou
+     * @brief resetAlphaSlider Set the alpha slider to a new value
+     * @param newValue The new value to set to
+     */
     void resetAlphaSlider(int newValue);
 
     //Andy Tran

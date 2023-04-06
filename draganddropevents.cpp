@@ -37,12 +37,13 @@ void DragAndDropGraphicsView::dropEvent(QDropEvent *event)
 
 void DragAndDropGraphicsView::mousePressEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event)
     emit customColorIsSelected(this);
 }
 
 DragAndDropLabel::DragAndDropLabel(QWidget *widget)
 {
-
+    Q_UNUSED(widget)
 }
 
 void DragAndDropLabel::createDrag(const QPoint &pos, QWidget *widget)

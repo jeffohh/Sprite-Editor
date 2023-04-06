@@ -473,6 +473,48 @@ void MainWindow::changeColorBtnIsPressed()
     }
 }
 
+//Extra feature: icons
+void MainWindow::setIconToToolBtns(){
+    QSize toolSize = QSize(30,30);
+    ui->pencilBtn->setIcon(QIcon(QPixmap(":/images/icons/Pencil.PNG")));
+    ui->pencilBtn->setIconSize(toolSize);
+    ui->eraserBtn->setIcon(QIcon(QPixmap(":/images/icons/Eraser.PNG")));
+    ui->eraserBtn->setIconSize(toolSize);
+    ui->pickerBtn->setIcon(QIcon(QPixmap(":/images/icons/Picker.PNG")));
+    ui->pickerBtn->setIconSize(toolSize);
+    ui->bucketBtn->setIcon(QIcon(QPixmap(":/images/icons/Bucket.PNG")));
+    ui->bucketBtn->setIconSize(toolSize);
+    //Ruini add
+    ui->changeColorBtn->setIcon(QIcon(QPixmap(":/images/icons/Color.PNG")));
+    ui->changeColorBtn->setIconSize(QSize(100,100));
+
+}
+
+//Extra feature: drag and drop
+void MainWindow::setColorScenesToViews()
+{
+    ui->customColorView1->setScene(customeColorScene1);
+    ui->customColorView2->setScene(customeColorScene2);
+    ui->customColorView3->setScene(customeColorScene3);
+    ui->customColorView4->setScene(customeColorScene4);
+    ui->customColorView5->setScene(customeColorScene5);
+}
+
+void MainWindow::imageEnter(QPixmap pixmap, QGraphicsView *view)
+{
+    QGraphicsScene* scene = view->scene();
+    if(scene->items().count()>0){
+        scene->clear();
+    }
+    scene->addPixmap(pixmap.scaled(26,26));
+    view->setScene(scene);
+    view->viewport()->update();
+    view->update();
+    view->show();
+
+    emit updateCustomColor(view);
+}
+
 // [=== MENU SECTION ===] @Duong
 
 /**
@@ -548,46 +590,5 @@ void MainWindow::displayHelpMenu()
 {
     helpMenu.show();
 }
-//-------------------Extra Features ----------------------
 
-//tzhou
-void MainWindow::setIconToToolBtns(){
-    ui->pencilBtn->setIcon(QIcon(QPixmap(":/images/icons/Pencil.PNG")));
-    ui->pencilBtn->setIconSize(QSize(30,30));
-    ui->eraserBtn->setIcon(QIcon(QPixmap(":/images/icons/Eraser.PNG")));
-    ui->eraserBtn->setIconSize(QSize(30,30));
-    ui->pickerBtn->setIcon(QIcon(QPixmap(":/images/icons/Picker.PNG")));
-    ui->pickerBtn->setIconSize(QSize(30,30));
-    ui->bucketBtn->setIcon(QIcon(QPixmap(":/images/icons/Bucket.PNG")));
-    ui->bucketBtn->setIconSize(QSize(30,30));
-    //Ruini add
-    ui->changeColorBtn->setIcon(QIcon(QPixmap(":/images/icons/Color.PNG")));
-    ui->changeColorBtn->setIconSize(QSize(100,100));
-
-}
-//tzhou
-void MainWindow::setColorScenesToViews()
-{
-    ui->customColorView1->setScene(customeColorScene1);
-    ui->customColorView2->setScene(customeColorScene2);
-    ui->customColorView3->setScene(customeColorScene3);
-    ui->customColorView4->setScene(customeColorScene4);
-    ui->customColorView5->setScene(customeColorScene5);
-}
-
-//Tzhou
-void MainWindow::imageEnter(QPixmap pixmap, QGraphicsView *view)
-{
-    QGraphicsScene* scene = view->scene();
-    if(scene->items().count()>0){
-        scene->clear();
-    }
-    scene->addPixmap(pixmap.scaled(26,26));
-    view->setScene(scene);
-    view->viewport()->update();
-    view->update();
-    view->show();
-
-    emit updateCustomColor(view);
-}
 

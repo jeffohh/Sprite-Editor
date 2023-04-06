@@ -93,10 +93,26 @@ public slots:
     void handleSize();
     void displayAbout();
 
-    //tzhou
+    /**
+     * @author Tingting Zhou
+     * @brief updatePaintColor Updates the current color
+     * @param newColor new color to set to
+     */
     void updatePaintColor(QColor newColor);
+
+    /**
+     * @author Tingting Zhou, Ruini Tong
+     * @brief changeColorBtnIsPressed Provokes a color dialog for user to change color
+     */
     void changeColorBtnIsPressed();
-    void imageEnter(QPixmap pixmap, QGraphicsView *view);//Extra Feature
+
+    /**
+     * @author Tingting Zhou
+     * @brief imageEnter Adds the drap and drop image to the view.
+     * @param pixmap the image is to be dropped
+     * @param view the view accepts the image
+     */
+    void imageEnter(QPixmap pixmap, QGraphicsView *view);
 
     /**
      * @author Ruini Tong
@@ -145,14 +161,24 @@ private:
     int frameDuration = 1000/12;
     unsigned int curPreviewIndex = 0;
 
-    //TZhou
+    //Color panel
     QColor DEFAULT_PAINT_COLOR = Qt::black; // Default pen or brush color
     QGraphicsScene* customeColorScene1 = new QGraphicsScene();
     QGraphicsScene* customeColorScene2 = new QGraphicsScene();
     QGraphicsScene* customeColorScene3 = new QGraphicsScene();
     QGraphicsScene* customeColorScene4 = new QGraphicsScene();
     QGraphicsScene* customeColorScene5 = new QGraphicsScene();
+
+    /**
+     * @authors Tingting Zhou, Andy Tran, Ruini Tong
+     * @brief setIconToToolBtns Sets icons to tool buttons
+     */
     void setIconToToolBtns();
+
+    /**
+     * @author Tingting Zhou
+     * @brief setColorScenesToViews Sets the scenes for each view in custom color area
+     */
     void setColorScenesToViews();
 
     /**
@@ -201,7 +227,10 @@ signals:
     void pickerCursor();
     void bucketCursor();
 
-    //Tzhou
+    /**
+     * @author Tingting Zhou
+     * @brief updateCustomColor Signal to change the custom color
+     */
     void updateCustomColor(QGraphicsView*);
 
 };
