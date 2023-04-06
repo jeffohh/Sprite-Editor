@@ -123,10 +123,26 @@ public slots:
     void changeColorBtnIsPressed();
     void imageEnter(QPixmap pixmap, QGraphicsView *view);//Extra Feature
 
-    //Ruini Tong
+    /**
+     * @author Ruini Tong
+     * @brief label display current size value
+     * @param value
+     */
     void changeSizeSliderValue(int value);
+
+    /**
+     * @author Ruini Tong
+     * @brief disable slected tool, enable all the other tools
+     * @param tool
+     */
     void disableTool(Tool);
-    void displayToolBox();
+
+    /**
+     * @author:Ruini Tong
+     * @brief This method display the help menu.
+     */
+    void displayHelpMenu();
+
 private:
     Ui::MainWindow *ui;
     Model& model;
@@ -168,7 +184,6 @@ signals:
     //AndyTran
     void changeFPS();
 
-    //Renee
     // used by any color change
     void paintColorChanged(QColor);
     void newCanvasRequested(int width, int height);

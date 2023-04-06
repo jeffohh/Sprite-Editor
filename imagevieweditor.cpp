@@ -56,14 +56,12 @@ void ImageViewEditor::mousePressEvent(QMouseEvent *event) {
         emit mouseDown(pos);
         emit getColor(pos);
     }
-    emit mousePressed(true);
 }
 
 void ImageViewEditor::mouseMoveEvent(QMouseEvent *event) {
     if (event->buttons() & Qt::LeftButton) {
         //Andy Tran Edited
         QPoint pos = mapToScene(event->position().toPoint()).toPoint();
-        //emit mouseDown(pos);
         emit mouseMove(pos);
     }
 }
@@ -75,9 +73,6 @@ void ImageViewEditor::mouseReleaseEvent(QMouseEvent *event) {
     }
 
     event->ignore();
-
-    //Ruini Tong
-    emit mousePressed(false);
 }
 
 void ImageViewEditor::wheelEvent(QWheelEvent *event)

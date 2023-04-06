@@ -54,7 +54,16 @@ public:
     static int frameIndex;
 
 public slots:
+    /**
+     * @author Jeffery, Ruini Tong
+     * @brief when the mouse is down, start drawing/erasing, pick current color or fill color
+     */
     void mouseDown(QPoint);
+
+    /**
+     * @author Jeffery, Ruini Tong
+     * @brief mouse move will only be triggered while the mouse is down, draw lines on canvas
+     */
     void mouseMove(QPoint);
     void mouseRelease(QPoint);
 
@@ -123,10 +132,20 @@ public slots:
     bool saveFile(const QString &filename);
     bool openFile(const QString &filename);
 
-
-    //Ruini Tong
+    /**
+     * @author Ruini Tong
+     * @brief change pen size to the value user selected
+     * @param size
+     */
     void setPenSize(int size);
-    void fillColor(QColor currentColor, QPoint pos);
+
+    /**
+     * @author Ruini Tong
+     * @brief fill color of certain area
+     * @param originColor in the position that was clicked
+     * @param position that user clicked
+     */
+    void fillColor(QColor originColor, QPoint pos);
 
 private:
     Tool tool = PENCIL;
@@ -136,9 +155,8 @@ private:
     void drawLine(QPoint, QPoint, QImage*, QPainter::CompositionMode);
 
     //Ruini Tong
-    QPoint pixelCurrent;
+    QPoint pixelCurrent;//use to keep track previous pixel position when mouseMove/mouseDown was called
     int penSize = 1;
-    QRect canvasRect;
 
     //Andy Tran
     vector<QImage> frameList;
@@ -174,9 +192,6 @@ signals:
     //Tzhou
     void updateAlphaSliderLabel(QString alphaSliderReading);
     void resetAlphaSlider(int newValue);
-
-    //Ruini Tong
-    void newPosition(QPoint pos);
 
     //Andy Tran
     void deleteFrameWidget(int);

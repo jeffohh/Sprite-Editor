@@ -13,7 +13,6 @@ Model::Model(QObject *parent)
     paintColor = Qt::black;
     initializeModel();
 
-    canvasRect = canvas.rect();// get canvas size
     canvasWidth = canvas.width();
     canvasHeight = canvas.height();
 }
@@ -83,13 +82,14 @@ void Model::onAddFrame(){
 // [=== TOOL SECTION ===] @Ruini
 // --- Tool Input ---
 void Model::mouseDown(QPoint pos) {
-    pixelCurrent = pos;
+    if (!canvas.rect().contains(pos)) return; //if the pixel is out of bound, return
+
+    pixelCurrent = pos;//keep track of the position
 
     mergeCanvas = QImage(canvas.width(), canvas.height(), canvas.format());
     mergeCanvas.fill(Qt::transparent);
-    //if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
 
-    QColor pixelColor = canvas.pixelColor(pos);
+    QColor pixelColor = canvas.pixelColor(pos);//get current pixel color
 
     switch (tool) {
     case PENCIL:
@@ -116,8 +116,7 @@ void Model::mouseDown(QPoint pos) {
 
 void Model::mouseMove(QPoint pos) {
 
-    canvasRect = canvas.rect(); // Jeffrey: is canvasRect a needed variable? we could call canvas.rect() instead
-    if (!canvasRect.contains(pos)) return; //if the pixel is out of bound, return
+    if (!canvas.rect().contains(pos)) return; //if the pixel is out of bound, return
 
     switch (tool) {
     case PENCIL:
@@ -166,26 +165,26 @@ void Model::drawLine(QPoint p1, QPoint p2, QImage* image, QPainter::CompositionM
 void Model::fillColor(QColor originColor, QPoint pos){
 
     //if the canvas color is the same as paintColor, don't need to fill
-    QColor canvasColor = canvas.pixelColor(pos);
     double threshold = 0.1;
 
-    double aDiff = abs(canvasColor.alpha() - paintColor.alpha());
-    double rDiff = abs(canvasColor.red() - paintColor.red());
-    double gDiff = abs(canvasColor.green() - paintColor.green());
-    double bDiff = abs(canvasColor.blue() - paintColor.blue());
+    double aDiff = abs(originColor.alpha() - paintColor.alpha());
+    double rDiff = abs(originColor.red() - paintColor.red());
+    double gDiff = abs(originColor.green() - paintColor.green());
+    double bDiff = abs(originColor.blue() - paintColor.blue());
 
     // check if the difference is within the threshold
     if ((aDiff <= threshold)&&(rDiff <= threshold) && (gDiff <= threshold) && (bDiff <= threshold)) {
         return;
     }
 
-    QList<QPoint> stack;
-    stack <<pos;
+    QList<QPoint> stack;//keep all the pixel position that are the same color to neigboring pixels
+    stack <<pos; //push the starting pixel
+    QRect canvasRect = canvas.rect();//get canvas area
     while(!stack.empty()){
         QPoint current = stack.takeLast();
         if (canvasRect.contains(current)) { // check if pixel is out of bound
             QColor pixelColor = canvas.pixelColor(current); //get pixel color
-            if (pixelColor == originColor){
+            if (pixelColor == originColor){//if the neigboring pixel have the same color as the starting pixel
                 canvas.setPixelColor(current, paintColor);
 
                 //expand top
@@ -220,7 +219,6 @@ void Model::changeTool(Tool currentTool){
 void Model::setPenSize(int size){
     penSize = size/5;
 }
-
 
 
 // [=== COLOR SECTION ===] @Tzhou @Ruini

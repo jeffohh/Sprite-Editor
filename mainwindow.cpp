@@ -8,8 +8,8 @@
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , helpMenu(this)
     , model(model)
+    , helpMenu(this)
 {
     ui->setupUi(this);
 
@@ -47,16 +47,16 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     // [=== TOOL CONNECTIONS ===] @Ruini
     // --- Tool Select ---
-    connect(ui->btnPencil,&QPushButton::clicked,this,[=](){
+    connect(ui->pencilBtn,&QPushButton::clicked,this,[=](){
         emit changeTool(PENCIL);
     });
-    connect(ui->btnPicker,&QPushButton::clicked,this,[=](){
+    connect(ui->pickerBtn,&QPushButton::clicked,this,[=](){
         emit changeTool(PICKER);
     });
-    connect(ui->btnEraser,&QPushButton::clicked,this,[=](){
+    connect(ui->eraserBtn,&QPushButton::clicked,this,[=](){
         emit changeTool(ERASER);
     });
-    connect(ui->btnBucket,&QPushButton::clicked,this,[=](){
+    connect(ui->bucketBtn,&QPushButton::clicked,this,[=](){
         emit changeTool(BUCKET);
     });
 
@@ -123,7 +123,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     // @Tzhou
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::displayAbout);
     //@Ruini Tong
-    connect(ui->actionToolBox, &QAction::triggered, this, &MainWindow::displayToolBox);
+    connect(ui->actionToolBox, &QAction::triggered, this, &MainWindow::displayHelpMenu);
 }
 
 MainWindow::~MainWindow()
@@ -416,26 +416,28 @@ void MainWindow::updatePreviewCanvas(QImage* canvas) {
 
 // [=== TOOL SECTION ===] @Ruini
 void MainWindow::disableTool(Tool tool){
-    ui->btnPencil->setEnabled(true);
-    ui->btnPicker->setEnabled(true);
-    ui->btnEraser->setEnabled(true);
-    ui->btnBucket->setEnabled(true);
+    //enable all tools
+    ui->pencilBtn->setEnabled(true);
+    ui->pickerBtn->setEnabled(true);
+    ui->eraserBtn->setEnabled(true);
+    ui->bucketBtn->setEnabled(true);
 
+    //disable selected tool
     switch (tool) {
     case PENCIL:
-        ui->btnPencil->setEnabled(false);
+        ui->pencilBtn->setEnabled(false);
         emit pencilCursor();
         break;
     case PICKER:
-        ui->btnPicker->setEnabled(false);
+        ui->pickerBtn->setEnabled(false);
         emit pickerCursor();
         break;
     case ERASER:
-        ui->btnEraser->setEnabled(false);
+        ui->eraserBtn->setEnabled(false);
         emit eraserCursor();
         break;
     case BUCKET:
-        ui->btnBucket->setEnabled(false);
+        ui->bucketBtn->setEnabled(false);
         emit bucketCursor();
         break;
     default:
@@ -562,11 +564,7 @@ void MainWindow::displayAbout()
 
 }
 
-/**
- * @author:Ruini Tong
- * @brief MainWindow::displayToolBox: This method handle About.
- */
-void MainWindow::displayToolBox()
+void MainWindow::displayHelpMenu()
 {
     helpMenu.show();
 }
@@ -574,14 +572,14 @@ void MainWindow::displayToolBox()
 
 //tzhou
 void MainWindow::setIconToToolBtns(){
-    ui->btnPencil->setIcon(QIcon(QPixmap(":/images/icons/Pencil.PNG")));
-    ui->btnPencil->setIconSize(QSize(30,30));
-    ui->btnEraser->setIcon(QIcon(QPixmap(":/images/icons/Eraser.PNG")));
-    ui->btnEraser->setIconSize(QSize(30,30));
-    ui->btnPicker->setIcon(QIcon(QPixmap(":/images/icons/Picker.PNG")));
-    ui->btnPicker->setIconSize(QSize(30,30));
-    ui->btnBucket->setIcon(QIcon(QPixmap(":/images/icons/Bucket.PNG")));
-    ui->btnBucket->setIconSize(QSize(30,30));
+    ui->pencilBtn->setIcon(QIcon(QPixmap(":/images/icons/Pencil.PNG")));
+    ui->pencilBtn->setIconSize(QSize(30,30));
+    ui->eraserBtn->setIcon(QIcon(QPixmap(":/images/icons/Eraser.PNG")));
+    ui->eraserBtn->setIconSize(QSize(30,30));
+    ui->pickerBtn->setIcon(QIcon(QPixmap(":/images/icons/Picker.PNG")));
+    ui->pickerBtn->setIconSize(QSize(30,30));
+    ui->bucketBtn->setIcon(QIcon(QPixmap(":/images/icons/Bucket.PNG")));
+    ui->bucketBtn->setIconSize(QSize(30,30));
     //Ruini add
     ui->changeColorBtn->setIcon(QIcon(QPixmap(":/images/icons/Color.PNG")));
     ui->changeColorBtn->setIconSize(QSize(100,100));

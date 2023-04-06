@@ -65,7 +65,7 @@ background-color: rgb(255, 255, 255);</string>
        <number>6</number>
       </property>
       <item row="1" column="0">
-       <widget class="QToolButton" name="btnEraser">
+       <widget class="QToolButton" name="eraserBtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -90,7 +90,7 @@ background-color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QToolButton" name="btnPencil">
+       <widget class="QToolButton" name="pencilBtn">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -118,7 +118,7 @@ background-color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="4" column="0">
-       <widget class="QToolButton" name="btnPicker">
+       <widget class="QToolButton" name="pickerBtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -143,7 +143,7 @@ background-color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="5" column="0">
-       <widget class="QToolButton" name="btnBucket">
+       <widget class="QToolButton" name="bucketBtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
