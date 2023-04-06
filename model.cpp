@@ -1,6 +1,5 @@
 #include "model.h"
 #include "QtGui/qpainter.h"
-#include "qdebug.h"
 
 //Initialize static variable
 int Model::frameIndex = 0;
