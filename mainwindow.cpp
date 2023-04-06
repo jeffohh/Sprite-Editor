@@ -551,8 +551,7 @@ void MainWindow::displayAbout()
     QMessageBox::information(
         this,
         tr("Sprite Editor"),
-        tr("Use DELETE key to remove a selected frame.\n"
-           "DRAG the color to custom color boxes to save it.\n\n"
+        tr(
            "Course: CS3505 2023 Spring\n"
            "Assignment: Sprite Editor\n"
            "Authors:\n"
