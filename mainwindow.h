@@ -26,6 +26,8 @@
 #include<QPainter>
 #include <QHBoxLayout>
 
+#include "helpmenu.h"
+
 using std::vector;
 
 QT_BEGIN_NAMESPACE
@@ -124,9 +126,11 @@ public slots:
     //Ruini Tong
     void changeSizeSliderValue(int value);
     void disableTool(Tool);
+    void displayToolBox();
 private:
     Ui::MainWindow *ui;
     Model& model;
+    helpmenu helpMenu;
 
     //Andy Tran
     bool isInit = true;
